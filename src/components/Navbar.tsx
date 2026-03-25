@@ -150,7 +150,7 @@ export function Navbar() {
                   await fetch("/api/logout", { method: "POST" });
                   window.location.href = "/";
                 }}
-                className="rounded-lg p-2 text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-all"
+                className="rounded-lg p-2 text-zinc-510 hover:bg-red-500/10 hover:text-red-400 transition-all"
                 title="Déconnexion"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
