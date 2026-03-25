@@ -207,15 +207,22 @@ export default function DashboardPage() {
                 key={profile.id}
                 className="group relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-all duration-200 hover:border-white/[0.12] hover:bg-white/[0.04]"
               >
-                {/* Cover gradient */}
-                <div className="absolute inset-x-0 top-0 h-20 rounded-t-2xl bg-gradient-to-br from-indigo-600/10 via-violet-600/5 to-transparent" />
+                {/* Cover image or gradient */}
+                {profile.cover ? (
+                  <div className="absolute inset-x-0 top-0 h-24 rounded-t-2xl overflow-hidden">
+                    <img src={profile.cover} alt="" className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-950/80" />
+                  </div>
+                ) : (
+                  <div className="absolute inset-x-0 top-0 h-20 rounded-t-2xl bg-gradient-to-br from-indigo-600/10 via-violet-600/5 to-transparent" />
+                )}
 
                 <div className="relative">
                   {/* Avatar + actions row */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-2xl font-bold text-white shadow-lg shadow-indigo-500/20 ring-4 ring-zinc-950">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 text-2xl font-bold text-white shadow-lg shadow-indigo-500/20 ring-4 ring-zinc-950 overflow-hidden">
                       {profile.avatar ? (
-                        <img src={profile.avatar} alt={profile.name} className="h-full w-full rounded-2xl object-cover" />
+                        <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
                       ) : (
                         profile.name.charAt(0).toUpperCase()
                       )}

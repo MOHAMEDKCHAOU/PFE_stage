@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 type Profile = {
   id: string;
@@ -19,6 +19,177 @@ const profileTypes = [
   { value: "CREATOR", label: "Créateur", icon: "🎨" },
   { value: "STARTUP", label: "Startup", icon: "🚀" },
 ];
+
+function ImageUploadFrame({
+  currentUrl,
+  onUploaded,
+  type,
+  shape,
+}: {
+  currentUrl: string;
+  onUploaded: (url: string) => void;
+  type: "avatar" | "cover";
+  shape: "circle" | "banner";
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [preview, setPreview] = useState(currentUrl);
+  const [uploadError, setUploadError] = useState("");
+
+  async function handleFile(file: File) {
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Ce fichier n'est pas une image");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("Max 5 Mo");
+      return;
+    }
+
+    setUploadError("");
+    setPreview(URL.createObjectURL(file));
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", type);
+
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const json = await res.json();
+
+      if (!res.ok) {
+        setUploadError(json.error || "Erreur upload");
+        setPreview(currentUrl);
+        return;
+      }
+
+      setPreview(json.url);
+      onUploaded(json.url);
+    } catch {
+      setUploadError("Erreur de connexion");
+      setPreview(currentUrl);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) handleFile(file);
+  }
+
+  if (shape === "circle") {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <div
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          className={`relative h-24 w-24 cursor-pointer rounded-full overflow-hidden transition-all duration-200 group ${
+            dragOver
+              ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-zinc-900"
+              : "ring-4 ring-zinc-800 hover:ring-indigo-500/30"
+          }`}
+        >
+          {preview ? (
+            <img src={preview} alt="Avatar" className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-600 to-violet-600 text-3xl font-bold text-white">
+              ?
+            </div>
+          )}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+            {uploading ? (
+              <svg className="h-6 w-6 animate-spin text-white" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            ) : (
+              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
+              </svg>
+            )}
+          </div>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            onChange={handleInputChange}
+            className="hidden"
+          />
+        </div>
+        <p className="text-[11px] text-zinc-600">Cliquer ou glisser</p>
+        {uploadError && <p className="text-[11px] text-red-400">{uploadError}</p>}
+      </div>
+    );
+  }
+
+  // Banner shape
+  return (
+    <div className="space-y-2">
+      <label className="text-xs font-medium text-zinc-400">Image de couverture</label>
+      <div
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+        className={`relative h-32 w-full cursor-pointer rounded-xl overflow-hidden transition-all duration-200 group border ${
+          dragOver
+            ? "border-indigo-500 ring-2 ring-indigo-500/30"
+            : "border-white/[0.06] border-dashed hover:border-indigo-500/30"
+        }`}
+      >
+        {preview ? (
+          <img src={preview} alt="Cover" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-white/[0.02]">
+            <svg className="h-8 w-8 text-zinc-700" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+            <p className="text-xs text-zinc-600">Cliquer ou glisser une image de couverture</p>
+          </div>
+        )}
+        {preview && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+            {uploading ? (
+              <svg className="h-6 w-6 animate-spin text-white" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            ) : (
+              <div className="flex items-center gap-2 text-white text-sm font-medium">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
+                </svg>
+                Changer
+              </div>
+            )}
+          </div>
+        )}
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          onChange={handleInputChange}
+          className="hidden"
+        />
+      </div>
+      {uploadError && <p className="text-[11px] text-red-400">{uploadError}</p>}
+    </div>
+  );
+}
 
 export function EditProfileModal({
   profile,
@@ -136,15 +307,22 @@ export function EditProfileModal({
             </div>
           )}
 
-          {/* Avatar preview + Name side by side */}
+          {/* Cover image upload */}
+          <ImageUploadFrame
+            currentUrl={form.cover}
+            onUploaded={(url) => handleChange("cover", url)}
+            type="cover"
+            shape="banner"
+          />
+
+          {/* Avatar + Name side by side */}
           <div className="flex items-start gap-5">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-2xl font-bold text-white shadow-lg shadow-indigo-500/20">
-              {form.avatar ? (
-                <img src={form.avatar} alt="" className="h-full w-full rounded-2xl object-cover" />
-              ) : (
-                form.name.charAt(0).toUpperCase()
-              )}
-            </div>
+            <ImageUploadFrame
+              currentUrl={form.avatar}
+              onUploaded={(url) => handleChange("avatar", url)}
+              type="avatar"
+              shape="circle"
+            />
             <div className="flex-1 space-y-4">
               {/* Name */}
               <div className="space-y-1.5">
@@ -207,29 +385,7 @@ export function EditProfileModal({
             <p className="text-[11px] text-zinc-600">{form.bio.length}/300 caractères</p>
           </div>
 
-          {/* Avatar URL */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-400">URL Avatar</label>
-            <input
-              type="url"
-              value={form.avatar}
-              onChange={(e) => handleChange("avatar", e.target.value)}
-              placeholder="https://..."
-              className="block w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono text-xs"
-            />
-          </div>
 
-          {/* Cover URL */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-400">URL Cover Image</label>
-            <input
-              type="url"
-              value={form.cover}
-              onChange={(e) => handleChange("cover", e.target.value)}
-              placeholder="https://..."
-              className="block w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-indigo-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all font-mono text-xs"
-            />
-          </div>
         </div>
 
         {/* Footer */}
