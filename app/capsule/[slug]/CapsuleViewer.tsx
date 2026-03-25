@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type Branch = {
   headline: string;
@@ -22,6 +22,7 @@ type CapsuleViewerProps = {
     avatar: string | null;
   };
   capsule: {
+    id: string;
     title: string;
     objective: string;
     options: Option[];
@@ -31,6 +32,35 @@ type CapsuleViewerProps = {
 export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const sessionIdRef = useRef<string | null>(null);
+
+  // Start tracking session on mount
+  useEffect(() => {
+    fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "START", capsuleId: capsule.id }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.sessionId) sessionIdRef.current = data.sessionId;
+      })
+      .catch(() => {});
+  }, [capsule.id]);
+
+  function trackEvent(action: string, optionLabel?: string) {
+    if (!sessionIdRef.current) return;
+    fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action,
+        capsuleId: capsule.id,
+        sessionId: sessionIdRef.current,
+        optionLabel,
+      }),
+    }).catch(() => {});
+  }
 
   function handleSelect(option: Option) {
     if (selectedOption?.id === option.id) {
@@ -42,11 +72,16 @@ export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
       return;
     }
 
+    trackEvent("OPTION_CLICK", option.label);
     setIsTransitioning(true);
     setTimeout(() => {
       setSelectedOption(option);
       setIsTransitioning(false);
     }, 300);
+  }
+
+  function handleCtaClick(optionLabel: string) {
+    trackEvent("CTA_CLICK", optionLabel);
   }
 
   function handleBack() {
@@ -142,6 +177,7 @@ export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
                     href={selectedOption.branch.cta}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => handleCtaClick(selectedOption!.label)}
                     className="inline-flex items-center justify-center w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-indigo-500 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98]"
                   >
                     {selectedOption.branch.cta}

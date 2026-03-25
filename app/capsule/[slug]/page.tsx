@@ -40,6 +40,7 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
           avatar: identity.avatar,
         }}
         capsule={{
+          id: capsule.id,
           title: capsule.title,
           objective: capsule.objective,
           options: capsule.options.map((opt) => ({
