@@ -11,6 +11,7 @@ type Profile = {
   headline: string | null;
   avatar: string | null;
   cover: string | null;
+  theme: string | null;
 };
 
 const profileTypes = [
@@ -18,6 +19,17 @@ const profileTypes = [
   { value: "AGENCY", label: "Agences", icon: "🏢" },
   { value: "CREATOR", label: "Créateur", icon: "🎨" },
   { value: "STARTUP", label: "Startup", icon: "🚀" },
+];
+
+const themePresets = [
+  { value: "", label: "Par défaut", from: "#6366f1", to: "#8b5cf6" },
+  { value: "ocean", label: "Océan", from: "#0ea5e9", to: "#06b6d4" },
+  { value: "sunset", label: "Coucher", from: "#f97316", to: "#ef4444" },
+  { value: "forest", label: "Forêt", from: "#22c55e", to: "#14b8a6" },
+  { value: "berry", label: "Berry", from: "#ec4899", to: "#a855f7" },
+  { value: "gold", label: "Or", from: "#eab308", to: "#f59e0b" },
+  { value: "midnight", label: "Nuit", from: "#3b82f6", to: "#6366f1" },
+  { value: "coral", label: "Corail", from: "#fb7185", to: "#f472b6" },
 ];
 
 function ImageUploadFrame({
@@ -207,6 +219,7 @@ export function EditProfileModal({
     bio: profile.bio || "",
     avatar: profile.avatar || "",
     cover: profile.cover || "",
+    theme: profile.theme || "",
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -239,6 +252,7 @@ export function EditProfileModal({
           bio: form.bio || null,
           avatar: form.avatar || null,
           cover: form.cover || null,
+          theme: form.theme || null,
         }),
       });
 
@@ -385,6 +399,32 @@ export function EditProfileModal({
             <p className="text-[11px] text-slate-400">{form.bio.length}/300 caractères</p>
           </div>
 
+          {/* Theme */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-slate-500">Thème de couleur</label>
+            <div className="grid grid-cols-4 gap-2">
+              {themePresets.map((t) => (
+                <button
+                  key={t.value}
+                  type="button"
+                  onClick={() => handleChange("theme", t.value)}
+                  className={`flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-center transition-all duration-200 active:scale-95 ${
+                    form.theme === t.value
+                      ? "border-violet-400 bg-violet-50 ring-1 ring-violet-300"
+                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                  }`}
+                >
+                  <div
+                    className="h-6 w-6 rounded-full shadow-inner"
+                    style={{ background: `linear-gradient(135deg, ${t.from}, ${t.to})` }}
+                  />
+                  <span className={`text-[10px] font-medium ${form.theme === t.value ? "text-violet-700" : "text-slate-400"}`}>
+                    {t.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
 
         </div>
 

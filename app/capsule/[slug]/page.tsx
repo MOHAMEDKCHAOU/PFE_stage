@@ -40,6 +40,7 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
           avatar: identity.avatar,
           cover: identity.cover,
           type: identity.type,
+          theme: identity.theme,
         }}
         capsules={identity.capsules.map((capsule) => ({
           id: capsule.id,

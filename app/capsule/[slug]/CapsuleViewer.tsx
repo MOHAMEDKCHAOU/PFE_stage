@@ -43,6 +43,7 @@ type CapsuleViewerProps = {
     avatar: string | null;
     cover: string | null;
     type: string;
+    theme: string | null;
   };
   capsules: Capsule[];
   projects: Project[];
@@ -56,6 +57,16 @@ const typeConfig: Record<string, { label: string; gradient: string; accent: stri
   STARTUP: { label: "Startup", gradient: "from-emerald-600 to-teal-500", accent: "text-emerald-400" },
 };
 
+const themeOverrides: Record<string, { gradient: string; accent: string }> = {
+  ocean:    { gradient: "from-sky-500 to-cyan-500",     accent: "text-sky-400" },
+  sunset:   { gradient: "from-orange-500 to-red-500",   accent: "text-orange-400" },
+  forest:   { gradient: "from-green-500 to-teal-500",   accent: "text-green-400" },
+  berry:    { gradient: "from-pink-500 to-purple-500",   accent: "text-pink-400" },
+  gold:     { gradient: "from-yellow-500 to-amber-500", accent: "text-yellow-400" },
+  midnight: { gradient: "from-blue-500 to-indigo-500",  accent: "text-blue-400" },
+  coral:    { gradient: "from-rose-400 to-pink-400",    accent: "text-rose-400" },
+};
+
 /* ───────── Component ───────── */
 export function CapsuleViewer({ identity, capsules, projects, testimonials }: CapsuleViewerProps) {
   const [activeCapsule, setActiveCapsule] = useState<Capsule>(capsules[0]);
@@ -65,7 +76,9 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
   const [isFavorited, setIsFavorited] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
 
-  const tc = typeConfig[identity.type] || typeConfig.FREELANCER;
+  const baseTC = typeConfig[identity.type] || typeConfig.FREELANCER;
+  const themeOv = identity.theme ? themeOverrides[identity.theme] : null;
+  const tc = themeOv ? { ...baseTC, ...themeOv } : baseTC;
 
   // Check favorites
   useEffect(() => {

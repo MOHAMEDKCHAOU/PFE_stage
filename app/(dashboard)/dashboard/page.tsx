@@ -13,6 +13,7 @@ type IdentityProfile = {
   headline: string | null;
   avatar: string | null;
   cover: string | null;
+  theme: string | null;
   createdAt: string;
   _count: {
     portfolioProjects: number;

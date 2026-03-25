@@ -30,6 +30,7 @@ model IdentityProfile {
   headline          String?
   avatar            String?
   cover             String?
+  theme             String?
 
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt

@@ -13,6 +13,7 @@ type Identity = {
   bio: string | null;
   avatar: string | null;
   cover: string | null;
+  theme: string | null;
   _count: { capsules: number; portfolioProjects: number; testimonials: number };
   capsules: { id: string; title: string; objective: string }[];
 };
@@ -32,6 +33,16 @@ const typeConfig: Record<string, { gradient: string; badge: string; ring: string
   STARTUP: { gradient: "from-emerald-600 to-teal-500", badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", ring: "ring-emerald-500/30" },
 };
 
+const exploreThemeOverrides: Record<string, { gradient: string }> = {
+  ocean:    { gradient: "from-sky-500 to-cyan-500" },
+  sunset:   { gradient: "from-orange-500 to-red-500" },
+  forest:   { gradient: "from-green-500 to-teal-500" },
+  berry:    { gradient: "from-pink-500 to-purple-500" },
+  gold:     { gradient: "from-yellow-500 to-amber-500" },
+  midnight: { gradient: "from-blue-500 to-indigo-500" },
+  coral:    { gradient: "from-rose-400 to-pink-400" },
+};
+
 export default function ExplorePage() {
   const [identities, setIdentities] = useState<Identity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,14 +58,20 @@ export default function ExplorePage() {
 
   const fetchIdentities = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams();
-    if (debouncedSearch) params.set("search", debouncedSearch);
-    if (activeType) params.set("type", activeType);
+    try {
+      const params = new URLSearchParams();
+      if (debouncedSearch) params.set("search", debouncedSearch);
+      if (activeType) params.set("type", activeType);
 
-    const res = await fetch(`/api/explore?${params}`);
-    const data = await res.json();
-    setIdentities(data);
-    setLoading(false);
+      const res = await fetch(`/api/explore?${params}`);
+      if (!res.ok) { setIdentities([]); return; }
+      const data = await res.json();
+      setIdentities(Array.isArray(data) ? data : []);
+    } catch {
+      setIdentities([]);
+    } finally {
+      setLoading(false);
+    }
   }, [debouncedSearch, activeType]);
 
   useEffect(() => {
@@ -166,7 +183,9 @@ export default function ExplorePage() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {identities.map((id) => {
-              const tc = typeConfig[id.type] || typeConfig.FREELANCER;
+              const baseTc = typeConfig[id.type] || typeConfig.FREELANCER;
+              const themeOv = id.theme ? exploreThemeOverrides[id.theme] : null;
+              const tc = themeOv ? { ...baseTc, gradient: themeOv.gradient } : baseTc;
               return (
                 <Link
                   key={id.id}
