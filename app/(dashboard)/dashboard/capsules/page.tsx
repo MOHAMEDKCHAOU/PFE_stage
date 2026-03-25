@@ -264,6 +264,15 @@ function CapsuleCard({
   // Delete
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function handleCopyLink() {
+    const url = `${window.location.origin}/capsule/${identity.slug}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   async function handleSaveTitle() {
     if (!title.trim() || !objective.trim()) return;
@@ -445,6 +454,25 @@ function CapsuleCard({
 
             {!editingTitle && (
               <div className="flex items-center gap-1 shrink-0">
+                <button
+                  onClick={handleCopyLink}
+                  className={`rounded-lg p-2 transition-all ${
+                    copied
+                      ? "bg-emerald-50 text-emerald-600"
+                      : "text-slate-400 hover:bg-violet-50 hover:text-violet-600"
+                  }`}
+                  title={copied ? "Lien copié !" : "Copier le lien"}
+                >
+                  {copied ? (
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  ) : (
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                    </svg>
+                  )}
+                </button>
                 <Link
                   href={`/capsule/${identity.slug}`}
                   target="_blank"
@@ -568,6 +596,26 @@ function CapsuleCard({
                   d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                 />
               </svg>
+            </button>
+          </div>
+
+          {/* Capsule URL */}
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2">
+            <svg className="h-3.5 w-3.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            <code className="text-xs text-slate-500 font-mono truncate flex-1">
+              faymoos.com/capsule/{identity.slug}
+            </code>
+            <button
+              onClick={handleCopyLink}
+              className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
+                copied
+                  ? "bg-emerald-100 text-emerald-700"
+                  : "bg-white text-slate-500 hover:text-violet-600 border border-slate-200"
+              }`}
+            >
+              {copied ? "Copié ✓" : "Copier"}
             </button>
           </div>
         </div>

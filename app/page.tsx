@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { prisma } from "@/lib/prisma";
 
 const features = [
   {
@@ -76,7 +77,20 @@ const profileTypes = [
   { icon: "🚀", label: "Startup", color: "from-emerald-500 to-teal-400" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  // Fetch public capsules with their identities
+  const capsules = await prisma.capsule.findMany({
+    where: {
+      options: { some: { branch: { isNot: null } } },
+    },
+    include: {
+      identity: { select: { name: true, slug: true, headline: true, avatar: true, type: true } },
+      options: true,
+    },
+    orderBy: { createdAt: "desc" },
+    take: 6,
+  });
+
   return (
     <div className="min-h-screen bg-[#FFFBF5] text-slate-800 overflow-hidden">
       {/* ═══════════ NAVBAR ═══════════ */}
@@ -397,6 +411,87 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════ DISCOVER CAPSULES ═══════════ */}
+      {capsules.length > 0 && (
+        <section id="discover" className="relative py-24 sm:py-32 border-t border-violet-100/60">
+          <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-violet-100/30 blur-[120px]" />
+          <div className="relative mx-auto max-w-7xl px-6">
+            <div className="text-center max-w-2xl mx-auto mb-16">
+              <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5 text-sm mb-6 shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-violet-600 font-medium">En ligne maintenant</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+                Découvrez des{" "}
+                <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+                  capsules en action
+                </span>
+              </h2>
+              <p className="mt-4 text-lg text-slate-500">
+                Explorez les capsules créées par nos utilisateurs et voyez l&apos;expérience interactive en direct.
+              </p>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {capsules.map((capsule) => (
+                <Link
+                  key={capsule.id}
+                  href={`/capsule/${capsule.identity.slug}`}
+                  className="group relative rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-violet-200 hover:shadow-xl hover:shadow-violet-500/10 hover:scale-[1.02]"
+                >
+                  {/* Identity header */}
+                  <div className="flex items-center gap-3 mb-4">
+                    {capsule.identity.avatar ? (
+                      <img
+                        src={capsule.identity.avatar}
+                        alt={capsule.identity.name}
+                        className="h-10 w-10 rounded-full object-cover ring-2 ring-violet-100"
+                      />
+                    ) : (
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-sm font-bold text-white ring-2 ring-violet-100">
+                        {capsule.identity.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-800 truncate">
+                        {capsule.identity.name}
+                      </p>
+                      <p className="text-xs text-slate-400 truncate">
+                        {capsule.identity.headline || capsule.identity.type}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Capsule info */}
+                  <h3 className="text-base font-semibold text-slate-800 mb-1 group-hover:text-violet-700 transition-colors">
+                    {capsule.title}
+                  </h3>
+                  <p className="text-sm text-slate-500 line-clamp-2 mb-4">
+                    {capsule.objective}
+                  </p>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                      </svg>
+                      {capsule.options.length} option{capsule.options.length !== 1 ? "s" : ""}
+                    </div>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-600 ring-1 ring-violet-200 group-hover:bg-violet-100 transition-colors">
+                      Interagir
+                      <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════ FINAL CTA ═══════════ */}
       <section className="relative py-24 sm:py-32">
