@@ -37,6 +37,7 @@ type Testimonial = {
 
 type CapsuleViewerProps = {
   identity: {
+    id: string;
     name: string;
     headline: string | null;
     bio: string | null;
@@ -73,6 +74,12 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const sessionIdRef = useRef<string | null>(null);
+
+  // Contact form state
+  const [contactForm, setContactForm] = useState({ name: "", email: "", content: "" });
+  const [contactSending, setContactSending] = useState(false);
+  const [contactStatus, setContactStatus] = useState<"idle" | "success" | "error">("idle");
+  const [contactError, setContactError] = useState("");
   const [isFavorited, setIsFavorited] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
 
@@ -418,6 +425,126 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
           </div>
         </section>
       )}
+
+      {/* ──── Contact Form ──── */}
+      <section className="max-w-3xl mx-auto px-6 mt-16">
+        <div className="flex items-center gap-3 mb-6">
+          <div className={`h-8 w-1 rounded-full bg-gradient-to-b ${tc.gradient}`} />
+          <h2 className="text-lg font-bold text-white">Contactez-moi</h2>
+        </div>
+        <div className="rounded-3xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl p-8">
+          {contactStatus === "success" ? (
+            <div className="text-center py-8">
+              <div className={`mx-auto h-14 w-14 rounded-2xl bg-gradient-to-br ${tc.gradient} flex items-center justify-center mb-4`}>
+                <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-white">Message envoyé !</h3>
+              <p className="text-sm text-zinc-400 mt-1">Merci, votre message a bien été transmis.</p>
+              <button
+                onClick={() => { setContactStatus("idle"); setContactForm({ name: "", email: "", content: "" }); }}
+                className="mt-4 text-sm text-zinc-500 hover:text-white transition-colors"
+              >
+                Envoyer un autre message
+              </button>
+            </div>
+          ) : (
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setContactSending(true);
+                setContactError("");
+                try {
+                  const res = await fetch("/api/messages", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ...contactForm, identityId: identity.id }),
+                  });
+                  if (!res.ok) {
+                    const d = await res.json();
+                    setContactError(d.error || "Erreur lors de l'envoi");
+                    setContactStatus("error");
+                  } else {
+                    setContactStatus("success");
+                  }
+                } catch {
+                  setContactError("Erreur de connexion");
+                  setContactStatus("error");
+                } finally {
+                  setContactSending(false);
+                }
+              }}
+              className="space-y-5"
+            >
+              {contactError && (
+                <div className="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm text-red-400">
+                  {contactError}
+                </div>
+              )}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-500">Nom</label>
+                  <input
+                    type="text"
+                    required
+                    value={contactForm.name}
+                    onChange={(e) => setContactForm((p) => ({ ...p, name: e.target.value }))}
+                    placeholder="Votre nom"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-zinc-500">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm((p) => ({ ...p, email: e.target.value }))}
+                    placeholder="votre@email.com"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-zinc-500">Message</label>
+                <textarea
+                  required
+                  rows={4}
+                  value={contactForm.content}
+                  onChange={(e) => setContactForm((p) => ({ ...p, content: e.target.value }))}
+                  placeholder="Votre message..."
+                  maxLength={2000}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                />
+                <p className="text-[11px] text-zinc-600 text-right">{contactForm.content.length}/2000</p>
+              </div>
+              <button
+                type="submit"
+                disabled={contactSending}
+                className={`w-full rounded-2xl bg-gradient-to-r ${tc.gradient} px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {contactSending ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Envoi...
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                    </svg>
+                    Envoyer le message
+                  </span>
+                )}
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
 
       {/* ──── Footer ──── */}
       <footer className="max-w-3xl mx-auto px-6 mt-20 mb-10 text-center">

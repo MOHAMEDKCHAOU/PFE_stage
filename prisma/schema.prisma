@@ -41,6 +41,7 @@ model IdentityProfile {
   portfolioProjects PortfolioProject[]
   testimonials      Testimonial[]
   capsules          Capsule[]
+  messages          Message[]
 }
 
 model PortfolioProject {
@@ -154,4 +155,17 @@ model Favorite {
   capsule    Capsule  @relation(fields: [capsuleId], references: [id])
 
   @@unique([userId, capsuleId])
+}
+
+// 📩 MESSAGES — Formulaire de contact sur les capsules
+model Message {
+  id          String          @id @default(uuid())
+  name        String
+  email       String
+  content     String
+  isRead      Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id])
 }
