@@ -85,6 +85,7 @@ model Capsule {
   identity    IdentityProfile @relation(fields: [identityId], references: [id])
 
   options     CapsuleOption[]
+  sessions    CapsuleSession[]
 }
 
 model CapsuleOption {
@@ -115,4 +116,25 @@ model CapsuleBranch {
 
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+}
+
+// 🔥 ANALYTICS — Tracking des interactions visiteurs
+model CapsuleSession {
+  id         String         @id @default(uuid())
+  capsuleId  String
+  capsule    Capsule        @relation(fields: [capsuleId], references: [id])
+  startedAt  DateTime       @default(now())
+  endedAt    DateTime?
+
+  events     CapsuleEvent[]
+}
+
+model CapsuleEvent {
+  id         String         @id @default(uuid())
+  sessionId  String
+  type       String         // "START" | "OPTION_CLICK" | "CTA_CLICK"
+  value      String?        // optionId ou autre
+  createdAt  DateTime       @default(now())
+
+  session    CapsuleSession @relation(fields: [sessionId], references: [id])
 }
