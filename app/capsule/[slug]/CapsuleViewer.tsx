@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import QRCode from "qrcode";
 
 /* ───────── Types ───────── */
 type Branch = {
@@ -82,6 +83,8 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
   const [contactError, setContactError] = useState("");
   const [isFavorited, setIsFavorited] = useState(false);
   const [favLoading, setFavLoading] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const qrCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const baseTC = typeConfig[identity.type] || typeConfig.FREELANCER;
   const themeOv = identity.theme ? themeOverrides[identity.theme] : null;
@@ -155,6 +158,25 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
     sessionIdRef.current = null;
   }
 
+  const generateQR = useCallback(() => {
+    if (!qrCanvasRef.current || !showQR) return;
+    QRCode.toCanvas(qrCanvasRef.current, window.location.href, {
+      width: 280,
+      margin: 2,
+      color: { dark: "#ffffff", light: "#00000000" },
+    });
+  }, [showQR]);
+
+  useEffect(() => { generateQR(); }, [generateQR]);
+
+  function downloadQR() {
+    if (!qrCanvasRef.current) return;
+    const link = document.createElement("a");
+    link.download = `${identity.name.replace(/\s+/g, "-")}-qrcode.png`;
+    link.href = qrCanvasRef.current.toDataURL("image/png");
+    link.click();
+  }
+
   return (
     <div className="relative">
       {/* ──── Animated background ──── */}
@@ -219,6 +241,18 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
             >
               <svg className="h-5 w-5" fill={isFavorited ? "currentColor" : "none"} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
+            </button>
+
+            {/* QR Code button */}
+            <button
+              onClick={() => setShowQR(true)}
+              className="group flex-shrink-0 rounded-xl p-3 bg-white/5 text-zinc-500 ring-1 ring-white/10 hover:text-white hover:ring-white/30 hover:bg-white/10 transition-all duration-200"
+              title="QR Code"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
               </svg>
             </button>
           </div>
@@ -554,6 +588,62 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
           <span className={`font-semibold ${tc.accent}`}>Faymoos</span>
         </p>
       </footer>
+
+      {/* ──── QR Code Modal ──── */}
+      {showQR && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowQR(false)} />
+          <div className="relative rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl p-8 text-center max-w-sm w-full">
+            <button
+              onClick={() => setShowQR(false)}
+              className="absolute top-4 right-4 rounded-lg p-1.5 text-zinc-500 hover:text-white hover:bg-white/10 transition-all"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <div className={`mx-auto h-12 w-12 rounded-2xl bg-gradient-to-br ${tc.gradient} flex items-center justify-center mb-4`}>
+              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
+              </svg>
+            </div>
+
+            <h3 className="text-lg font-bold text-white mb-1">QR Code</h3>
+            <p className="text-xs text-zinc-500 mb-6">Scannez pour accéder à cette page</p>
+
+            <div className="flex justify-center mb-6">
+              <div className={`rounded-2xl p-4 bg-gradient-to-br ${tc.gradient} bg-opacity-10`}>
+                <canvas ref={qrCanvasRef} />
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={downloadQR}
+                className={`flex-1 rounded-xl bg-gradient-to-r ${tc.gradient} px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-[0.98]`}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                  Télécharger PNG
+                </span>
+              </button>
+              <button
+                onClick={() => { navigator.clipboard.writeText(window.location.href); }}
+                className="rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-[0.98]"
+                title="Copier le lien"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-9.86a4.5 4.5 0 00-6.364 6.364l4.5 4.5a4.5 4.5 0 006.364-6.364l-1.757-1.757" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
