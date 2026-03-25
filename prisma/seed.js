@@ -95,6 +95,17 @@ async function main() {
   }
 
   console.log("\n🎉 Seed complete! Visit: /capsule/faymoos-studio");
+
+  // 5. Create admin user
+  const adminPassword = await bcrypt.hash("Admin1234", 10);
+  const admin = await prisma.user.create({
+    data: {
+      email: "admin@faymoos.com",
+      password: adminPassword,
+      role: "ADMIN",
+    },
+  });
+  console.log("✅ Admin user created:", admin.email, "(password: Admin1234)");
 }
 
 main()

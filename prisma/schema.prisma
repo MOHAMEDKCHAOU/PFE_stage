@@ -11,10 +11,12 @@ model User {
   id               String            @id @default(uuid())
   email            String            @unique
   password         String
+  role             String            @default("USER") // "USER" | "ADMIN"
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 
   identityProfiles IdentityProfile[]
+  favorites        Favorite[]
 }
 
 model IdentityProfile {
@@ -86,6 +88,7 @@ model Capsule {
 
   options     CapsuleOption[]
   sessions    CapsuleSession[]
+  favorites   Favorite[]
 }
 
 model CapsuleOption {
@@ -137,4 +140,17 @@ model CapsuleEvent {
   createdAt  DateTime       @default(now())
 
   session    CapsuleSession @relation(fields: [sessionId], references: [id])
+}
+
+// ⭐ FAVORIS — Capsules favorites des utilisateurs
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  capsuleId  String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  capsule    Capsule  @relation(fields: [capsuleId], references: [id])
+
+  @@unique([userId, capsuleId])
 }

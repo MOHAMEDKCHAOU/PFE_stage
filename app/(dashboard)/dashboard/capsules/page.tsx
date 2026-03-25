@@ -1,8 +1,97 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
+// ─── AI Improve Button ───────────────────────────────────
+function AiImproveButton({
+  text,
+  context,
+  onApply,
+}: {
+  text: string;
+  context: "title" | "objective" | "option" | "headline" | "description" | "cta";
+  onApply: (improved: string) => void;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [suggestions, setSuggestions] = useState<{ improved: string; suggestions: string[] } | null>(null);
+
+  const handleImprove = useCallback(async () => {
+    if (!text.trim() || text.trim().length < 2) return;
+    setLoading(true);
+    setSuggestions(null);
+    try {
+      const res = await fetch("/api/ai/improve-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text.trim(), context }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSuggestions(data);
+        setShowDropdown(true);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
+    }
+  }, [text, context]);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => (showDropdown ? setShowDropdown(false) : handleImprove())}
+        disabled={loading || text.trim().length < 2}
+        className="rounded-lg p-1.5 text-slate-400 hover:bg-violet-50 hover:text-violet-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        title="Améliorer avec l'IA"
+      >
+        {loading ? (
+          <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        ) : (
+          <span className="text-sm">✨</span>
+        )}
+      </button>
+
+      {showDropdown && suggestions && (
+        <div className="absolute right-0 top-full mt-1 z-50 w-72 rounded-xl border border-slate-200 bg-white shadow-xl shadow-violet-500/10 p-3 space-y-2 animate-in">
+          <p className="text-[10px] uppercase tracking-wider text-violet-500 font-semibold">Suggestions IA</p>
+          <button
+            type="button"
+            onClick={() => { onApply(suggestions.improved); setShowDropdown(false); }}
+            className="w-full text-left rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-xs text-slate-700 hover:bg-violet-100 transition-all"
+          >
+            <span className="text-[10px] text-violet-500 font-semibold block mb-0.5">Recommandé</span>
+            {suggestions.improved}
+          </button>
+          {suggestions.suggestions?.map((s, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => { onApply(s); setShowDropdown(false); }}
+              className="w-full text-left rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs text-slate-600 hover:bg-slate-100 transition-all"
+            >
+              {s}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setShowDropdown(false)}
+            className="w-full text-center text-[11px] text-slate-400 hover:text-slate-600 pt-1"
+          >
+            Fermer
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─── Types ───────────────────────────────────────────────
 type Branch = {
@@ -151,9 +240,10 @@ function BranchModal({
           )}
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-500">
-              Headline *
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-slate-500">Headline *</label>
+              <AiImproveButton text={headline} context="headline" onApply={setHeadline} />
+            </div>
             <input
               type="text"
               value={headline}
@@ -167,9 +257,10 @@ function BranchModal({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-500">
-              Description *
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-slate-500">Description *</label>
+              <AiImproveButton text={description} context="description" onApply={setDescription} />
+            </div>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -180,9 +271,10 @@ function BranchModal({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-500">
-              Call-to-Action (CTA) *
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-slate-500">Call-to-Action (CTA) *</label>
+              <AiImproveButton text={cta} context="cta" onApply={setCta} />
+            </div>
             <input
               type="text"
               value={cta}
@@ -1250,34 +1342,206 @@ function CreateCapsuleModal({
           {/* Step 2 (or step 1 if single identity): capsule details */}
           {(step === 2 || identities.length <= 1) && (
             <>
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-500">
-                  Titre de la capsule *
-                </label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
+              {/* AI Mode Toggle */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAiMode(!aiMode);
+                    setAiGenerated(null);
                     setError("");
                   }}
-                  placeholder='Ex: "Demande de projet", "Besoin d&#39;accompagnement"'
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
-                />
+                  className={`flex-1 flex items-center gap-2.5 rounded-xl border p-3.5 text-left transition-all ${
+                    aiMode
+                      ? "border-violet-300 bg-gradient-to-r from-violet-50 to-fuchsia-50 ring-2 ring-violet-200"
+                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                  }`}
+                >
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${aiMode ? "bg-violet-100" : "bg-slate-100"}`}>
+                    <span className="text-base">✨</span>
+                  </div>
+                  <div>
+                    <p className={`text-sm font-semibold ${aiMode ? "text-violet-700" : "text-slate-600"}`}>
+                      Générer avec IA
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Décrivez votre activité, l&apos;IA crée tout
+                    </p>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAiMode(false);
+                    setAiGenerated(null);
+                    setError("");
+                  }}
+                  className={`flex-1 flex items-center gap-2.5 rounded-xl border p-3.5 text-left transition-all ${
+                    !aiMode
+                      ? "border-violet-300 bg-gradient-to-r from-violet-50 to-fuchsia-50 ring-2 ring-violet-200"
+                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                  }`}
+                >
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${!aiMode ? "bg-violet-100" : "bg-slate-100"}`}>
+                    <span className="text-base">✏️</span>
+                  </div>
+                  <div>
+                    <p className={`text-sm font-semibold ${!aiMode ? "text-violet-700" : "text-slate-600"}`}>
+                      Créer manuellement
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Remplissez les champs vous-même
+                    </p>
+                  </div>
+                </button>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-500">
-                  Question / Objectif *
-                </label>
-                <textarea
-                  value={objective}
-                  onChange={(e) => setObjective(e.target.value)}
-                  rows={3}
-                  placeholder='Ex: "Quel type de projet avez-vous en tête ?", "Que recherchez-vous ?"'
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
-                />
-              </div>
+              {/* AI Mode: Prompt */}
+              {aiMode && !aiGenerated && (
+                <div className="space-y-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-500">
+                      Décrivez votre activité et ce que vous voulez qualifier *
+                    </label>
+                    <textarea
+                      value={aiPrompt}
+                      onChange={(e) => {
+                        setAiPrompt(e.target.value);
+                        setError("");
+                      }}
+                      rows={3}
+                      placeholder='Ex: "Je suis architecte, je veux qualifier mes clients selon leur type de projet" ou "Coach sportif, je veux orienter les visiteurs vers le bon programme"'
+                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAiGenerate}
+                    disabled={aiLoading || aiPrompt.trim().length < 5}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:from-violet-500 hover:to-fuchsia-400 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {aiLoading ? (
+                      <>
+                        <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        L&apos;IA génère votre capsule...
+                      </>
+                    ) : (
+                      <>
+                        ✨ Générer la capsule
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {/* AI Generated Preview */}
+              {aiGenerated && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-emerald-600 flex items-center gap-1">
+                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                      Capsule générée par IA
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAiGenerated(null);
+                        setTitle("");
+                        setObjective("");
+                      }}
+                      className="text-xs text-slate-400 hover:text-violet-600 transition-colors"
+                    >
+                      Régénérer
+                    </button>
+                  </div>
+
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-4 space-y-3">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-emerald-500 font-semibold">Titre</p>
+                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{aiGenerated.title}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-emerald-500 font-semibold">Question</p>
+                      <p className="text-sm text-slate-700 mt-0.5">{aiGenerated.objective}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-emerald-500 font-semibold mb-2">
+                        {aiGenerated.options.length} Options avec branches
+                      </p>
+                      <div className="space-y-2">
+                        {aiGenerated.options.map((opt, i) => (
+                          <div key={i} className="rounded-lg border border-emerald-100 bg-white p-3">
+                            <p className="text-xs font-semibold text-slate-700">{opt.label}</p>
+                            <p className="text-[11px] text-slate-400 mt-1 line-clamp-1">{opt.branch.headline}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-500">
+                      Titre (modifiable)
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-500">
+                      Question (modifiable)
+                    </label>
+                    <textarea
+                      value={objective}
+                      onChange={(e) => setObjective(e.target.value)}
+                      rows={2}
+                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Manual mode fields */}
+              {!aiMode && (
+                <>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-500">
+                      Titre de la capsule *
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                        setError("");
+                      }}
+                      placeholder='Ex: "Demande de projet", "Besoin d&#39;accompagnement"'
+                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-slate-500">
+                      Question / Objectif *
+                    </label>
+                    <textarea
+                      value={objective}
+                      onChange={(e) => setObjective(e.target.value)}
+                      rows={3}
+                      placeholder='Ex: "Quel type de projet avez-vous en tête ?", "Que recherchez-vous ?"'
+                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="rounded-xl border border-violet-100 bg-violet-50/50 p-4">
                 <p className="text-xs text-violet-600 leading-relaxed">

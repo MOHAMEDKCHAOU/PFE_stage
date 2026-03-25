@@ -292,6 +292,30 @@ export default function CapsuleAnalyticsDetailPage() {
   const [data, setData] = useState<CapsuleAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // AI Insights
+  const [aiInsights, setAiInsights] = useState<string[] | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  async function fetchAiInsights() {
+    if (!data) return;
+    setAiLoading(true);
+    try {
+      const res = await fetch("/api/ai/insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ analytics: data }),
+      });
+      if (res.ok) {
+        const result = await res.json();
+        setAiInsights(result.insights);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   useEffect(() => {
     async function fetchCapsuleAnalytics() {
       try {
@@ -624,6 +648,60 @@ export default function CapsuleAnalyticsDetailPage() {
               </div>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* AI Insights */}
+      <div className="rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-violet-50/50 p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🧠</span>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+              Insights IA
+            </h3>
+          </div>
+          <button
+            onClick={fetchAiInsights}
+            disabled={aiLoading}
+            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium transition-all ${
+              aiLoading
+                ? "bg-indigo-100 text-indigo-400 cursor-not-allowed"
+                : "bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm"
+            }`}
+          >
+            {aiLoading ? (
+              <>
+                <svg className="h-3.5 w-3.5 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Analyse en cours...
+              </>
+            ) : aiInsights ? (
+              <>✨ Réanalyser</>
+            ) : (
+              <>✨ Analyser avec l&apos;IA</>
+            )}
+          </button>
+        </div>
+
+        {!aiInsights && !aiLoading && (
+          <p className="text-sm text-indigo-400">
+            Cliquez sur &quot;Analyser avec l&apos;IA&quot; pour obtenir des recommandations personnalisées basées sur vos données.
+          </p>
+        )}
+
+        {aiInsights && (
+          <ul className="space-y-3">
+            {aiInsights.map((insight, i) => (
+              <li key={i} className="flex items-start gap-3 rounded-xl border border-indigo-100 bg-white p-4">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mt-0.5">
+                  {i + 1}
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed">{insight}</p>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 

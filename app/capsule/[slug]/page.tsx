@@ -21,6 +21,8 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
           },
         },
       },
+      portfolioProjects: { where: { isPublic: true }, take: 6 },
+      testimonials: { take: 4 },
     },
   });
 
@@ -28,18 +30,18 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
     notFound();
   }
 
-  // Use the first capsule for this page
-  const capsule = identity.capsules[0];
-
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 px-4 py-12">
+    <main className="min-h-screen bg-zinc-950 text-white">
       <CapsuleViewer
         identity={{
           name: identity.name,
           headline: identity.headline,
+          bio: identity.bio,
           avatar: identity.avatar,
+          cover: identity.cover,
+          type: identity.type,
         }}
-        capsule={{
+        capsules={identity.capsules.map((capsule) => ({
           id: capsule.id,
           title: capsule.title,
           objective: capsule.objective,
@@ -55,7 +57,21 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
                 }
               : null,
           })),
-        }}
+        }))}
+        projects={identity.portfolioProjects.map((p) => ({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          image: p.image,
+          year: p.year,
+        }))}
+        testimonials={identity.testimonials.map((t) => ({
+          id: t.id,
+          author: t.author,
+          content: t.content,
+          role: t.role,
+          company: t.company,
+        }))}
       />
     </main>
   );
