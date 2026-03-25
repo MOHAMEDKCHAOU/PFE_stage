@@ -29,7 +29,7 @@ type UserData = {
 };
 
 const typeLabels: Record<string, { label: string; icon: string; color: string }> = {
-  FREELANCER: { label: "Freelancer", icon: "💼", color: "bg-blue-500/15 text-blue-400 ring-blue-500/20" },
+  FREELANCER: { label: "Freelanceer", icon: "💼", color: "bg-blue-500/15 text-blue-400 ring-blue-500/20" },
   AGENCY: { label: "Agence", icon: "🏢", color: "bg-purple-500/15 text-purple-400 ring-purple-500/20" },
   CREATOR: { label: "Créateur", icon: "🎨", color: "bg-pink-500/15 text-pink-400 ring-pink-500/20" },
   STARTUP: { label: "Startup", icon: "🚀", color: "bg-emerald-500/15 text-emerald-400 ring-emerald-500/20" },
