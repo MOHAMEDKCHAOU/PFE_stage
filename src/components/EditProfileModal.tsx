@@ -15,7 +15,7 @@ type Profile = {
 
 const profileTypes = [
   { value: "FREELANCER", label: "Freelancer", icon: "💼" },
-  { value: "AGENCY", label: "Agence", icon: "🏢" },
+  { value: "AGENCY", label: "Agences", icon: "🏢" },
   { value: "CREATOR", label: "Créateur", icon: "🎨" },
   { value: "STARTUP", label: "Startup", icon: "🚀" },
 ];
