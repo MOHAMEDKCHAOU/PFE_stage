@@ -1007,6 +1007,45 @@ function CreateCapsuleModal({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  // AI generation
+  const [aiMode, setAiMode] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiGenerated, setAiGenerated] = useState<{
+    title: string;
+    objective: string;
+    options: { label: string; branch: { headline: string; description: string; cta: string } }[];
+  } | null>(null);
+
+  async function handleAiGenerate() {
+    if (!aiPrompt.trim() || aiPrompt.trim().length < 5) {
+      setError("Décrivez votre activité en au moins 5 caractères");
+      return;
+    }
+    setAiLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/ai/generate-capsule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ description: aiPrompt.trim() }),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        setError(d.error || "Erreur IA");
+        return;
+      }
+      const data = await res.json();
+      setAiGenerated(data);
+      setTitle(data.title);
+      setObjective(data.objective);
+    } catch {
+      setError("Erreur de connexion à l'IA");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   async function handleCreate() {
     if (!identityId) {
       setError("Choisissez une identité");
@@ -1020,6 +1059,7 @@ function CreateCapsuleModal({
     setSaving(true);
     setError("");
     try {
+      // Create capsule
       const res = await fetch("/api/capsules", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1034,6 +1074,32 @@ function CreateCapsuleModal({
         setError(d.error || "Erreur");
         return;
       }
+      const capsuleData = await res.json();
+
+      // If AI generated options, create them automatically
+      if (aiGenerated?.options && capsuleData.id) {
+        for (const opt of aiGenerated.options) {
+          const optRes = await fetch("/api/options", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ capsuleId: capsuleData.id, label: opt.label }),
+          });
+          if (optRes.ok && opt.branch) {
+            const optData = await optRes.json();
+            await fetch("/api/branches", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                optionId: optData.id,
+                headline: opt.branch.headline,
+                description: opt.branch.description,
+                cta: opt.branch.cta,
+              }),
+            });
+          }
+        }
+      }
+
       onCreated();
     } catch {
       setError("Erreur de connexion");
