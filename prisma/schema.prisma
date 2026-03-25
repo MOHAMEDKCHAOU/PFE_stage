@@ -133,7 +133,7 @@ model CapsuleEvent {
   id         String         @id @default(uuid())
   sessionId  String
   type       String         // "START" | "OPTION_CLICK" | "CTA_CLICK"
-  value      String?        // optionId ou autre
+  value      String?        
   createdAt  DateTime       @default(now())
 
   session    CapsuleSession @relation(fields: [sessionId], references: [id])
