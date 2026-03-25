@@ -59,6 +59,40 @@ export async function POST(req: Request) {
   }
 }
 
+// REST Route: PUT /api/capsules (Protected = for creators)
+export async function PUT(req: Request) {
+  try {
+    const userId = await getUserId();
+    if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+
+    const { id, title, objective } = await req.json();
+
+    if (!id) return NextResponse.json({ error: "L'ID de la capsule est requis" }, { status: 400 });
+
+    const capsule = await prisma.capsule.findUnique({
+      where: { id },
+      include: { identity: true },
+    });
+
+    if (!capsule || capsule.identity.userId !== userId) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    }
+
+    const updated = await prisma.capsule.update({
+      where: { id },
+      data: {
+        title: title ?? capsule.title,
+        objective: objective ?? capsule.objective,
+      },
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PUT CAPSULES ERROR", error);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
+}
+
 // REST Route: DELETE /api/capsules
 export async function DELETE(req: Request) {
   try {

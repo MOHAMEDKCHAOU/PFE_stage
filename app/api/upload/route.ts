@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const folder = type === "cover" ? "covers" : "avatars";
+    const folder = type === "cover" ? "covers" : type === "portfolio" ? "portfolio" : "avatars";
     const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
     const safeName = `${userId}-${randomUUID().slice(0, 8)}.${ext}`;
 

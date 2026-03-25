@@ -60,27 +60,27 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen bg-zinc-950 text-white overflow-hidden">
+    <div className="flex h-screen bg-[#FFFBF5] text-slate-800 overflow-hidden">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] flex flex-col bg-zinc-950 border-r border-white/[0.06] transition-transform duration-300 lg:relative lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] flex flex-col bg-white border-r border-violet-100 transition-transform duration-300 lg:relative lg:translate-x-0 shadow-lg shadow-violet-500/5 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-white/[0.06]">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-violet-100">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center shadow-md shadow-violet-500/20">
             <span className="text-white font-bold text-base">F</span>
           </div>
-          <span className="text-lg font-bold text-white tracking-tight">
+          <span className="text-lg font-bold text-slate-800 tracking-tight">
             Faymoos
           </span>
         </div>
@@ -96,11 +96,11 @@ export default function DashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-indigo-600/15 text-indigo-400 shadow-sm shadow-indigo-500/10"
-                    : "text-zinc-400 hover:bg-white/[0.04] hover:text-zinc-200"
+                    ? "bg-violet-50 text-violet-700 shadow-sm shadow-violet-500/10 ring-1 ring-violet-200"
+                    : "text-slate-500 hover:bg-violet-50/50 hover:text-slate-700"
                 }`}
               >
-                <span className={isActive ? "text-indigo-400" : "text-zinc-500"}>
+                <span className={isActive ? "text-violet-600" : "text-slate-400"}>
                   {item.icon}
                 </span>
                 {item.label}
@@ -110,11 +110,11 @@ export default function DashboardLayout({
         </nav>
 
         {/* Logout */}
-        <div className="px-3 py-4 border-t border-white/[0.06]">
+        <div className="px-3 py-4 border-t border-violet-100">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-zinc-400 transition-all duration-200 hover:bg-red-500/10 hover:text-red-400"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-500 transition-all duration-200 hover:bg-red-50 hover:text-red-500"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -127,10 +127,10 @@ export default function DashboardLayout({
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="flex items-center gap-4 px-6 py-4 border-b border-white/[0.06] bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-30">
+        <header className="flex items-center gap-4 px-6 py-4 border-b border-violet-100 bg-white/80 backdrop-blur-xl sticky top-0 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden rounded-lg p-2 text-zinc-400 hover:bg-white/[0.05] hover:text-white transition-colors"
+            className="lg:hidden rounded-lg p-2 text-slate-500 hover:bg-violet-50 hover:text-violet-700 transition-colors"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

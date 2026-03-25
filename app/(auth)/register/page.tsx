@@ -129,20 +129,20 @@ export default function RegisterPage() {
     <div className="animate-in fade-in duration-500">
       {/* Mobile logo */}
       <div className="flex items-center gap-3 mb-10 lg:hidden">
-        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-violet-500/25">
           <span className="text-white font-bold text-base">F</span>
         </div>
-        <span className="text-xl font-bold text-white tracking-tight">
+        <span className="text-xl font-bold text-slate-800 tracking-tight">
           Faymoos
         </span>
       </div>
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
           Créer votre compte
         </h2>
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-2 text-sm text-slate-500">
           {step === 1
             ? "Remplissez vos informations pour commencer"
             : "Choisissez votre type de profil"}
@@ -155,8 +155,8 @@ export default function RegisterPage() {
           <div
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
               step >= 1
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/30"
-                : "bg-white/[0.05] text-zinc-600"
+                ? "bg-violet-600 text-slate-800 shadow-md shadow-violet-500/30"
+                : "bg-violet-50 text-slate-400"
             }`}
           >
             {step > 1 ? (
@@ -167,22 +167,22 @@ export default function RegisterPage() {
               "1"
             )}
           </div>
-          <span className={`text-xs font-medium ${step >= 1 ? "text-zinc-300" : "text-zinc-600"}`}>
+          <span className={`text-xs font-medium ${step >= 1 ? "text-slate-700" : "text-slate-400"}`}>
             Informations
           </span>
         </div>
-        <div className={`h-px w-8 transition-colors duration-300 ${step >= 2 ? "bg-indigo-600" : "bg-white/[0.08]"}`} />
+        <div className={`h-px w-8 transition-colors duration-300 ${step >= 2 ? "bg-violet-600" : "bg-white/[0.08]"}`} />
         <div className="flex items-center gap-2">
           <div
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
               step >= 2
-                ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/30"
-                : "bg-white/[0.05] text-zinc-600"
+                ? "bg-violet-600 text-slate-800 shadow-md shadow-violet-500/30"
+                : "bg-violet-50 text-slate-400"
             }`}
           >
             2
           </div>
-          <span className={`text-xs font-medium ${step >= 2 ? "text-zinc-300" : "text-zinc-600"}`}>
+          <span className={`text-xs font-medium ${step >= 2 ? "text-slate-700" : "text-slate-400"}`}>
             Profil
           </span>
         </div>
@@ -190,9 +190,9 @@ export default function RegisterPage() {
 
       {/* Server error */}
       {serverError && (
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3.5">
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-50 px-4 py-3.5">
           <svg
-            className="mt-0.5 h-5 w-5 shrink-0 text-red-400"
+            className="mt-0.5 h-5 w-5 shrink-0 text-red-500"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
@@ -204,7 +204,7 @@ export default function RegisterPage() {
               d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
             />
           </svg>
-          <p className="text-sm text-red-300">{serverError}</p>
+          <p className="text-sm text-red-600">{serverError}</p>
         </div>
       )}
 
@@ -214,12 +214,12 @@ export default function RegisterPage() {
         <div className={step === 1 ? "space-y-5" : "hidden"}>
           {/* Name */}
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-zinc-300">
+            <label htmlFor="name" className="block text-sm font-medium text-slate-700">
               Nom complet
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-zinc-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </div>
@@ -229,26 +229,26 @@ export default function RegisterPage() {
                 autoComplete="name"
                 placeholder="John Doe"
                 {...register("name")}
-                className={`block w-full rounded-xl border bg-white/[0.03] py-3 pl-11 pr-4 text-sm text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border bg-white py-3 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.name
-                    ? "border-red-500/50 focus:ring-red-500/30"
-                    : "border-white/[0.08] focus:border-indigo-500/50 focus:ring-indigo-500/20"
+                    ? "border-red-300 focus:ring-red-200"
+                    : "border-slate-200 focus:border-violet-400 focus:ring-violet-200"
                 }`}
               />
             </div>
             {errors.name && (
-              <p className="text-xs text-red-400 pl-1">{errors.name.message}</p>
+              <p className="text-xs text-red-500 pl-1">{errors.name.message}</p>
             )}
           </div>
 
           {/* Email */}
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-zinc-300">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700">
               Adresse email
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-zinc-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
               </div>
@@ -258,26 +258,26 @@ export default function RegisterPage() {
                 autoComplete="email"
                 placeholder="vous@exemple.com"
                 {...register("email")}
-                className={`block w-full rounded-xl border bg-white/[0.03] py-3 pl-11 pr-4 text-sm text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border bg-white py-3 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.email
-                    ? "border-red-500/50 focus:ring-red-500/30"
-                    : "border-white/[0.08] focus:border-indigo-500/50 focus:ring-indigo-500/20"
+                    ? "border-red-300 focus:ring-red-200"
+                    : "border-slate-200 focus:border-violet-400 focus:ring-violet-200"
                 }`}
               />
             </div>
             {errors.email && (
-              <p className="text-xs text-red-400 pl-1">{errors.email.message}</p>
+              <p className="text-xs text-red-500 pl-1">{errors.email.message}</p>
             )}
           </div>
 
           {/* Password */}
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-zinc-300">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
               Mot de passe
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-zinc-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               </div>
@@ -287,16 +287,16 @@ export default function RegisterPage() {
                 autoComplete="new-password"
                 placeholder="Min. 8 caractères"
                 {...register("password")}
-                className={`block w-full rounded-xl border bg-white/[0.03] py-3 pl-11 pr-11 text-sm text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border bg-white py-3 pl-11 pr-11 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.password
-                    ? "border-red-500/50 focus:ring-red-500/30"
-                    : "border-white/[0.08] focus:border-indigo-500/50 focus:ring-indigo-500/20"
+                    ? "border-red-300 focus:ring-red-200"
+                    : "border-slate-200 focus:border-violet-400 focus:ring-violet-200"
                 }`}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-600 hover:text-zinc-400 transition-colors"
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-500 transition-colors"
               >
                 {showPassword ? (
                   <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -321,30 +321,30 @@ export default function RegisterPage() {
                       className={`h-1 flex-1 rounded-full transition-all duration-300 ${
                         passwordStrength >= level
                           ? strengthColors[passwordStrength]
-                          : "bg-white/[0.06]"
+                          : "bg-violet-100/20"
                       }`}
                     />
                   ))}
                 </div>
-                <p className={`text-xs ${passwordStrength <= 2 ? "text-red-400" : passwordStrength <= 3 ? "text-yellow-400" : "text-emerald-400"}`}>
+                <p className={`text-xs ${passwordStrength <= 2 ? "text-red-500" : passwordStrength <= 3 ? "text-yellow-400" : "text-emerald-400"}`}>
                   {strengthLabels[passwordStrength]}
                 </p>
               </div>
             )}
 
             {errors.password && (
-              <p className="text-xs text-red-400 pl-1">{errors.password.message}</p>
+              <p className="text-xs text-red-500 pl-1">{errors.password.message}</p>
             )}
           </div>
 
           {/* Confirm Password */}
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-zinc-300">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-700">
               Confirmer le mot de passe
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-zinc-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
               </div>
@@ -354,15 +354,15 @@ export default function RegisterPage() {
                 autoComplete="new-password"
                 placeholder="Retapez le mot de passe"
                 {...register("confirmPassword")}
-                className={`block w-full rounded-xl border bg-white/[0.03] py-3 pl-11 pr-4 text-sm text-white placeholder:text-zinc-600 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border bg-white py-3 pl-11 pr-4 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.confirmPassword
-                    ? "border-red-500/50 focus:ring-red-500/30"
-                    : "border-white/[0.08] focus:border-indigo-500/50 focus:ring-indigo-500/20"
+                    ? "border-red-300 focus:ring-red-200"
+                    : "border-slate-200 focus:border-violet-400 focus:ring-violet-200"
                 }`}
               />
             </div>
             {errors.confirmPassword && (
-              <p className="text-xs text-red-400 pl-1">{errors.confirmPassword.message}</p>
+              <p className="text-xs text-red-500 pl-1">{errors.confirmPassword.message}</p>
             )}
           </div>
 
@@ -370,7 +370,7 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={handleNextStep}
-            className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl hover:shadow-indigo-500/30 active:scale-[0.98]"
+            className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-lg shadow-violet-500/25 transition-all duration-200 hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl hover:shadow-violet-500/30 active:scale-[0.98]"
           >
             Continuer
           </button>
@@ -379,10 +379,10 @@ export default function RegisterPage() {
         {/* ─── STEP 2: Profile Type ─── */}
         <div className={step === 2 ? "space-y-5" : "hidden"}>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-zinc-300">
+            <label className="block text-sm font-medium text-slate-700">
               Type de profil
             </label>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-slate-500">
               Vous pourrez créer d&apos;autres profils plus tard
             </p>
           </div>
@@ -395,37 +395,37 @@ export default function RegisterPage() {
                 onClick={() => setValue("type", type.value as RegisterFormData["type"], { shouldValidate: true })}
                 className={`group relative flex flex-col items-start rounded-xl border p-4 text-left transition-all duration-200 active:scale-[0.97] ${
                   watchedType === type.value
-                    ? "border-indigo-500/60 bg-indigo-500/10 shadow-md shadow-indigo-500/10 ring-1 ring-indigo-500/30"
-                    : "border-white/[0.08] bg-white/[0.02] hover:border-white/[0.15] hover:bg-white/[0.04]"
+                    ? "border-violet-400 bg-violet-50 shadow-md shadow-violet-200 ring-1 ring-violet-300"
+                    : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
                 }`}
               >
                 {/* Selection indicator */}
                 <div
                   className={`absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200 ${
                     watchedType === type.value
-                      ? "bg-indigo-600 shadow-md shadow-indigo-500/40"
-                      : "border border-white/[0.15] bg-white/[0.03]"
+                      ? "bg-violet-600 shadow-md shadow-violet-500/40"
+                      : "border border-violet-200 bg-white"
                   }`}
                 >
                   {watchedType === type.value && (
-                    <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                    <svg className="h-3 w-3 text-slate-800" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                     </svg>
                   )}
                 </div>
 
                 <span className="text-2xl mb-2">{type.icon}</span>
-                <span className={`text-sm font-semibold transition-colors ${watchedType === type.value ? "text-white" : "text-zinc-300"}`}>
+                <span className={`text-sm font-semibold transition-colors ${watchedType === type.value ? "text-slate-800" : "text-slate-700"}`}>
                   {type.label}
                 </span>
-                <span className="text-xs text-zinc-500 mt-0.5">
+                <span className="text-xs text-slate-500 mt-0.5">
                   {type.desc}
                 </span>
               </button>
             ))}
           </div>
           {errors.type && (
-            <p className="text-xs text-red-400 pl-1">{errors.type.message}</p>
+            <p className="text-xs text-red-500 pl-1">{errors.type.message}</p>
           )}
 
           {/* Action buttons */}
@@ -433,7 +433,7 @@ export default function RegisterPage() {
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.02] px-5 py-3.5 text-sm font-medium text-zinc-300 transition-all duration-200 hover:bg-white/[0.05] hover:border-white/[0.15]"
+              className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-violet-50 hover:border-violet-200"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -444,7 +444,7 @@ export default function RegisterPage() {
               type="button"
               onClick={handleFinalSubmit}
               disabled={isLoading || !watchedType}
-              className="relative flex-1 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl hover:shadow-indigo-500/30 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+              className="relative flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-lg shadow-violet-500/25 transition-all duration-200 hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl hover:shadow-violet-500/30 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-lg"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -463,11 +463,11 @@ export default function RegisterPage() {
       </form>
 
       {/* Footer link */}
-      <p className="mt-8 text-center text-sm text-zinc-500">
+      <p className="mt-8 text-center text-sm text-slate-500">
         Déjà un compte ?{" "}
         <Link
           href="/login"
-          className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+          className="font-semibold text-violet-600 hover:text-violet-700 transition-colors"
         >
           Se connecter
         </Link>

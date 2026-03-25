@@ -29,11 +29,11 @@ type UserData = {
 };
 
 const typeLabels: Record<string, { label: string; icon: string; color: string }> = {
-  FREELANCER: { label: "Freelanceer", icon: "💼", color: "bg-blue-500/15 text-blue-400 ring-blue-500/20" },
-  AGENCY: { label: "Agence", icon: "🏢", color: "bg-purple-500/15 text-purple-400 ring-purple-500/20" },
-  CREATOR: { label: "Créateur", icon: "🎨", color: "bg-pink-500/15 text-pink-400 ring-pink-500/20" },
-  STARTUP: { label: "Startup", icon: "🚀", color: "bg-emerald-500/15 text-emerald-400 ring-emerald-500/20" },
-  USER: { label: "Utilisateur", icon: "👤", color: "bg-zinc-500/15 text-zinc-400 ring-zinc-500/20" },
+  FREELANCER: { label: "Freelanceer", icon: "💼", color: "bg-blue-100 text-blue-600 ring-blue-200" },
+  AGENCY: { label: "Agence", icon: "🏢", color: "bg-purple-100 text-purple-600 ring-purple-200" },
+  CREATOR: { label: "Créateur", icon: "🎨", color: "bg-pink-100 text-pink-600 ring-pink-200" },
+  STARTUP: { label: "Startup", icon: "🚀", color: "bg-emerald-100 text-emerald-600 ring-emerald-200" },
+  USER: { label: "Utilisateur", icon: "👤", color: "bg-slate-100 text-slate-500 ring-slate-200" },
 };
 
 export default function DashboardPage() {
@@ -76,7 +76,7 @@ export default function DashboardPage() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <p className="text-sm text-zinc-500">Chargement...</p>
+          <p className="text-sm text-slate-400">Chargement...</p>
         </div>
       </div>
     );
@@ -102,8 +102,8 @@ export default function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
         </svg>
       ),
-      color: "from-indigo-600/20 to-indigo-600/5 border-indigo-500/15",
-      iconBg: "bg-indigo-500/15 text-indigo-400",
+      color: "from-violet-100 to-violet-50 border-violet-200",
+      iconBg: "bg-violet-100 text-violet-600",
     },
     {
       label: "Capsules",
@@ -113,8 +113,8 @@ export default function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
         </svg>
       ),
-      color: "from-violet-600/20 to-violet-600/5 border-violet-500/15",
-      iconBg: "bg-violet-500/15 text-violet-400",
+      color: "from-violet-100 to-violet-50 border-violet-200",
+      iconBg: "bg-violet-100 text-violet-600",
     },
     {
       label: "Projets",
@@ -124,8 +124,8 @@ export default function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
         </svg>
       ),
-      color: "from-emerald-600/20 to-emerald-600/5 border-emerald-500/15",
-      iconBg: "bg-emerald-500/15 text-emerald-400",
+      color: "from-emerald-100 to-emerald-50 border-emerald-200",
+      iconBg: "bg-emerald-100 text-emerald-600",
     },
     {
       label: "Témoignages",
@@ -135,8 +135,8 @@ export default function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
         </svg>
       ),
-      color: "from-amber-600/20 to-amber-600/5 border-amber-500/15",
-      iconBg: "bg-amber-500/15 text-amber-400",
+      color: "from-amber-100 to-amber-50 border-amber-200",
+      iconBg: "bg-amber-100 text-amber-600",
     },
   ];
 
@@ -145,10 +145,10 @@ export default function DashboardPage() {
       {/* Welcome header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
             Bonjour, {mainProfile?.name || "Utilisateur"} 👋
           </h1>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-1 text-sm text-slate-400">
             Membre depuis {memberSince} &middot; {user.email}
           </p>
         </div>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
           href={mainProfile ? `/capsule/${mainProfile.slug}` : "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl bg-indigo-600/15 px-4 py-2.5 text-sm font-medium text-indigo-400 ring-1 ring-indigo-500/20 transition-all hover:bg-indigo-600/25 hover:ring-indigo-500/40"
+          className="inline-flex items-center gap-2 rounded-xl bg-violet-50 px-4 py-2.5 text-sm font-medium text-violet-600 ring-1 ring-violet-200 transition-all hover:bg-violet-100 hover:ring-violet-300"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -174,10 +174,10 @@ export default function DashboardPage() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
                   {stat.label}
                 </p>
-                <p className="mt-2 text-3xl font-bold text-white">{stat.value}</p>
+                <p className="mt-2 text-3xl font-bold text-slate-800">{stat.value}</p>
               </div>
               <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.iconBg}`}>
                 {stat.icon}
@@ -190,8 +190,8 @@ export default function DashboardPage() {
       {/* Identity Profiles */}
       <div>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-white">Mes Identités</h2>
-          <button className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-zinc-400 ring-1 ring-white/[0.08] transition-all hover:bg-white/[0.08] hover:text-white">
+          <h2 className="text-lg font-semibold text-slate-800">Mes Identités</h2>
+          <button className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50/50 px-3 py-1.5 text-xs font-medium text-slate-500 ring-1 ring-white/[0.08] transition-all hover:bg-violet-50 hover:text-slate-800">
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
@@ -205,22 +205,22 @@ export default function DashboardPage() {
             return (
               <div
                 key={profile.id}
-                className="group relative rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-all duration-200 hover:border-white/[0.12] hover:bg-white/[0.04]"
+                className="group relative rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-violet-200 hover:bg-violet-50/50"
               >
                 {/* Cover image or gradient */}
                 {profile.cover ? (
                   <div className="absolute inset-x-0 top-0 h-24 rounded-t-2xl overflow-hidden">
                     <img src={profile.cover} alt="" className="h-full w-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-950/80" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/80" />
                   </div>
                 ) : (
-                  <div className="absolute inset-x-0 top-0 h-20 rounded-t-2xl bg-gradient-to-br from-indigo-600/10 via-violet-600/5 to-transparent" />
+                  <div className="absolute inset-x-0 top-0 h-20 rounded-t-2xl bg-gradient-to-br from-indigo-600/10 via-violet-50 to-transparent" />
                 )}
 
                 <div className="relative">
                   {/* Avatar + actions row */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 text-2xl font-bold text-white shadow-lg shadow-indigo-500/20 ring-4 ring-zinc-950 overflow-hidden">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-2xl font-bold text-slate-800 shadow-lg shadow-violet-500/15 ring-4 ring-white overflow-hidden">
                       {profile.avatar ? (
                         <img src={profile.avatar} alt={profile.name} className="h-full w-full object-cover" />
                       ) : (
@@ -229,7 +229,7 @@ export default function DashboardPage() {
                     </div>
                     <button
                       onClick={() => setEditingProfile(profile)}
-                      className="rounded-lg p-2 text-zinc-500 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/[0.06] hover:text-white"
+                      className="rounded-lg p-2 text-slate-400 opacity-0 group-hover:opacity-100 transition-all hover:bg-violet-50 hover:text-slate-800"
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
@@ -238,9 +238,9 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Name & type */}
-                  <h3 className="text-base font-semibold text-white">{profile.name}</h3>
+                  <h3 className="text-base font-semibold text-slate-800">{profile.name}</h3>
                   {profile.headline && (
-                    <p className="mt-0.5 text-sm text-zinc-500 line-clamp-1">{profile.headline}</p>
+                    <p className="mt-0.5 text-sm text-slate-400 line-clamp-1">{profile.headline}</p>
                   )}
 
                   <div className="mt-3 flex items-center gap-2">
@@ -252,26 +252,26 @@ export default function DashboardPage() {
 
                   {/* Bio */}
                   {profile.bio && (
-                    <p className="mt-3 text-sm text-zinc-400 line-clamp-2 leading-relaxed">
+                    <p className="mt-3 text-sm text-slate-500 line-clamp-2 leading-relaxed">
                       {profile.bio}
                     </p>
                   )}
 
                   {/* Stats row */}
-                  <div className="mt-4 flex items-center gap-4 border-t border-white/[0.04] pt-4">
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <div className="mt-4 flex items-center gap-4 border-t border-slate-100 pt-4">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                       </svg>
                       {profile._count.portfolioProjects} projets
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
                       </svg>
                       {profile._count.capsules} capsules
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                       </svg>
@@ -281,12 +281,12 @@ export default function DashboardPage() {
 
                   {/* Slug / link */}
                   <div className="mt-3 flex items-center gap-1.5">
-                    <span className="text-xs text-zinc-600 font-mono truncate">
+                    <span className="text-xs text-slate-400 font-mono truncate">
                       faymoos.com/capsule/{profile.slug}
                     </span>
                     <button
                       onClick={() => navigator.clipboard.writeText(`${window.location.origin}/capsule/${profile.slug}`)}
-                      className="rounded p-1 text-zinc-600 hover:text-indigo-400 transition-colors"
+                      className="rounded p-1 text-slate-400 hover:text-violet-600 transition-colors"
                       title="Copier le lien"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
