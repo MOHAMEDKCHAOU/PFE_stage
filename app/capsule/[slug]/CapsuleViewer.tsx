@@ -200,9 +200,9 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
       </div>
 
       {/* ──── Hero Section ──── */}
-      <section className="relative overflow-hidden">
+      <section className="relative">
         {/* Cover */}
-        <div className="h-48 sm:h-64 relative">
+        <div className="h-48 sm:h-64 relative overflow-hidden">
           {identity.cover ? (
             <img src={identity.cover} alt="" className="absolute inset-0 w-full h-full object-cover" />
           ) : (
