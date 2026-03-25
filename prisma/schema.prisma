@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  password         String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  identityProfiles IdentityProfile[]
+}
+
+model IdentityProfile {
+  id                String             @id @default(uuid())
+  name              String
+  slug              String             @unique
+  type              String
+  bio               String?
+
+  // 🔥 AJOUTS IMPORTANTS
+  headline          String?
+  avatar            String?
+  cover             String?
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+
+  portfolioProjects PortfolioProject[]
+  testimonials      Testimonial[]
+  capsules          Capsule[]
+}
+
+model PortfolioProject {
+  id          String          @id @default(uuid())
+  title       String
+  description String
+
+  // 🔥 AJOUTS IMPORTANTS
+  image       String?
+  year        Int?
+  isPublic    Boolean         @default(true)
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+model Testimonial {
+  id         String          @id @default(uuid())
+  author     String
+  content    String
+
+  // 🔥 AJOUTS IMPORTANTS
+  role       String?
+  company    String?
+
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  identityId String
+  identity   IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+model Capsule {
+  id          String          @id @default(uuid())
+  title       String
+  objective   String
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id])
+
+  options     CapsuleOption[]
+}
+
+model CapsuleOption {
+  id         String         @id @default(uuid())
+  label      String
+
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  capsuleId  String
+  capsule    Capsule        @relation(fields: [capsuleId], references: [id])
+
+  // ⚠️ gardé comme tu as fait (1 branch)
+  branch     CapsuleBranch?
+}
+
+model CapsuleBranch {
+  id            String        @id @default(uuid())
+  optionId      String        @unique
+  option        CapsuleOption @relation(fields: [optionId], references: [id])
+
+  headline      String
+  description   String
+  cta           String
+
+  // 🔥 AJOUT IMPORTANT (core du projet)
+  proof         String?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
