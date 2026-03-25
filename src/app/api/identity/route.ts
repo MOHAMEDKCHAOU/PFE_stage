@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
     const body = await req.json();
-    const { name, type, bio, headline, avatar, cover, theme } = body;
+    const { name, type, bio, headline, avatar, cover, theme, socialLinks } = body;
 
     if (!name || !type) {
       return NextResponse.json({ error: "Le nom et le type sont requis" }, { status: 400 });
@@ -50,6 +50,7 @@ export async function POST(req: Request) {
         avatar,
         cover,
         theme,
+        socialLinks: socialLinks || undefined,
       }
     });
     return NextResponse.json(identity, { status: 201 });
@@ -65,7 +66,7 @@ export async function PUT(req: Request) {
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     
     const body = await req.json();
-    const { id, name, type, bio, headline, avatar, cover, theme } = body;
+    const { id, name, type, bio, headline, avatar, cover, theme, socialLinks } = body;
     
     if (!id) return NextResponse.json({ error: "L'ID de l'identité est requis" }, { status: 400 });
 
@@ -77,7 +78,7 @@ export async function PUT(req: Request) {
 
     const identity = await prisma.identityProfile.update({
       where: { id }, 
-      data: { name, type, bio, headline, avatar, cover, theme }
+      data: { name, type, bio, headline, avatar, cover, theme, socialLinks: socialLinks !== undefined ? socialLinks : undefined }
     });
     return NextResponse.json(identity);
   } catch (error) {

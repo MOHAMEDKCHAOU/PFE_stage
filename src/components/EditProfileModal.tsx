@@ -12,7 +12,17 @@ type Profile = {
   avatar: string | null;
   cover: string | null;
   theme: string | null;
+  socialLinks: Record<string, string> | null;
 };
+
+const socialPlatforms = [
+  { key: "linkedin", label: "LinkedIn", icon: "in", placeholder: "https://linkedin.com/in/..." },
+  { key: "github", label: "GitHub", icon: "GH", placeholder: "https://github.com/..." },
+  { key: "twitter", label: "X / Twitter", icon: "𝕏", placeholder: "https://x.com/..." },
+  { key: "dribbble", label: "Dribbble", icon: "Dr", placeholder: "https://dribbble.com/..." },
+  { key: "website", label: "Site web", icon: "🌐", placeholder: "https://votresite.com" },
+  { key: "behance", label: "Behance", icon: "Bē", placeholder: "https://behance.net/..." },
+];
 
 const profileTypes = [
   { value: "FREELANCER", label: "Freelancer", icon: "💼" },
@@ -221,6 +231,9 @@ export function EditProfileModal({
     cover: profile.cover || "",
     theme: profile.theme || "",
   });
+  const [socialLinks, setSocialLinks] = useState<Record<string, string>>(
+    (profile.socialLinks as Record<string, string>) || {}
+  );
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -253,6 +266,9 @@ export function EditProfileModal({
           avatar: form.avatar || null,
           cover: form.cover || null,
           theme: form.theme || null,
+          socialLinks: Object.fromEntries(
+            Object.entries(socialLinks).filter(([, v]) => v.trim())
+          ),
         }),
       });
 
@@ -422,6 +438,27 @@ export function EditProfileModal({
                     {t.label}
                   </span>
                 </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Social Links */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-slate-500">Liens sociaux</label>
+            <div className="space-y-2">
+              {socialPlatforms.map((p) => (
+                <div key={p.key} className="flex items-center gap-2">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-violet-50 border border-violet-100 flex items-center justify-center text-[10px] font-bold text-violet-600">
+                    {p.icon}
+                  </span>
+                  <input
+                    type="url"
+                    value={socialLinks[p.key] || ""}
+                    onChange={(e) => setSocialLinks((prev) => ({ ...prev, [p.key]: e.target.value }))}
+                    placeholder={p.placeholder}
+                    className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-300 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  />
+                </div>
               ))}
             </div>
           </div>

@@ -42,6 +42,7 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
           cover: identity.cover,
           type: identity.type,
           theme: identity.theme,
+          socialLinks: identity.socialLinks as Record<string, string> | null,
         }}
         capsules={identity.capsules.map((capsule) => ({
           id: capsule.id,

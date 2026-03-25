@@ -32,6 +32,7 @@ type IdentityProfile = {
   avatar: string | null;
   cover: string | null;
   theme: string | null;
+  socialLinks: Record<string, string> | null;
   createdAt: string;
   portfolioProjects: PortfolioProject[];
   testimonials: Testimonial[];
