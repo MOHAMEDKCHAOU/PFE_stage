@@ -46,6 +46,7 @@ export function Navbar() {
 
         {/* Center links */}
         <div className="hidden md:flex items-center gap-8">
+          <Link href="/explore" className="text-sm text-slate-500 hover:text-violet-600 transition-colors font-medium">Explorer</Link>
           <a href="#features" className="text-sm text-slate-500 hover:text-violet-600 transition-colors">Fonctionnalités</a>
           <a href="#how-it-works" className="text-sm text-slate-500 hover:text-violet-600 transition-colors">Comment ça marche</a>
           <a href="#profiles" className="text-sm text-slate-500 hover:text-violet-600 transition-colors">Profils</a>
