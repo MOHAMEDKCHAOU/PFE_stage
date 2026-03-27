@@ -20,8 +20,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message trop long (max 2000 caractères)" }, { status: 400 });
     }
 
-    // Verify identity exists
-    const identity = await prisma.identityProfile.findUnique({ where: { id: identityId } });
+    // Verify identity exists (include userId for notification)
+    const identity = await prisma.identityProfile.findUnique({
+      where: { id: identityId },
+      select: { id: true, userId: true, name: true },
+    });
     if (!identity) {
       return NextResponse.json({ error: "Identité introuvable" }, { status: 404 });
     }
@@ -34,6 +37,17 @@ export async function POST(req: NextRequest) {
         identityId,
       },
     });
+
+    // Create notification for identity owner
+    await prisma.notification.create({
+      data: {
+        userId: identity.userId,
+        type: "NEW_MESSAGE",
+        title: "💬 Nouveau message",
+        body: `${name.trim()} vous a envoyé un message sur ${identity.name}`,
+        link: "/dashboard/messages",
+      },
+    }).catch(() => {});
 
     return NextResponse.json(message, { status: 201 });
   } catch (error) {

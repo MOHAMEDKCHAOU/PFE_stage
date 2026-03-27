@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { NotificationBell } from "@/components/NotificationBell";
 
 const navItems = [
   {
@@ -233,6 +234,7 @@ export default function DashboardLayout({
             </svg>
           </button>
           <div className="flex-1" />
+          <NotificationBell />
         </header>
 
         {/* Content */}

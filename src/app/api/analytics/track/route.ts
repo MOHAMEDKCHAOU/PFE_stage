@@ -15,9 +15,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verify capsule exists
+    // Verify capsule exists (include identity for notification)
     const capsule = await prisma.capsule.findUnique({
       where: { id: capsuleId },
+      include: { identity: { select: { userId: true, name: true } } },
     });
     if (!capsule) {
       return NextResponse.json(
@@ -68,12 +69,23 @@ export async function POST(req: Request) {
         },
       });
 
-      // If CTA_CLICK → mark session as ended (completed)
+      // If CTA_CLICK → mark session as ended + notify owner
       if (action === "CTA_CLICK") {
         await prisma.capsuleSession.update({
           where: { id: sessionId },
           data: { endedAt: new Date() },
         });
+
+        // Create notification for capsule owner
+        await prisma.notification.create({
+          data: {
+            userId: capsule.identity.userId,
+            type: "CTA_CLICK",
+            title: "🎯 Clic sur votre CTA",
+            body: `Un visiteur a cliqué sur le CTA de votre capsule "${capsule.title}" (option: ${optionLabel || "inconnue"})`,
+            link: "/dashboard/analytics",
+          },
+        }).catch(() => {});
       }
 
       return NextResponse.json({ eventId: event.id }, { status: 201 });
