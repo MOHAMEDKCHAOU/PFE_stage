@@ -36,9 +36,11 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-500 text-sm font-black text-white shadow-md shadow-violet-500/30">
-            F
-          </div>
+          <img
+            src="/uploads/logofaymoos.png"
+            alt="Faymoos"
+            className="h-14 w-12 rounded-lg object-contain"
+          />
           <span className="text-lg font-bold tracking-tight text-slate-800">
             Fay<span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">moos</span>
           </span>

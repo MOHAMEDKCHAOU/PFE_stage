@@ -143,9 +143,11 @@ export default function DashboardLayout({
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 py-5 border-b border-violet-100">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 flex items-center justify-center shadow-md shadow-violet-500/20">
-            <span className="text-white font-bold text-base">F</span>
-          </div>
+          <img
+            src="/uploads/logofaymoos.png"
+            alt="Faymoos"
+            className="h-9 w-9 rounded-xl object-contain"
+          />
           <span className="text-lg font-bold text-slate-800 tracking-tight">
             Faymoos
           </span>
