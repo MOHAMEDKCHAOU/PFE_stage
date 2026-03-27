@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "qrcode";
+import { generatePortfolioPDF } from "@/lib/generatePDF";
 
 /* ───────── Types ───────── */
 type Branch = {
@@ -96,6 +97,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
   const [showQR, setShowQR] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const qrCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const baseTC = typeConfig[identity.type] || typeConfig.FREELANCER;
@@ -266,6 +268,31 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
               </svg>
+            </button>
+
+            {/* Download PDF button */}
+            <button
+              onClick={() => {
+                setPdfLoading(true);
+                setTimeout(() => {
+                  generatePortfolioPDF({ identity, capsules, projects, testimonials });
+                  setPdfLoading(false);
+                }, 100);
+              }}
+              disabled={pdfLoading}
+              className="group flex-shrink-0 rounded-xl p-3 bg-white/5 text-zinc-500 ring-1 ring-white/10 hover:text-white hover:ring-white/30 hover:bg-white/10 transition-all duration-200 disabled:opacity-50"
+              title="Télécharger le portfolio en PDF"
+            >
+              {pdfLoading ? (
+                <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+              )}
             </button>
           </div>
 
