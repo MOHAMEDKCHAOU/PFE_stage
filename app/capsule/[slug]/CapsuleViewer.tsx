@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "qrcode";
 import { generatePortfolioPDF } from "@/lib/generatePDF";
+import { ChatBot } from "@/components/ChatBot";
 
 /* ───────── Types ───────── */
 type Branch = {
@@ -722,6 +723,14 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
           <span className={`font-semibold ${tc.accent}`}>Faymoos</span>
         </p>
       </footer>
+
+      {/* ──── ChatBot ──── */}
+      <ChatBot
+        identityId={identity.id}
+        identityName={identity.name}
+        accentGradient={tc.gradient}
+        accentColor={tc.accent}
+      />
 
       {/* ──── QR Code Modal ──── */}
       {showQR && (
