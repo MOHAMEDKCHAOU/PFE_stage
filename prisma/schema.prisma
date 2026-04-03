@@ -11,9 +11,14 @@ model User {
   id               String            @id @default(uuid())
   email            String            @unique
   password         String
-  role             String            @default("USER") // "USER" | "ADMIN"
+  role             String            @default("USER") // "USER" | "ADMIN" | "AFFILIATEUR"
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+
+  // Relation affiliateur → clients
+  affiliatorId     String?
+  affiliator       User?             @relation("AffiliatorClients", fields: [affiliatorId], references: [id])
+  clients          User[]            @relation("AffiliatorClients")
 
   identityProfiles IdentityProfile[]
   favorites        Favorite[]

@@ -8,6 +8,7 @@ import {
   registerSchema,
   type RegisterFormData,
   profileTypes,
+  roleTypes,
 } from "@/lib/validations/auth";
 
 // Minimal Zod resolver for react-hook-form
@@ -49,7 +50,7 @@ export default function RegisterPage() {
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
 
   const {
     register,
@@ -66,16 +67,22 @@ export default function RegisterPage() {
       password: "",
       confirmPassword: "",
       type: undefined,
+      role: "USER",
     },
   });
 
   const watchedPassword = watch("password", "");
   const watchedType = watch("type");
+  const watchedRole = watch("role");
   const passwordStrength = getPasswordStrength(watchedPassword);
 
   async function handleNextStep() {
     const valid = await trigger(["name", "email", "password", "confirmPassword"]);
     if (valid) setStep(2);
+  }
+
+  function handleNextToRole() {
+    if (watchedType) setStep(3);
   }
 
   async function handleFinalSubmit() {
@@ -106,6 +113,7 @@ export default function RegisterPage() {
           password: result.data.password,
           name: result.data.name,
           type: result.data.type,
+          role: result.data.role,
         }),
       });
 
@@ -145,7 +153,9 @@ export default function RegisterPage() {
         <p className="mt-2 text-sm text-slate-500">
           {step === 1
             ? "Remplissez vos informations pour commencer"
-            : "Choisissez votre type de profil"}
+            : step === 2
+            ? "Choisissez votre type de profil"
+            : "Choisissez votre rôle sur la plateforme"}
         </p>
       </div>
 
@@ -180,10 +190,31 @@ export default function RegisterPage() {
                 : "bg-violet-50 text-slate-400"
             }`}
           >
-            2
+            {step > 2 ? (
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            ) : (
+              "2"
+            )}
           </div>
           <span className={`text-xs font-medium ${step >= 2 ? "text-slate-700" : "text-slate-400"}`}>
             Profil
+          </span>
+        </div>
+        <div className={`h-px w-8 transition-colors duration-300 ${step >= 3 ? "bg-violet-600" : "bg-white/[0.08]"}`} />
+        <div className="flex items-center gap-2">
+          <div
+            className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
+              step >= 3
+                ? "bg-violet-600 text-slate-800 shadow-md shadow-violet-500/30"
+                : "bg-violet-50 text-slate-400"
+            }`}
+          >
+            3
+          </div>
+          <span className={`text-xs font-medium ${step >= 3 ? "text-slate-700" : "text-slate-400"}`}>
+            Rôle
           </span>
         </div>
       </div>
@@ -442,8 +473,84 @@ export default function RegisterPage() {
             </button>
             <button
               type="button"
+              onClick={handleNextToRole}
+              disabled={!watchedType}
+              className="relative flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-lg shadow-violet-500/25 transition-all duration-200 hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl hover:shadow-violet-500/30 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-lg"
+            >
+              Continuer
+            </button>
+          </div>
+        </div>
+
+        {/* ─── STEP 3: Role Selection ─── */}
+        <div className={step === 3 ? "space-y-5" : "hidden"}>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-slate-700">
+              Votre rôle
+            </label>
+            <p className="text-xs text-slate-500">
+              Choisissez comment vous souhaitez utiliser Faymoos
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            {roleTypes.map((r) => (
+              <button
+                key={r.value}
+                type="button"
+                onClick={() => setValue("role", r.value as RegisterFormData["role"], { shouldValidate: true })}
+                className={`group relative flex items-start gap-4 rounded-xl border p-5 text-left transition-all duration-200 active:scale-[0.97] ${
+                  watchedRole === r.value
+                    ? "border-violet-400 bg-violet-50 shadow-md shadow-violet-200 ring-1 ring-violet-300"
+                    : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                }`}
+              >
+                <div
+                  className={`absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200 ${
+                    watchedRole === r.value
+                      ? "bg-violet-600 shadow-md shadow-violet-500/40"
+                      : "border border-violet-200 bg-white"
+                  }`}
+                >
+                  {watchedRole === r.value && (
+                    <svg className="h-3 w-3 text-slate-800" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  )}
+                </div>
+
+                <span className="text-3xl">{r.icon}</span>
+                <div>
+                  <span className={`text-sm font-semibold transition-colors ${watchedRole === r.value ? "text-slate-800" : "text-slate-700"}`}>
+                    {r.label}
+                  </span>
+                  <p className="text-xs text-slate-500 mt-1">{r.desc}</p>
+                  {r.value === "AFFILIATEUR" && (
+                    <p className="text-xs text-violet-600 mt-2 font-medium">
+                      Accès au tableau de bord affiliateur, gestion des clients, stratégie marketing
+                    </p>
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-violet-50 hover:border-violet-200"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+              </svg>
+              Retour
+            </button>
+            <button
+              type="button"
               onClick={handleFinalSubmit}
-              disabled={isLoading || !watchedType}
+              disabled={isLoading || !watchedRole}
               className="relative flex-1 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-3.5 text-sm font-semibold text-slate-800 shadow-lg shadow-violet-500/25 transition-all duration-200 hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl hover:shadow-violet-500/30 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-lg"
             >
               {isLoading ? (
