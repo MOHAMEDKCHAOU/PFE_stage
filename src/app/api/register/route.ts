@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, password, name, type, bio, role } = body;
+    const { email, password, name, type, bio } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
     const finalName = name || email.split("@")[0];
     const finalType = type || "USER";
-    const finalRole = role === "AFFILIATEUR" ? "AFFILIATEUR" : "USER";
+    const finalRole = "USER";
     const slugBase = finalName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const slug = `${slugBase}-${Date.now()}`;
 

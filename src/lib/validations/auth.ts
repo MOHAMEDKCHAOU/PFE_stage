@@ -32,7 +32,7 @@ export const registerSchema = z
     type: z.enum(["FREELANCER", "AGENCY", "CREATOR", "STARTUP"], {
       message: "Le type de profil est requis",
     }),
-    role: z.enum(["USER", "AFFILIATEUR"]).default("USER"),
+    role: z.literal("USER").default("USER"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Les mots de passe ne correspondent pas",
@@ -49,7 +49,4 @@ export const profileTypes = [
   { value: "STARTUP", label: "Startup", icon: "🚀", desc: "Entrepreneur & fondateur" },
 ] as const;
 
-export const roleTypes = [
-  { value: "USER", label: "Utilisateur", icon: "👤", desc: "Gérer mes propres capsules" },
-  { value: "AFFILIATEUR", label: "Affiliateur", icon: "🤝", desc: "Gérer des clients & leurs capsules" },
-] as const;
+
