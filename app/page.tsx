@@ -82,6 +82,7 @@ export default async function Home() {
   // Fetch public capsules with their identities
   const capsules = await prisma.capsule.findMany({
     where: {
+      isPublished: true,
       options: { some: { branch: { isNot: null } } },
     },
     include: {

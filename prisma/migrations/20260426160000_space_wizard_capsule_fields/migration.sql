@@ -1,0 +1,7 @@
+-- AlterTable Capsule
+ALTER TABLE "Capsule" ADD COLUMN IF NOT EXISTS "layoutPreset" TEXT;
+ALTER TABLE "Capsule" ADD COLUMN IF NOT EXISTS "isPublished" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "Capsule" ADD COLUMN IF NOT EXISTS "editorHotspots" JSONB;
+
+-- AlterTable CapsuleOption
+ALTER TABLE "CapsuleOption" ADD COLUMN IF NOT EXISTS "sortOrder" INTEGER NOT NULL DEFAULT 0;

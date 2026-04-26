@@ -84,6 +84,13 @@ model Capsule {
   title       String
   objective   String
 
+  /// Preset visuel Space (ocean, sunset, …) — aligné sur IdentityProfile.theme
+  layoutPreset String?
+  /// Brouillon : false jusqu’au bouton Publier dans Space Editor
+  isPublished  Boolean         @default(true)
+  /// Hotspots { hotspots: [{ optionId, x, y, w, h, ... }] } — JSON libre
+  editorHotspots Json?
+
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
@@ -98,6 +105,7 @@ model Capsule {
 model CapsuleOption {
   id         String         @id @default(uuid())
   label      String
+  sortOrder  Int            @default(0)
 
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt

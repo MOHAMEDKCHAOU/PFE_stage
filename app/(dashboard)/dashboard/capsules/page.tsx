@@ -1720,29 +1720,42 @@ export default function CapsulesPage() {
             Créez des interactions intelligentes avec vos visiteurs
           </p>
         </div>
-        <button
-          onClick={() => {
-            if (identities.length === 0) return;
-            setShowCreate(true);
-          }}
-          disabled={identities.length === 0}
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => {
+              if (identities.length === 0) return;
+              setShowCreate(true);
+            }}
+            disabled={identities.length === 0}
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:from-indigo-500 hover:to-violet-500 hover:shadow-xl active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Nouvelle capsule
-        </button>
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Nouvelle capsule
+          </button>
+          <Link
+            href="/dashboard/space/wizard/templates"
+            className={`inline-flex items-center gap-2 rounded-xl border border-bordeaux-200 bg-white px-4 py-2.5 text-sm font-semibold text-bordeaux-900 shadow-sm transition hover:bg-bordeaux-50 ${
+              identities.length === 0 ? "pointer-events-none opacity-40" : ""
+            }`}
+            onClick={(e) => {
+              if (identities.length === 0) e.preventDefault();
+            }}
+          >
+            Space Studio
+          </Link>
+        </div>
       </div>
 
       {/* Identity filter */}

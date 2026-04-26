@@ -13,8 +13,11 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
     where: { slug },
     include: {
       capsules: {
+        where: { isPublished: true },
+        orderBy: { createdAt: "desc" },
         include: {
           options: {
+            orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
             include: {
               branch: true,
             },

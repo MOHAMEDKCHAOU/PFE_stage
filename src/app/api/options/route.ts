@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-    const { capsuleId, label } = await req.json();
+    const { capsuleId, label, sortOrder: sortIn } = await req.json();
 
     if (!capsuleId || !label) {
       return NextResponse.json({ error: "capsuleId et label requis" }, { status: 400 });
@@ -24,8 +24,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
+    let sortOrder = typeof sortIn === "number" ? sortIn : 0;
+    if (typeof sortIn !== "number") {
+      const agg = await prisma.capsuleOption.aggregate({
+        where: { capsuleId },
+        _max: { sortOrder: true },
+      });
+      sortOrder = (agg._max.sortOrder ?? -1) + 1;
+    }
+
     const option = await prisma.capsuleOption.create({
-      data: { capsuleId, label },
+      data: { capsuleId, label, sortOrder },
     });
 
     return NextResponse.json(option, { status: 201 });
@@ -41,8 +50,8 @@ export async function PUT(req: Request) {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-    const { id, label } = await req.json();
-    if (!id || !label) return NextResponse.json({ error: "id et label requis" }, { status: 400 });
+    const { id, label, sortOrder } = await req.json();
+    if (!id) return NextResponse.json({ error: "id requis" }, { status: 400 });
 
     // Vérifier que l'option appartient bien au user
     const existing = await prisma.capsuleOption.findUnique({
@@ -56,7 +65,10 @@ export async function PUT(req: Request) {
 
     const option = await prisma.capsuleOption.update({
       where: { id },
-      data: { label },
+      data: {
+        ...(label != null && { label }),
+        ...(typeof sortOrder === "number" && { sortOrder }),
+      },
     });
 
     return NextResponse.json(option);

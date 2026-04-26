@@ -7,7 +7,27 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const identityId = searchParams.get("identityId");
-    
+    const capsuleId = searchParams.get("capsuleId");
+
+    if (capsuleId) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+      const cap = await prisma.capsule.findUnique({
+        where: { id: capsuleId },
+        include: {
+          identity: true,
+          options: {
+            orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+            include: { branch: true },
+          },
+        },
+      });
+      if (!cap || cap.identity.userId !== userId) {
+        return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+      }
+      return NextResponse.json(cap);
+    }
+
     if (!identityId) {
       return NextResponse.json({ error: "Le paramètre identityId est requis" }, { status: 400 });
     }
@@ -16,6 +36,7 @@ export async function GET(req: Request) {
       where: { identityId },
       include: {
         options: {
+          orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
           include: {
             branch: true,
           }
@@ -36,7 +57,8 @@ export async function POST(req: Request) {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-    const { identityId, title, objective } = await req.json();
+    const body = await req.json();
+    const { identityId, title, objective, layoutPreset, isPublished, editorHotspots } = body;
 
     if (!identityId || !title || !objective) {
       return NextResponse.json({ error: "identityId, title et objective requis" }, { status: 400 });
@@ -48,8 +70,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Identité non autorisée" }, { status: 403 });
     }
 
+    const published =
+      typeof isPublished === "boolean" ? isPublished : true;
+
     const capsule = await prisma.capsule.create({
-      data: { title, objective, identityId }
+      data: {
+        title,
+        objective,
+        identityId,
+        layoutPreset: layoutPreset ?? null,
+        isPublished: published,
+        editorHotspots: editorHotspots ?? undefined,
+      },
     });
 
     return NextResponse.json(capsule, { status: 201 });
@@ -65,7 +97,8 @@ export async function PUT(req: Request) {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-    const { id, title, objective } = await req.json();
+    const body = await req.json();
+    const { id, title, objective, layoutPreset, isPublished, editorHotspots } = body;
 
     if (!id) return NextResponse.json({ error: "L'ID de la capsule est requis" }, { status: 400 });
 
@@ -83,6 +116,9 @@ export async function PUT(req: Request) {
       data: {
         title: title ?? capsule.title,
         objective: objective ?? capsule.objective,
+        layoutPreset: layoutPreset !== undefined ? layoutPreset : capsule.layoutPreset,
+        isPublished: typeof isPublished === "boolean" ? isPublished : capsule.isPublished,
+        ...(editorHotspots !== undefined && { editorHotspots }),
       },
     });
 
