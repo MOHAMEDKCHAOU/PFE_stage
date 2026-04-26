@@ -31,7 +31,7 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
+    <main className="theme-capsule min-h-screen bg-zinc-950 text-white">
       <CapsuleViewer
         identity={{
           id: identity.id,

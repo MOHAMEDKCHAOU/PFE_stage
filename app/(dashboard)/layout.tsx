@@ -126,7 +126,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen bg-[#FFFBF5] text-slate-800 overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-[#f4efe6] text-stone-900">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -137,18 +137,18 @@ export default function DashboardLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] flex flex-col bg-white border-r border-violet-100 transition-transform duration-300 lg:relative lg:translate-x-0 shadow-lg shadow-violet-500/5 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] flex flex-col border-r border-stone-200/90 bg-white/95 transition-transform duration-300 shadow-xl shadow-stone-200/30 lg:relative lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-violet-100">
+        <div className="flex items-center gap-3 border-b border-stone-200/80 px-6 py-5">
           <img
-            src="/uploads/logofaymoos.png"
+            src="/uploads/logofaymoos.jpeg"
             alt="Faymoos"
             className="h-9 w-9 rounded-xl object-contain"
           />
-          <span className="text-lg font-bold text-slate-800 tracking-tight">
+          <span className="text-lg font-bold tracking-tight text-stone-900">
             Faymoos
           </span>
         </div>
@@ -164,11 +164,11 @@ export default function DashboardLayout({
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-violet-50 text-violet-700 shadow-sm shadow-violet-500/10 ring-1 ring-violet-200"
-                    : "text-slate-500 hover:bg-violet-50/50 hover:text-slate-700"
+                    ? "bg-bordeaux-100 text-bordeaux-900 shadow-sm ring-1 ring-bordeaux-200/80"
+                    : "text-stone-600 hover:bg-bordeaux-50/50 hover:text-stone-900"
                 }`}
               >
-                <span className={isActive ? "text-violet-600" : "text-slate-400"}>
+                <span className={isActive ? "text-bordeaux-800" : "text-stone-500"}>
                   {item.icon}
                 </span>
                 {item.label}
@@ -209,11 +209,11 @@ export default function DashboardLayout({
         </nav>
 
         {/* Logout */}
-        <div className="px-3 py-4 border-t border-violet-100">
+        <div className="border-t border-stone-200/80 px-3 py-4">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-500 transition-all duration-200 hover:bg-red-50 hover:text-red-500"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-stone-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -226,10 +226,10 @@ export default function DashboardLayout({
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="flex items-center gap-4 px-6 py-4 border-b border-violet-100 bg-white/80 backdrop-blur-xl sticky top-0 z-30">
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-stone-200/80 bg-[#f4efe6]/90 px-6 py-4 backdrop-blur-xl">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden rounded-lg p-2 text-slate-500 hover:bg-violet-50 hover:text-violet-700 transition-colors"
+            className="lg:hidden rounded-lg p-2 text-stone-600 transition-colors hover:bg-bordeaux-100/50 hover:text-bordeaux-900"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

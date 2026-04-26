@@ -173,7 +173,7 @@ export function NotificationBell() {
       {/* Bell button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative rounded-xl p-2.5 text-yellow-500 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
+        className="relative rounded-xl p-2.5 text-amber-400/90 hover:bg-bordeaux-500/10 hover:text-bordeaux-200 transition-colors"
         title="Notifications"
       >
         <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -188,15 +188,15 @@ export function NotificationBell() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-[360px] rounded-2xl border border-violet-100 bg-white shadow-xl shadow-violet-500/10 z-50 overflow-hidden">
+        <div className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-2xl border border-stone-200/90 bg-white/98 shadow-lg shadow-stone-200/50 backdrop-blur-xl">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-violet-50">
-            <h3 className="text-sm font-bold text-slate-800">Notifications</h3>
+          <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
+            <h3 className="text-sm font-bold text-stone-900">Notifications</h3>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
                 <button
                   onClick={markAllRead}
-                  className="text-[11px] font-medium text-violet-600 hover:text-violet-800 transition-colors"
+                  className="text-[11px] font-medium text-bordeaux-800 hover:text-bordeaux-600 transition-colors"
                 >
                   Tout marquer lu
                 </button>
@@ -205,14 +205,14 @@ export function NotificationBell() {
           </div>
 
           {/* Settings row */}
-          <div className="flex items-center gap-3 px-4 py-2 border-b border-violet-50 bg-violet-50/30">
+          <div className="flex items-center gap-3 border-b border-stone-100 bg-bordeaux-50/30 px-4 py-2">
             {/* Sound toggle */}
             <button
               onClick={toggleSound}
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
                 soundEnabled
-                  ? "bg-violet-100 text-violet-700"
-                  : "bg-white text-slate-400 hover:text-slate-600 border border-slate-200"
+                  ? "bg-bordeaux-100 text-bordeaux-900"
+                  : "border border-stone-200/90 bg-white text-stone-500 hover:text-stone-800"
               }`}
               title={soundEnabled ? "Son activé" : "Son désactivé"}
             >
@@ -233,8 +233,8 @@ export function NotificationBell() {
               onClick={toggleBrowserNotif}
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
                 browserNotifEnabled
-                  ? "bg-violet-100 text-violet-700"
-                  : "bg-white text-slate-400 hover:text-slate-600 border border-slate-200"
+                  ? "bg-bordeaux-100 text-bordeaux-900"
+                  : "border border-stone-200/90 bg-white text-stone-500 hover:text-stone-800"
               }`}
               title={browserNotifEnabled ? "Notifications desktop activées" : "Notifications desktop désactivées"}
             >
@@ -250,45 +250,45 @@ export function NotificationBell() {
           <div className="max-h-[340px] overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="py-10 text-center">
-                <svg className="mx-auto h-10 w-10 text-slate-200" fill="none" viewBox="0 0 24 24" strokeWidth={0.5} stroke="currentColor">
+                <svg className="mx-auto h-10 w-10 text-stone-200" fill="none" viewBox="0 0 24 24" strokeWidth={0.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                 </svg>
-                <p className="mt-2 text-sm text-slate-400">Aucune notification</p>
+                <p className="mt-2 text-sm text-stone-500">Aucune notification</p>
               </div>
             ) : (
               notifications.map((notif) => (
                 <button
                   key={notif.id}
                   onClick={() => handleClick(notif)}
-                  className={`w-full text-left px-4 py-3 flex items-start gap-3 transition-colors hover:bg-violet-50/50 border-b border-violet-50 last:border-0 ${
-                    !notif.isRead ? "bg-violet-50/30" : ""
+                  className={`flex w-full items-start gap-3 border-b border-stone-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bordeaux-50/50 ${
+                    !notif.isRead ? "bg-bordeaux-50/40" : ""
                   }`}
                 >
                   {/* Dot */}
                   <div className="mt-1.5 flex-shrink-0 w-2">
                     {!notif.isRead && (
-                      <div className="h-2 w-2 rounded-full bg-violet-500" />
+                      <div className="h-2 w-2 rounded-full bg-bordeaux-500" />
                     )}
                   </div>
 
                   {/* Icon */}
                   <div className={`mt-0.5 flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center text-sm ${
                     notif.type === "CTA_CLICK"
-                      ? "bg-emerald-50 text-emerald-600"
-                      : "bg-blue-50 text-blue-600"
+                      ? "bg-emerald-500/15 text-emerald-400"
+                      : "bg-bordeaux-500/15 text-bordeaux-300"
                   }`}>
                     {notif.type === "CTA_CLICK" ? "🎯" : "💬"}
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <p className={`text-xs leading-snug ${!notif.isRead ? "font-semibold text-slate-800" : "text-slate-600"}`}>
+                    <p className={`text-xs leading-snug ${!notif.isRead ? "font-semibold text-stone-900" : "text-stone-600"}`}>
                       {notif.title}
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">
+                    <p className="mt-0.5 line-clamp-2 text-[11px] text-stone-500">
                       {notif.body}
                     </p>
-                    <p className="text-[10px] text-slate-400 mt-1">
+                    <p className="mt-1 text-[10px] text-stone-400">
                       {timeAgo(notif.createdAt)}
                     </p>
                   </div>

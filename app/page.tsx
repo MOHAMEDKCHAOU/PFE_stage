@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { WelcomeToFaymoos } from "@/components/WelcomeToFaymoos";
 import { prisma } from "@/lib/prisma";
 
 const features = [
@@ -11,8 +12,8 @@ const features = [
     ),
     title: "Multi-Identités",
     desc: "Freelancer, agence, créateur, startup — gérez plusieurs profils professionnels depuis un seul compte.",
-    color: "border-blue-200 bg-gradient-to-br from-blue-50 to-white",
-    iconBg: "bg-blue-100 text-blue-600",
+    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-bordeaux-200/60",
+    iconBg: "bg-bordeaux-100 text-bordeaux-800",
   },
   {
     icon: (
@@ -22,8 +23,8 @@ const features = [
     ),
     title: "Capsules Interactives",
     desc: "Créez des expériences conversationnelles où vos visiteurs choisissent leur propre parcours.",
-    color: "border-violet-200 bg-gradient-to-br from-violet-50 to-white",
-    iconBg: "bg-violet-100 text-violet-600",
+    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-rose-200/80",
+    iconBg: "bg-rose-100 text-rose-800",
   },
   {
     icon: (
@@ -33,8 +34,8 @@ const features = [
     ),
     title: "Analytics en Temps Réel",
     desc: "Suivez chaque interaction — clics, parcours choisis, taux de conversion — pour optimiser vos capsules.",
-    color: "border-emerald-200 bg-gradient-to-br from-emerald-50 to-white",
-    iconBg: "bg-emerald-100 text-emerald-600",
+    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-emerald-200/80",
+    iconBg: "bg-emerald-100 text-emerald-800",
   },
   {
     icon: (
@@ -44,8 +45,8 @@ const features = [
     ),
     title: "Portfolio Intégré",
     desc: "Présentez vos projets, témoignages clients et réalisations directement dans votre capsule.",
-    color: "border-amber-200 bg-gradient-to-br from-amber-50 to-white",
-    iconBg: "bg-amber-100 text-amber-600",
+    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-amber-200/80",
+    iconBg: "bg-amber-100 text-amber-800",
   },
 ];
 
@@ -71,10 +72,10 @@ const steps = [
 ];
 
 const profileTypes = [
-  { icon: "💼", label: "Freelancer", color: "from-blue-500 to-blue-400" },
-  { icon: "🏢", label: "Agence", color: "from-violet-500 to-purple-400" },
-  { icon: "🎨", label: "Créateur", color: "from-rose-500 to-pink-400" },
-  { icon: "🚀", label: "Startup", color: "from-emerald-500 to-teal-400" },
+  { icon: "💼", label: "Freelancer", color: "from-zinc-600 to-bordeaux-500" },
+  { icon: "🏢", label: "Agence", color: "from-bordeaux-800 to-bordeaux-500" },
+  { icon: "🎨", label: "Créateur", color: "from-rose-700 to-bordeaux-400" },
+  { icon: "🚀", label: "Startup", color: "from-emerald-800 to-emerald-500" },
 ];
 
 export default async function Home() {
@@ -92,7 +93,9 @@ export default async function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-[#FFFBF5] text-slate-800 overflow-hidden">
+    <>
+      <WelcomeToFaymoos />
+      <div className="relative z-10 min-h-screen overflow-hidden bg-[#f4efe6] text-stone-900">
       {/* ═══════════ NAVBAR ═══════════ */}
       <Navbar />
 
@@ -100,25 +103,25 @@ export default async function Home() {
       <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-32">
         {/* Background effects */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-20 left-1/4 h-[500px] w-[500px] rounded-full bg-violet-200/40 blur-[120px] animate-pulse-glow" />
-          <div className="absolute top-40 right-1/4 h-[400px] w-[400px] rounded-full bg-fuchsia-200/30 blur-[100px] animate-pulse-glow delay-200" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[300px] w-[600px] rounded-full bg-orange-200/20 blur-[80px]" />
-          {/* Grid pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.04)_1px,transparent_1px)] bg-[size:64px_64px]" />
+          <div className="absolute top-20 left-1/4 h-[500px] w-[500px] rounded-full bg-bordeaux-500/8 blur-[120px] animate-pulse-glow" />
+          <div className="absolute top-40 right-1/4 h-[400px] w-[400px] rounded-full bg-amber-200/30 blur-[100px] animate-mesh delay-200" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[300px] w-[600px] rounded-full bg-stone-300/20 blur-[80px] animate-pulse-glow" />
+          <div className="absolute top-1/2 left-1/2 h-[min(100vw,900px)] w-[min(100vw,900px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-bordeaux-200/20 opacity-40 animate-blob" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(28,25,23,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(28,25,23,0.04)_1px,transparent_1px)] bg-[size:64px_64px]" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
             {/* Badge */}
-            <div className="animate-slide-up inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5 text-sm shadow-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-violet-500 animate-pulse" />
-              <span className="text-violet-700 font-medium">Nouvelle plateforme</span>
+            <div className="animate-slide-up inline-flex items-center gap-2 rounded-full border border-bordeaux-200/60 bg-white/80 px-4 py-1.5 text-sm shadow-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-bordeaux-500 animate-pulse" />
+              <span className="text-bordeaux-800 font-medium">Nouvelle plateforme</span>
             </div>
 
             {/* Headline */}
-            <h1 className="mt-8 max-w-4xl text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] animate-slide-up delay-100 text-slate-900">
+            <h1 className="mt-8 max-w-4xl text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] animate-slide-up delay-100 text-stone-900">
               Créez votre{" "}
-              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-400 bg-clip-text text-transparent animate-gradient-x">
+              <span className="bg-gradient-to-r from-bordeaux-800 via-bordeaux-600 to-rose-600 bg-clip-text text-transparent animate-gradient-x">
                 identité unique
               </span>
               <br />
@@ -126,7 +129,7 @@ export default async function Home() {
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 max-w-2xl text-lg sm:text-xl text-slate-500 leading-relaxed animate-slide-up delay-200">
+            <p className="mt-6 max-w-2xl text-lg sm:text-xl text-stone-600 leading-relaxed animate-slide-up delay-200">
               Faymoos transforme votre présence professionnelle en une expérience interactive.
               Vos visiteurs choisissent leur parcours, vous convertissez plus.
             </p>
@@ -135,7 +138,7 @@ export default async function Home() {
             <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-slide-up delay-300">
               <Link
                 href="/register"
-                className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-violet-500/25 transition-all hover:from-violet-500 hover:to-fuchsia-400 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.5)] active:scale-[0.98]"
+                className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-bordeaux-500/25 transition-all hover:from-bordeaux-600 hover:to-bordeaux-400 hover:shadow-[0_20px_60px_-15px_rgba(158,27,50,0.45)] active:scale-[0.98]"
               >
                 Commencer gratuitement
                 <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -144,9 +147,9 @@ export default async function Home() {
               </Link>
               <a
                 href="#how-it-works"
-                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-4 text-base font-medium text-slate-600 transition-all hover:bg-violet-50 hover:border-violet-200 hover:text-violet-700 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-2xl border border-stone-300 bg-white/90 px-8 py-4 text-base font-medium text-stone-800 transition-all hover:border-bordeaux-300 hover:bg-bordeaux-50/50 hover:text-bordeaux-900 shadow-sm"
               >
-                <svg className="h-5 w-5 text-violet-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-5 w-5 text-bordeaux-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
                 </svg>
@@ -155,18 +158,19 @@ export default async function Home() {
             </div>
 
             {/* Floating capsule mockup */}
+            {/* Aperçu capsule = zone noire (comme l&apos;expérience réelle) */}
             <div className="relative mt-20 w-full max-w-3xl animate-slide-up delay-500">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-violet-300/30 via-fuchsia-300/30 to-orange-300/30 blur-2xl opacity-60" />
-              <div className="relative rounded-2xl border border-violet-100 bg-white shadow-2xl shadow-violet-500/10 overflow-hidden">
+              <div className="absolute -inset-4 rounded-3xl bg-zinc-950/40 blur-2xl" />
+              <div className="relative rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/30 overflow-hidden ring-2 ring-stone-900/10">
                 {/* Browser chrome */}
-                <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3 bg-slate-50/50">
+                <div className="flex items-center gap-2 border-b border-zinc-800/80 px-4 py-3 bg-zinc-950/80">
                   <div className="flex gap-1.5">
                     <div className="h-3 w-3 rounded-full bg-red-400" />
                     <div className="h-3 w-3 rounded-full bg-amber-400" />
                     <div className="h-3 w-3 rounded-full bg-emerald-400" />
                   </div>
                   <div className="flex-1 flex justify-center">
-                    <div className="flex items-center gap-2 rounded-lg bg-white px-4 py-1.5 text-xs text-slate-400 font-mono border border-slate-200">
+                    <div className="flex items-center gap-2 rounded-lg bg-zinc-900/90 px-4 py-1.5 text-xs text-zinc-500 font-mono border border-zinc-800">
                       <svg className="h-3 w-3 text-emerald-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                       </svg>
@@ -177,29 +181,29 @@ export default async function Home() {
                 {/* Capsule content mock */}
                 <div className="p-8 sm:p-10">
                   <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-3xl font-bold text-white ring-4 ring-violet-100 animate-float-slow">
+                    <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-3xl font-bold text-white ring-4 ring-bordeaux-500/25 animate-float-slow">
                       S
                     </div>
                     <div className="text-center sm:text-left">
-                      <h3 className="text-xl font-bold text-slate-800">Sarah Dupont</h3>
-                      <p className="text-sm text-slate-500 mt-1">Développeuse Full-Stack &amp; UI Designer</p>
+                      <h3 className="text-xl font-bold text-zinc-100">Sarah Dupont</h3>
+                      <p className="text-sm text-zinc-400 mt-1">Développeuse Full-Stack &amp; UI Designer</p>
                       <div className="mt-3 flex flex-wrap justify-center sm:justify-start gap-2">
-                        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600 ring-1 ring-blue-200">💼 Freelancer</span>
-                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600 ring-1 ring-emerald-200">✅ Disponible</span>
+                        <span className="rounded-full bg-bordeaux-500/10 px-3 py-1 text-xs font-medium text-bordeaux-300 ring-1 ring-bordeaux-500/30">💼 Freelancer</span>
+                        <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400 ring-1 ring-emerald-500/30">✅ Disponible</span>
                       </div>
                     </div>
                   </div>
                   {/* Interactive options mock */}
                   <div className="mt-8">
-                    <p className="text-sm font-medium text-slate-600 mb-4">Que souhaitez-vous découvrir ?</p>
+                    <p className="text-sm font-medium text-zinc-300 mb-4">Que souhaitez-vous découvrir ?</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {["🎯 Voir mes projets", "💬 Lire les témoignages", "📩 Me contacter", "📊 Mon parcours"].map((opt, i) => (
                         <div
                           key={opt}
                           className={`rounded-xl border px-4 py-3 text-sm font-medium transition-all cursor-pointer ${
                             i === 0
-                              ? "border-violet-300 bg-violet-50 text-violet-700 shadow-md shadow-violet-500/10"
-                              : "border-slate-200 bg-white text-slate-500 hover:border-violet-200 hover:bg-violet-50/50 hover:text-slate-700"
+                              ? "border-bordeaux-500/40 bg-bordeaux-500/10 text-bordeaux-200 shadow-md shadow-bordeaux-500/20"
+                              : "border-zinc-700/80 bg-zinc-900/30 text-zinc-400 hover:border-bordeaux-500/30 hover:bg-bordeaux-500/5 hover:text-zinc-200"
                           }`}
                         >
                           {opt}
@@ -215,18 +219,18 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ TRUSTED BY (scrolling logos) ═══════════ */}
-      <section className="border-y border-violet-100/60 py-12 bg-white/60">
+      <section className="border-y border-stone-200/80 py-12 bg-stone-200/30">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 mb-8">
             Conçu pour tous les professionnels
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
             {profileTypes.map((pt) => (
-              <div key={pt.label} className="flex items-center gap-3 opacity-70 hover:opacity-100 transition-opacity">
+              <div key={pt.label} className="flex items-center gap-3 opacity-80 hover:opacity-100 transition-opacity">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${pt.color} text-lg text-white shadow-sm`}>
                   {pt.icon}
                 </div>
-                <span className="text-sm font-medium text-slate-500">{pt.label}</span>
+                <span className="text-sm font-medium text-stone-700">{pt.label}</span>
               </div>
             ))}
           </div>
@@ -235,18 +239,18 @@ export default async function Home() {
 
       {/* ═══════════ FEATURES ═══════════ */}
       <section id="features" className="relative py-24 sm:py-32">
-        <div className="pointer-events-none absolute top-0 right-0 h-[600px] w-[600px] rounded-full bg-fuchsia-100/40 blur-[150px]" />
+        <div className="pointer-events-none absolute top-0 right-0 h-[600px] w-[600px] rounded-full bg-bordeaux-200/20 blur-[150px] animate-mesh" />
         <div className="relative mx-auto max-w-7xl px-6">
           {/* Section header */}
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5 text-sm mb-6 shadow-sm">
-              <span className="text-violet-600 font-medium">Fonctionnalités</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-bordeaux-200/80 bg-white/90 px-4 py-1.5 text-sm mb-6 shadow-sm">
+              <span className="text-bordeaux-800 font-medium">Fonctionnalités</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
               Tout ce qu&apos;il vous faut pour{" "}
-              <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">briller</span>
+              <span className="bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">briller</span>
             </h2>
-            <p className="mt-4 text-lg text-slate-500">
+            <p className="mt-4 text-lg text-stone-600">
               Une suite complète d&apos;outils pour créer, gérer et analyser votre présence professionnelle.
             </p>
           </div>
@@ -262,8 +266,8 @@ export default async function Home() {
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${f.iconBg} mb-4 transition-transform group-hover:scale-110`}>
                   {f.icon}
                 </div>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">{f.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
+                <h3 className="text-base font-semibold text-stone-900 mb-2">{f.title}</h3>
+                <p className="text-sm text-stone-600 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -271,19 +275,19 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ HOW IT WORKS ═══════════ */}
-      <section id="how-it-works" className="relative py-24 sm:py-32 border-t border-violet-100/60">
-        <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-violet-100/30 blur-[150px]" />
+      <section id="how-it-works" className="relative py-24 sm:py-32 border-t border-stone-200/80">
+        <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-amber-100/40 blur-[150px]" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="text-center max-w-2xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-sm mb-6 shadow-sm">
-              <span className="text-orange-600 font-medium">3 étapes simples</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-amber-50/80 px-4 py-1.5 text-sm mb-6 shadow-sm">
+              <span className="text-amber-800 font-medium">3 étapes simples</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
               Comment{" "}
-              <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">ça marche</span>
+              <span className="bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">ça marche</span>
               {" "}?
             </h2>
-            <p className="mt-4 text-lg text-slate-500">
+            <p className="mt-4 text-lg text-stone-600">
               De la création à la conversion, en seulement trois étapes.
             </p>
           </div>
@@ -294,20 +298,20 @@ export default async function Home() {
               <div key={step.num} className="relative group">
                 {/* Connector line */}
                 {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-14 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-gradient-to-r from-violet-300 to-transparent" />
+                  <div className="hidden md:block absolute top-14 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-gradient-to-r from-bordeaux-200 to-transparent" />
                 )}
                 <div className="relative flex flex-col items-center text-center">
                   {/* Number + icon */}
                   <div className="relative mb-6">
-                    <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-violet-100 bg-white transition-all duration-300 group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:shadow-xl group-hover:shadow-violet-500/10 shadow-sm">
+                    <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-stone-200/90 bg-white shadow-sm transition-all duration-300 group-hover:border-bordeaux-200 group-hover:shadow-md">
                       <span className="text-5xl">{step.icon}</span>
                     </div>
-                    <div className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-xs font-bold text-white ring-4 ring-[#FFFBF5] shadow-md">
+                    <div className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-xs font-bold text-white ring-4 ring-[#f4efe6] shadow-md">
                       {step.num}
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">{step.title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed max-w-xs">{step.desc}</p>
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">{step.title}</h3>
+                  <p className="text-sm text-stone-600 leading-relaxed max-w-xs">{step.desc}</p>
                 </div>
               </div>
             ))}
@@ -316,20 +320,20 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ PROFILES SHOWCASE ═══════════ */}
-      <section id="profiles" className="relative py-24 sm:py-32 border-t border-violet-100/60">
-        <div className="pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full bg-fuchsia-100/30 blur-[120px]" />
+      <section id="profiles" className="relative py-24 sm:py-32 border-t border-stone-200/80">
+        <div className="pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full bg-rose-100/30 blur-[120px]" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Left text */}
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-1.5 text-sm mb-6 shadow-sm">
-                <span className="text-rose-600 font-medium">Pour chaque profil</span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-rose-200/80 bg-rose-50/90 px-4 py-1.5 text-sm mb-6 shadow-sm">
+                <span className="text-rose-800 font-medium">Pour chaque profil</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight text-slate-900">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight text-stone-900">
                 Un espace adapté à{" "}
-                <span className="bg-gradient-to-r from-rose-500 to-violet-500 bg-clip-text text-transparent">chaque métier</span>
+                <span className="bg-gradient-to-r from-rose-600 to-bordeaux-700 bg-clip-text text-transparent">chaque métier</span>
               </h2>
-              <p className="mt-4 text-lg text-slate-500 leading-relaxed">
+              <p className="mt-4 text-lg text-stone-600 leading-relaxed">
                 Que vous soyez freelancer, dirigeant d&apos;agence, créateur de contenu ou fondateur de startup,
                 Faymoos s&apos;adapte à votre façon de travailler.
               </p>
@@ -342,15 +346,15 @@ export default async function Home() {
                   { emoji: "🎯", text: "CTAs optimisés pour la conversion" },
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-sm border border-violet-100">{item.emoji}</span>
-                    <span className="text-sm text-slate-600">{item.text}</span>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-bordeaux-100 text-sm border border-bordeaux-200">{item.emoji}</span>
+                    <span className="text-sm text-stone-700">{item.text}</span>
                   </div>
                 ))}
               </div>
 
               <Link
                 href="/register"
-                className="mt-10 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:from-violet-500 hover:to-fuchsia-400 hover:shadow-xl active:scale-[0.98]"
+                className="mt-10 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-bordeaux-500/25 transition-all hover:from-bordeaux-600 hover:to-bordeaux-400 hover:shadow-xl active:scale-[0.98]"
               >
                 Créer mon profil
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -361,26 +365,26 @@ export default async function Home() {
 
             {/* Right - profile cards stack */}
             <div className="relative">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-violet-200/30 to-fuchsia-200/30 blur-2xl" />
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-bordeaux-100/30 to-rose-100/20 blur-2xl" />
               <div className="relative space-y-4">
                 {[
-                  { name: "Sarah Dupont", headline: "Développeuse Full-Stack", type: "💼 Freelancer", color: "border-blue-200 hover:shadow-blue-500/10", avatar: "S" },
-                  { name: "Studio Pixel", headline: "Agence Digitale Créative", type: "🏢 Agence", color: "border-violet-200 hover:shadow-violet-500/10", avatar: "P" },
-                  { name: "Yassine K.", headline: "YouTuber & Entrepreneur", type: "🎨 Créateur", color: "border-rose-200 hover:shadow-rose-500/10", avatar: "Y" },
+                  { name: "Sarah Dupont", headline: "Développeuse Full-Stack", type: "💼 Freelancer", color: "border-stone-200 hover:shadow-bordeaux-200/30", avatar: "S" },
+                  { name: "Studio Pixel", headline: "Agence Digitale Créative", type: "🏢 Agence", color: "border-stone-200 hover:shadow-bordeaux-200/30", avatar: "P" },
+                  { name: "Yassine K.", headline: "YouTuber & Entrepreneur", type: "🎨 Créateur", color: "border-stone-200 hover:shadow-rose-200/40", avatar: "Y" },
                 ].map((card, i) => (
                   <div
                     key={card.name}
-                    className={`relative flex items-center gap-4 rounded-2xl border bg-white p-5 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] shadow-sm ${card.color}`}
+                    className={`relative flex items-center gap-4 rounded-2xl border border-stone-200/90 bg-white/95 p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] ${card.color}`}
                     style={{ transform: `translateX(${i * 20}px)` }}
                   >
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-xl font-bold text-white">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-xl font-bold text-white">
                       {card.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-slate-800">{card.name}</p>
-                      <p className="text-sm text-slate-400 truncate">{card.headline}</p>
+                      <p className="font-semibold text-stone-900">{card.name}</p>
+                      <p className="text-sm text-stone-500 truncate">{card.headline}</p>
                     </div>
-                    <span className="shrink-0 rounded-full bg-violet-50 px-3 py-1 text-xs text-violet-600 ring-1 ring-violet-200 font-medium">
+                    <span className="shrink-0 rounded-full bg-bordeaux-50 px-3 py-1 text-xs text-bordeaux-800 ring-1 ring-bordeaux-200 font-medium">
                       {card.type}
                     </span>
                   </div>
@@ -392,7 +396,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ STATS ═══════════ */}
-      <section className="border-y border-violet-100/60 py-16 bg-white/60">
+      <section className="border-y border-stone-200/80 py-16 bg-stone-100/60">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -402,10 +406,10 @@ export default async function Home() {
               { value: "24/7", label: "Disponible" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <p className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+                <p className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">
                   {stat.value}
                 </p>
-                <p className="mt-2 text-sm text-slate-500">{stat.label}</p>
+                <p className="mt-2 text-sm text-stone-600">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -414,21 +418,21 @@ export default async function Home() {
 
       {/* ═══════════ DISCOVER CAPSULES ═══════════ */}
       {capsules.length > 0 && (
-        <section id="discover" className="relative py-24 sm:py-32 border-t border-violet-100/60">
-          <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 h-[400px] w-[600px] rounded-full bg-violet-100/30 blur-[120px]" />
+        <section id="discover" className="theme-capsule relative border-t border-zinc-800 bg-zinc-950 py-24 sm:py-32 text-zinc-100">
+          <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 rounded-full bg-bordeaux-900/20 blur-[120px]" />
           <div className="relative mx-auto max-w-7xl px-6">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-1.5 text-sm mb-6 shadow-sm">
+              <div className="inline-flex items-center gap-2 rounded-full border border-bordeaux-500/30 bg-bordeaux-500/10 px-4 py-1.5 text-sm mb-6 shadow-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-violet-600 font-medium">En ligne maintenant</span>
+                <span className="text-bordeaux-200 font-medium">En ligne maintenant</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-50">
                 Découvrez des{" "}
-                <span className="bg-gradient-to-r from-violet-600 to-fuchsia-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-rose-200 to-bordeaux-300 bg-clip-text text-transparent">
                   capsules en action
                 </span>
               </h2>
-              <p className="mt-4 text-lg text-slate-500">
+              <p className="mt-4 text-lg text-zinc-400">
                 Explorez les capsules créées par nos utilisateurs et voyez l&apos;expérience interactive en direct.
               </p>
             </div>
@@ -438,7 +442,7 @@ export default async function Home() {
                 <Link
                   key={capsule.id}
                   href={`/capsule/${capsule.identity.slug}`}
-                  className="group relative rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:border-violet-200 hover:shadow-xl hover:shadow-violet-500/10 hover:scale-[1.02]"
+                  className="group relative rounded-2xl border border-zinc-800/80 bg-zinc-900/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-bordeaux-500/30 hover:shadow-xl hover:shadow-bordeaux-500/20 hover:scale-[1.02]"
                 >
                   {/* Identity header */}
                   <div className="flex items-center gap-3 mb-4">
@@ -446,40 +450,40 @@ export default async function Home() {
                       <img
                         src={capsule.identity.avatar}
                         alt={capsule.identity.name}
-                        className="h-10 w-10 rounded-full object-cover ring-2 ring-violet-100"
+                        className="h-10 w-10 rounded-full object-cover ring-2 ring-bordeaux-500/25"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-sm font-bold text-white ring-2 ring-violet-100">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-sm font-bold text-white ring-2 ring-bordeaux-500/25">
                         {capsule.identity.name.charAt(0).toUpperCase()}
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 truncate">
+                      <p className="text-sm font-semibold text-zinc-100 truncate">
                         {capsule.identity.name}
                       </p>
-                      <p className="text-xs text-slate-400 truncate">
+                      <p className="text-xs text-zinc-500 truncate">
                         {capsule.identity.headline || capsule.identity.type}
                       </p>
                     </div>
                   </div>
 
                   {/* Capsule info */}
-                  <h3 className="text-base font-semibold text-slate-800 mb-1 group-hover:text-violet-700 transition-colors">
+                  <h3 className="text-base font-semibold text-zinc-100 mb-1 group-hover:text-bordeaux-200 transition-colors">
                     {capsule.title}
                   </h3>
-                  <p className="text-sm text-slate-500 line-clamp-2 mb-4">
+                  <p className="text-sm text-zinc-400 line-clamp-2 mb-4">
                     {capsule.objective}
                   </p>
 
                   {/* Footer */}
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-500">
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                       </svg>
                       {capsule.options.length} option{capsule.options.length !== 1 ? "s" : ""}
                     </div>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-600 ring-1 ring-violet-200 group-hover:bg-violet-100 transition-colors">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-bordeaux-500/10 px-2.5 py-1 text-[11px] font-medium text-bordeaux-300 ring-1 ring-bordeaux-500/30 group-hover:bg-bordeaux-500/15 transition-colors">
                       Interagir
                       <svg className="h-3 w-3 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -496,25 +500,25 @@ export default async function Home() {
       {/* ═══════════ FINAL CTA ═══════════ */}
       <section className="relative py-24 sm:py-32">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-violet-50/50 to-transparent" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[800px] rounded-full bg-violet-200/30 blur-[150px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bordeaux-100/20 to-transparent" />
+          <div className="absolute top-1/2 left-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bordeaux-200/15 blur-[150px] animate-pulse-glow" />
         </div>
         <div className="relative mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-slate-900">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-stone-900">
             Prêt à créer votre{" "}
-            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-400 bg-clip-text text-transparent animate-gradient-x">
+            <span className="bg-gradient-to-r from-bordeaux-800 via-bordeaux-600 to-rose-600 bg-clip-text text-transparent animate-gradient-x">
               capsule unique
             </span>
             {" "}?
           </h2>
-          <p className="mt-6 text-lg text-slate-500 max-w-2xl mx-auto">
+          <p className="mt-6 text-lg text-stone-600 max-w-2xl mx-auto">
             Rejoignez Faymoos et transformez votre identité professionnelle en une expérience
             interactive qui convertit vos visiteurs en opportunités.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/register"
-              className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-10 py-4 text-base font-semibold text-white shadow-xl shadow-violet-500/25 transition-all hover:from-violet-500 hover:to-fuchsia-400 hover:shadow-[0_20px_60px_-15px_rgba(139,92,246,0.5)] active:scale-[0.98]"
+              className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 px-10 py-4 text-base font-semibold text-white shadow-xl shadow-bordeaux-500/25 transition-all hover:from-bordeaux-600 hover:to-bordeaux-400 hover:shadow-[0_20px_60px_-15px_rgba(158,27,50,0.45)] active:scale-[0.98]"
             >
               Créer mon compte gratuitement
               <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -523,7 +527,7 @@ export default async function Home() {
             </Link>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-violet-600 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-bordeaux-800 transition-colors"
             >
               Déjà un compte ? Se connecter
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -535,29 +539,30 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ FOOTER ═══════════ */}
-      <footer className="border-t border-violet-100/60 py-12 bg-white/60">
+      <footer className="border-t border-stone-200/80 py-12 bg-stone-100/80">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-500 text-xs font-black text-white shadow-sm">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-xs font-black text-white shadow-sm">
                 F
               </div>
-              <span className="text-sm font-semibold text-slate-400">
-                Fay<span className="text-slate-600">moos</span>
+              <span className="text-sm font-semibold text-stone-600">
+                Fay<span className="text-stone-900">moos</span>
               </span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-slate-400">
-              <a href="#features" className="hover:text-violet-600 transition-colors">Fonctionnalités</a>
-              <a href="#how-it-works" className="hover:text-violet-600 transition-colors">Comment ça marche</a>
-              <Link href="/login" className="hover:text-violet-600 transition-colors">Connexion</Link>
-              <Link href="/register" className="hover:text-violet-600 transition-colors">Inscription</Link>
+            <div className="flex items-center gap-6 text-sm text-stone-600">
+              <a href="#features" className="hover:text-bordeaux-800 transition-colors">Fonctionnalités</a>
+              <a href="#how-it-works" className="hover:text-bordeaux-800 transition-colors">Comment ça marche</a>
+              <Link href="/login" className="hover:text-bordeaux-800 transition-colors">Connexion</Link>
+              <Link href="/register" className="hover:text-bordeaux-800 transition-colors">Inscription</Link>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-stone-500">
               &copy; {new Date().getFullYear()} Faymoos. Tous droits réservés.
             </p>
           </div>
         </div>
       </footer>
     </div>
+    </>
   );
 }

@@ -6,7 +6,7 @@ export default function AuthLayout({
   return (
     <div className="flex min-h-screen">
       {/* Left branding panel */}
-      <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] flex-col justify-between bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-400 p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[480px] xl:w-[560px] flex-col justify-between bg-gradient-to-br from-zinc-950 via-bordeaux-900 to-bordeaux-700 p-12 relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
@@ -30,8 +30,8 @@ export default function AuthLayout({
         </div>
 
         {/* Glowing orbs */}
-        <div className="absolute top-1/4 -left-20 w-72 h-72 bg-white/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/4 right-0 w-56 h-56 bg-white/10 rounded-full blur-[80px]" />
+        <div className="absolute top-1/4 -left-20 w-72 h-72 bg-bordeaux-500/30 rounded-full blur-[100px] animate-pulse-glow" />
+        <div className="absolute bottom-1/4 right-0 w-56 h-56 bg-rose-500/20 rounded-full blur-[80px] animate-mesh" />
 
         {/* Logo */}
         <div className="relative z-10">
@@ -104,7 +104,7 @@ export default function AuthLayout({
       </div>
 
       {/* Right content area */}
-      <div className="flex flex-1 items-center justify-center bg-[#FFFBF5] px-6 py-12 sm:px-12">
+      <div className="flex flex-1 items-center justify-center bg-[#f4efe6] px-6 py-12 sm:px-12">
         <div className="w-full max-w-md">{children}</div>
       </div>
     </div>
