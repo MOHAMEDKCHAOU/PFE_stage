@@ -18,6 +18,28 @@ model User {
   identityProfiles IdentityProfile[]
   favorites        Favorite[]
   notifications    Notification[]
+  userAssets       UserAsset[]
+}
+
+/// Médias personnels réutilisables (hub Asset Library)
+model UserAsset {
+  id         String        @id @default(uuid())
+  url        String
+  kind       UserAssetKind
+  mimeType   String
+  sizeBytes  Int
+  createdAt  DateTime      @default(now())
+
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, kind, createdAt(sort: Desc)])
+}
+
+enum UserAssetKind {
+  IMAGE
+  VIDEO
+  MODEL_3D
 }
 
 model IdentityProfile {

@@ -1,11 +1,10 @@
 import { getUserId } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { classifyUploadFile, shouldRecordUserAsset } from "@/lib/asset-upload";
 import { NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
-
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function POST(req: Request) {
   try {
@@ -16,28 +15,40 @@ export async function POST(req: Request) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
-    const type = formData.get("type") as string | null; // "avatar" or "cover"
+    const type = formData.get("type") as string | null;
 
     if (!file) {
       return NextResponse.json({ error: "Aucun fichier fourni" }, { status: 400 });
     }
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    const classified = classifyUploadFile(file);
+    if (!classified.ok) {
+      return NextResponse.json({ error: classified.error }, { status: 400 });
+    }
+
+    if (file.size > classified.maxBytes) {
       return NextResponse.json(
-        { error: "Format non supporté. Utilisez JPG, PNG, WebP ou GIF" },
-        { status: 400 }
+        { error: `Fichier trop volumineux (max ${Math.round(classified.maxBytes / (1024 * 1024))} Mo)` },
+        { status: 400 },
       );
     }
 
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json(
-        { error: "Le fichier ne doit pas dépasser 5 Mo" },
-        { status: 400 }
-      );
+    const folder =
+      type === "cover"
+        ? "covers"
+        : type === "portfolio"
+          ? "portfolio"
+          : type === "library" || type === "asset"
+            ? "library"
+            : "avatars";
+
+    if (type === "avatar" || type === "cover") {
+      if (classified.kind !== "IMAGE") {
+        return NextResponse.json({ error: "Avatar et cover acceptent uniquement des images" }, { status: 400 });
+      }
     }
 
-    const folder = type === "cover" ? "covers" : type === "portfolio" ? "portfolio" : "avatars";
-    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
     const safeName = `${userId}-${randomUUID().slice(0, 8)}.${ext}`;
 
     const uploadDir = path.join(process.cwd(), "public", "uploads", folder);
@@ -48,8 +59,24 @@ export async function POST(req: Request) {
     await writeFile(filePath, bytes);
 
     const url = `/uploads/${folder}/${safeName}`;
+    const mime = file.type || "application/octet-stream";
 
-    return NextResponse.json({ url }, { status: 201 });
+    if (shouldRecordUserAsset(type)) {
+      await prisma.userAsset.create({
+        data: {
+          userId,
+          url,
+          kind: classified.kind,
+          mimeType: mime,
+          sizeBytes: file.size,
+        },
+      });
+    }
+
+    return NextResponse.json(
+      { url, kind: classified.kind, sizeBytes: file.size, mimeType: mime },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("UPLOAD ERROR:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

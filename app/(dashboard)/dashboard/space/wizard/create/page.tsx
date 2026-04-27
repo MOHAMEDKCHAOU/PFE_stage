@@ -1,5 +1,6 @@
 "use client";
 
+import { ScanCaptureWorkflow } from "@/components/ScanCaptureWorkflow";
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -23,6 +24,7 @@ export default function SpaceCreatePage() {
   const [aiData, setAiData] = useState<AiPayload | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const [scanOpen, setScanOpen] = useState(false);
 
   const onUpload = useCallback(
     async (files: FileList | null) => {
@@ -200,14 +202,39 @@ export default function SpaceCreatePage() {
       {err && <p className="mt-4 text-sm text-red-600">{err}</p>}
 
       {tab === "scan" && (
-        <div className="mt-6 rounded-xl border border-dashed border-stone-300 bg-white p-6 text-center">
-          <p className="text-sm text-stone-600">Prenez une photo (mobile) ou choisissez un fichier.</p>
+        <div className="mt-6 space-y-4 rounded-xl border border-dashed border-stone-300 bg-white p-6 text-center">
+          <p className="text-sm text-stone-600">
+            Scan plein écran (caméra + aperçu + validation) ou fichier local.
+          </p>
+          <button
+            type="button"
+            onClick={() => setScanOpen(true)}
+            className="w-full rounded-xl bg-bordeaux-800 py-3 text-sm font-semibold text-white hover:bg-bordeaux-700 sm:w-auto sm:px-8"
+          >
+            Ouvrir le scan
+          </button>
           <input
             type="file"
             accept="image/*"
             capture="environment"
-            className="mt-4 block w-full text-sm"
+            className="block w-full text-sm"
             onChange={(e) => onUpload(e.target.files)}
+          />
+          <ScanCaptureWorkflow
+            open={scanOpen}
+            onClose={() => setScanOpen(false)}
+            onUseScan={async (file) => {
+              const fd = new FormData();
+              fd.append("file", file);
+              fd.append("type", "portfolio");
+              const r = await fetch("/api/upload", { method: "POST", body: fd, credentials: "include" });
+              if (!r.ok) {
+                const j = (await r.json().catch(() => ({}))) as { error?: string };
+                throw new Error(j.error || "Upload refusé");
+              }
+              const j = (await r.json()) as { url?: string };
+              if (j.url) setAssets((a) => [...a, j.url!]);
+            }}
           />
         </div>
       )}
@@ -252,14 +279,18 @@ export default function SpaceCreatePage() {
 
       {assets.length > 0 && (
         <div className="mt-6">
-          <p className="text-sm font-medium text-stone-700">Bibliothèque temporaire</p>
+          <p className="text-sm font-medium text-stone-700">Sélection courante</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {assets.map((u) => (
               <li
                 key={u}
                 className="h-16 w-16 overflow-hidden rounded border border-stone-200 bg-stone-100"
               >
-                <img src={u} alt="" className="h-full w-full object-cover" />
+                {/\.(mp4|webm|mov)(\?|$)/i.test(u) ? (
+                  <video src={u} className="h-full w-full object-cover" muted playsInline />
+                ) : (
+                  <img src={u} alt="" className="h-full w-full object-cover" />
+                )}
               </li>
             ))}
           </ul>
