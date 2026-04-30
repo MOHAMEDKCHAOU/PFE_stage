@@ -1,1 +1,1 @@
-export { GET } from "@/app/api/analytics/route";
+export { GET } from "@/route-handlers/api/analytics/route";

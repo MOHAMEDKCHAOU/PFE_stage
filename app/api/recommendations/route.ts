@@ -1,1 +1,1 @@
-export { GET } from "@/app/api/recommendations/route";
+export { GET } from "@/route-handlers/api/recommendations/route";

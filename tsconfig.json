@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/route-handlers/*": ["./src/route-handlers/*"]
     }
   },
   "include": [

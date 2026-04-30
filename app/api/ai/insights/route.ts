@@ -1,1 +1,1 @@
-export { POST } from "@/app/api/ai/insights/route";
+export { POST } from "@/route-handlers/api/ai/insights/route";

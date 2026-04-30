@@ -1,7 +1,7 @@
 "use client";
 
 import { ScanCaptureWorkflow } from "@/components/ScanCaptureWorkflow";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -12,7 +12,7 @@ type AiOption = {
 
 type AiPayload = { title: string; objective: string; options: AiOption[] };
 
-export default function SpaceCreatePage() {
+function SpaceCreatePageContent() {
   const router = useRouter();
   const sp = useSearchParams();
   const identityId = sp.get("identityId") || "";
@@ -308,5 +308,19 @@ export default function SpaceCreatePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SpaceCreatePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center text-sm text-stone-500">
+          Chargement…
+        </div>
+      }
+    >
+      <SpaceCreatePageContent />
+    </Suspense>
   );
 }

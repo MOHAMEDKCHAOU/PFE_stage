@@ -1,13 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { spaceThemePresets, type SpaceThemeId, isSpaceThemeId } from "@/lib/space-themes";
 
 type Identity = { id: string; name: string; theme: string | null };
 
-export default function SpaceTemplatesPage() {
+function SpaceTemplatesContent() {
   const router = useRouter();
   const sp = useSearchParams();
   const [identities, setIdentities] = useState<Identity[]>([]);
@@ -186,5 +186,19 @@ export default function SpaceTemplatesPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SpaceTemplatesPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center text-sm text-stone-500">
+          Chargement du thème…
+        </div>
+      }
+    >
+      <SpaceTemplatesContent />
+    </Suspense>
   );
 }

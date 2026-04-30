@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { prisma } from "@/lib/prisma";
 import * as auth from "@/lib/auth";
-import { GET, POST, PUT, DELETE } from "@/app/api/identity/route";
+import { GET, POST, PUT, DELETE } from "@/route-handlers/api/identity/route";
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {

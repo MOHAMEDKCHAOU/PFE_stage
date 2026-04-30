@@ -1,1 +1,1 @@
-export { POST } from "@/app/api/ai/improve-text/route";
+export { POST } from "@/route-handlers/api/ai/improve-text/route";

@@ -1,1 +1,1 @@
-export { POST, PUT, DELETE } from "@/app/api/branches/route";
+export { POST, PUT, DELETE } from "@/route-handlers/api/branches/route";

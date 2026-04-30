@@ -1,1 +1,1 @@
-export { POST } from "@/app/api/analytics/track/route";
+export { POST } from "@/route-handlers/api/analytics/track/route";
