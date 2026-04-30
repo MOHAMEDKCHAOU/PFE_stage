@@ -1,9 +1,20 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import QRCode from "qrcode";
 import { generatePortfolioPDF } from "@/lib/generatePDF";
 import { ChatBot } from "@/components/ChatBot";
+import { CapsuleJourneyGraph } from "@/components/CapsuleJourneyGraph";
+
+function readJourneyImmersed(capsuleId: string, optionCount: number): boolean {
+  if (optionCount === 0) return true;
+  if (typeof window === "undefined") return false;
+  try {
+    return sessionStorage.getItem(`faymoos_journey_${capsuleId}`) === "1";
+  } catch {
+    return false;
+  }
+}
 
 /* ───────── Types ───────── */
 type Branch = {
@@ -84,6 +95,7 @@ const themeOverrides: Record<string, { gradient: string; accent: string }> = {
 /* ───────── Component ───────── */
 export function CapsuleViewer({ identity, capsules, projects, testimonials }: CapsuleViewerProps) {
   const [activeCapsule, setActiveCapsule] = useState<Capsule>(capsules[0]);
+  const [journeyImmersed, setJourneyImmersed] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const sessionIdRef = useRef<string | null>(null);
@@ -105,6 +117,30 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
   const themeOv = identity.theme ? themeOverrides[identity.theme] : null;
   const tc = themeOv ? { ...baseTC, ...themeOv } : baseTC;
 
+  const showJourneyMap = activeCapsule.options.length > 0 && !journeyImmersed;
+
+  useLayoutEffect(() => {
+    setJourneyImmersed(readJourneyImmersed(activeCapsule.id, activeCapsule.options.length));
+  }, [activeCapsule.id, activeCapsule.options.length]);
+
+  function beginCapsuleExperience() {
+    try {
+      sessionStorage.setItem(`faymoos_journey_${activeCapsule.id}`, "1");
+    } catch {
+      /* ignore */
+    }
+    setJourneyImmersed(true);
+  }
+
+  function reopenJourneyMap() {
+    try {
+      sessionStorage.removeItem(`faymoos_journey_${activeCapsule.id}`);
+    } catch {
+      /* ignore */
+    }
+    setJourneyImmersed(false);
+  }
+
   // Check favorites
   useEffect(() => {
     fetch("/api/favorites")
@@ -117,8 +153,9 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
       .catch(() => {});
   }, [activeCapsule.id]);
 
-  // Start analytics session
+  // Start analytics session (après immersion ou capsule sans options interactives)
   useEffect(() => {
+    if (activeCapsule.options.length > 0 && !journeyImmersed) return;
     fetch("/api/analytics/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -127,7 +164,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
       .then((r) => r.json())
       .then((d) => { if (d.sessionId) sessionIdRef.current = d.sessionId; })
       .catch(() => {});
-  }, [activeCapsule.id]);
+  }, [activeCapsule.id, activeCapsule.options.length, journeyImmersed]);
 
   function trackEvent(action: string, label?: string) {
     if (!sessionIdRef.current) return;
@@ -422,14 +459,113 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
         </div>
       )}
 
+      {/* ──── Carte du parcours (pré-immersion) ──── */}
+      {showJourneyMap && (
+        <section className="max-w-3xl mx-auto px-6 mt-10">
+          <div className="relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-gradient-to-b from-white/[0.07] via-white/[0.02] to-transparent p-[1px] shadow-[0_28px_80px_-20px_rgba(0,0,0,0.75)]">
+            <div className="relative overflow-hidden rounded-[27px] bg-zinc-950/80 px-6 py-9 backdrop-blur-2xl sm:px-10 sm:py-10">
+              <div
+                className={`pointer-events-none absolute -top-32 right-0 h-64 w-64 rounded-full bg-gradient-to-br ${tc.gradient} opacity-[0.12] blur-3xl`}
+              />
+              <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl" />
+
+              <div className="relative text-center">
+                <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-1.5 shadow-lg shadow-black/20">
+                  <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${tc.gradient} animate-pulse shadow-[0_0_12px_rgba(236,72,153,0.6)]`} />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-300">
+                    Pré-immersion
+                  </span>
+                </div>
+                <h2
+                  className={`mt-5 bg-gradient-to-r ${tc.gradient} bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl`}
+                >
+                  Aperçu narratif du parcours
+                </h2>
+                <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-zinc-400 sm:text-[15px]">
+                  Visualisez la structure de l’expérience : chaque chemin, chaque choix et chaque action avant de
+                  plonger dans la capsule interactive.
+                </p>
+                <p className="mx-auto mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-500">
+                  <span className="rounded-md bg-zinc-900/80 px-2 py-0.5 font-medium text-zinc-400 ring-1 ring-white/5">
+                    + lisible
+                  </span>
+                  <span className="rounded-md bg-zinc-900/80 px-2 py-0.5 font-medium text-zinc-400 ring-1 ring-white/5">
+                    + mémorable
+                  </span>
+                  <span className="rounded-md bg-zinc-900/80 px-2 py-0.5 font-medium text-zinc-400 ring-1 ring-white/5">
+                    + storytelling
+                  </span>
+                </p>
+              </div>
+
+              <div className="relative mt-10">
+                <CapsuleJourneyGraph
+                  identityName={identity.name}
+                  capsuleTitle={activeCapsule.title}
+                  objective={activeCapsule.objective}
+                  options={activeCapsule.options.map((o) => ({
+                    id: o.id,
+                    label: o.label,
+                    branch: o.branch
+                      ? {
+                          headline: o.branch.headline,
+                          description: o.branch.description,
+                          cta: o.branch.cta,
+                        }
+                      : null,
+                  }))}
+                />
+              </div>
+
+              <div className="relative mt-10 flex flex-col items-center gap-4">
+                <button
+                  type="button"
+                  onClick={beginCapsuleExperience}
+                  className={`group/btn relative inline-flex items-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r ${tc.gradient} px-12 py-4 text-sm font-semibold text-white shadow-[0_16px_48px_-12px_rgba(99,102,241,0.55)] transition-all duration-300 hover:brightness-110 hover:shadow-[0_22px_56px_-12px_rgba(236,72,153,0.45)] active:scale-[0.98]`}
+                >
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full" />
+                  <span className="relative flex items-center gap-2">
+                    <svg className="h-5 w-5 opacity-95" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
+                    </svg>
+                    Commencer l’expérience
+                    <svg className="h-5 w-5 transition-transform group-hover/btn:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                  </span>
+                </button>
+                <p className="max-w-md text-center text-xs leading-relaxed text-zinc-500">
+                  Ensuite : choix interactifs, portfolio, témoignages et contact — tout le parcours Faymoos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ──── Active Capsule ──── */}
-      <section className="max-w-3xl mx-auto px-6 mt-8">
+      {!showJourneyMap && (
+      <section
+        className={`max-w-3xl mx-auto px-6 mt-8 transition-all duration-500 ease-out ${
+          journeyImmersed ? "opacity-100 translate-y-0 scale-100" : ""
+        }`}
+      >
         <div className="relative rounded-3xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden">
           {/* Glow line */}
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
           {/* Question */}
           <div className="px-8 pt-10 pb-6 text-center">
+            {activeCapsule.options.length > 0 && (
+              <button
+                type="button"
+                onClick={reopenJourneyMap}
+                className="mb-4 text-xs font-medium text-zinc-500 underline-offset-4 hover:text-zinc-300 hover:underline"
+              >
+                ← Voir la carte du parcours
+              </button>
+            )}
             <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-1.5 mb-5">
               <div className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${tc.gradient} animate-pulse`} />
               <span className={`text-xs font-semibold uppercase tracking-widest ${tc.accent}`}>
@@ -531,9 +667,10 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
           </div>
         </div>
       </section>
+      )}
 
       {/* ──── Portfolio Section ──── */}
-      {projects.length > 0 && (
+      {!showJourneyMap && projects.length > 0 && (
         <section className="max-w-3xl mx-auto px-6 mt-16">
           <div className="flex items-center gap-3 mb-6">
             <div className={`h-8 w-1 rounded-full bg-gradient-to-b ${tc.gradient}`} />
@@ -563,7 +700,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
       )}
 
       {/* ──── Testimonials Section ──── */}
-      {testimonials.length > 0 && (
+      {!showJourneyMap && testimonials.length > 0 && (
         <section className="max-w-3xl mx-auto px-6 mt-16">
           <div className="flex items-center gap-3 mb-6">
             <div className={`h-8 w-1 rounded-full bg-gradient-to-b ${tc.gradient}`} />
@@ -596,6 +733,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
       )}
 
       {/* ──── Contact Form ──── */}
+      {!showJourneyMap && (
       <section className="max-w-3xl mx-auto px-6 mt-16">
         <div className="flex items-center gap-3 mb-6">
           <div className={`h-8 w-1 rounded-full bg-gradient-to-b ${tc.gradient}`} />
@@ -714,8 +852,10 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
           )}
         </div>
       </section>
+      )}
 
       {/* ──── Footer ──── */}
+      {!showJourneyMap && (
       <footer className="max-w-3xl mx-auto px-6 mt-20 mb-10 text-center">
         <div className="h-px w-16 mx-auto bg-gradient-to-r from-transparent via-zinc-700 to-transparent mb-6" />
         <p className="text-xs text-zinc-700">
@@ -723,14 +863,17 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
           <span className={`font-semibold ${tc.accent}`}>Faymoos</span>
         </p>
       </footer>
+      )}
 
       {/* ──── ChatBot ──── */}
+      {!showJourneyMap && (
       <ChatBot
         identityId={identity.id}
         identityName={identity.name}
         accentGradient={tc.gradient}
         accentColor={tc.accent}
       />
+      )}
 
       {/* ──── QR Code Modal ──── */}
       {showQR && (
