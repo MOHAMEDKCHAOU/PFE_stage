@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAffiliate } from "@/lib/auth";
+import { requireStudioSubscriptionOrResponse } from "@/lib/studio-plan-guard";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -9,6 +10,8 @@ const WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 /** GET — indicateurs pilotage affilié (clients actifs, invitations, taux 30 j.) */
 export async function GET() {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }

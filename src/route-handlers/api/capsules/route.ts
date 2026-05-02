@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
+import { assertCanCreateCapsule } from "@/lib/subscription-guards";
 import { NextResponse } from "next/server";
 
 // REST Route: GET /api/capsules (Public = for visitors)
@@ -69,6 +70,11 @@ export async function POST(req: Request) {
     const identity = await prisma.identityProfile.findUnique({ where: { id: identityId }});
     if (!identity || !(await canManageIdentityAsOwner(userId, identity.userId))) {
       return NextResponse.json({ error: "Identité non autorisée" }, { status: 403 });
+    }
+
+    const capQuota = await assertCanCreateCapsule(userId, identity.userId);
+    if (capQuota) {
+      return NextResponse.json({ error: capQuota.error }, { status: capQuota.status });
     }
 
     const published =

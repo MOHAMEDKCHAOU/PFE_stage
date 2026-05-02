@@ -17,6 +17,16 @@ model User {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 
+  /// Stripe Customer id (cus_…)
+  stripeCustomerId     String? @unique
+  /// Stripe Subscription id (sub_…)
+  stripeSubscriptionId String? @unique
+  /// inactive | active | past_due | canceled | trialing | unpaid | incomplete …
+  subscriptionStatus   String?
+  /// FREE | PRO | STUDIO | STUDIO_PLUS (aligné produits Stripe / appli)
+  subscriptionPlan     String  @default("FREE")
+  currentPeriodEnd     DateTime?
+
   identityProfiles IdentityProfile[]
   favorites        Favorite[]
   notifications    Notification[]
@@ -25,6 +35,21 @@ model User {
   studioAsClient   AffiliateClient[] @relation("ClientOfAffiliate")
   studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
   studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
+  subscriptionUsages    SubscriptionUsage[]
+}
+
+/// Compteurs mensuels (UTC) pour quotas facturation (exports Studio, invitations créées, etc.)
+model SubscriptionUsage {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Clé mois UTC, ex. "2026-05"
+  periodKey    String
+  exportsCount Int      @default(0)
+  invitesCount Int      @default(0)
+
+  @@unique([userId, periodKey])
+  @@index([userId])
 }
 
 /// Lien Studio (affilié) → compte client géré

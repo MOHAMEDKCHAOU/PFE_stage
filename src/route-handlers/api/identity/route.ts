@@ -1,7 +1,10 @@
-import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { assertCanCreateIdentity } from "@/lib/subscription-guards";
 import { canManageIdentityAsOwner, getManagedUserIdsForViewer, isAffiliateForClient } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
+
+export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   try {
@@ -49,6 +52,11 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Client non lié à votre Studio" }, { status: 403 });
       }
       ownerUserId = clientUserId;
+    }
+
+    const quota = await assertCanCreateIdentity(userId, ownerUserId);
+    if (quota) {
+      return NextResponse.json({ error: quota.error }, { status: quota.status });
     }
 
     const slugBase = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -118,16 +126,14 @@ export async function PUT(req: Request) {
         ...(ctaWebhookUrl !== undefined
           ? {
               ctaWebhookUrl:
-                typeof ctaWebhookUrl === "string" && ctaWebhookUrl.trim().length
-                  ? ctaWebhookUrl.trim()
-                  : null,
+                typeof ctaWebhookUrl === "string" && ctaWebhookUrl.trim() !== "" ? ctaWebhookUrl.trim() : null,
             }
           : {}),
         ...(ctaWebhookSecret !== undefined
           ? {
               ctaWebhookSecret:
-                typeof ctaWebhookSecret === "string" && ctaWebhookSecret.trim().length
-                  ? ctaWebhookSecret.trim()
+                typeof ctaWebhookSecret === "string" && ctaWebhookSecret.trim() !== ""
+                  ? ctaWebhookSecret
                   : null,
             }
           : {}),
@@ -148,18 +154,17 @@ export async function DELETE(req: Request) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    if (!id) return NextResponse.json({ error: "L'ID de l'identité est requis" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "Le paramètre id est requis" }, { status: 400 });
+    }
 
     const existing = await prisma.identityProfile.findUnique({ where: { id } });
-    if (!existing || existing.userId !== userId) {
+    if (!existing || !(await canManageIdentityAsOwner(userId, existing.userId))) {
       return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });
     }
 
-    await prisma.identityProfile.delete({
-      where: { id },
-    });
-
-    return NextResponse.json({ success: true, message: "Identité supprimée" });
+    await prisma.identityProfile.delete({ where: { id } });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE IDENTITY ERROR:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

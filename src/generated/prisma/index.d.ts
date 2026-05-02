@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model SubscriptionUsage
+ * Compteurs mensuels (UTC) pour quotas facturation (exports Studio, invitations créées, etc.)
+ */
+export type SubscriptionUsage = $Result.DefaultSelection<Prisma.$SubscriptionUsagePayload>
+/**
  * Model AffiliateClient
  * Lien Studio (affilié) → compte client géré
  */
@@ -239,6 +244,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.subscriptionUsage`: Exposes CRUD operations for the **SubscriptionUsage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SubscriptionUsages
+    * const subscriptionUsages = await prisma.subscriptionUsage.findMany()
+    * ```
+    */
+  get subscriptionUsage(): Prisma.SubscriptionUsageDelegate<ExtArgs>;
 
   /**
    * `prisma.affiliateClient`: Exposes CRUD operations for the **AffiliateClient** model.
@@ -821,6 +836,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    SubscriptionUsage: 'SubscriptionUsage',
     AffiliateClient: 'AffiliateClient',
     StudioClientInvite: 'StudioClientInvite',
     UserAsset: 'UserAsset',
@@ -850,7 +866,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "affiliateClient" | "studioClientInvite" | "userAsset" | "identityProfile" | "portfolioProject" | "testimonial" | "capsule" | "capsuleOption" | "capsuleBranch" | "capsuleSession" | "capsuleEvent" | "favorite" | "message" | "notification"
+      modelProps: "user" | "subscriptionUsage" | "affiliateClient" | "studioClientInvite" | "userAsset" | "identityProfile" | "portfolioProject" | "testimonial" | "capsule" | "capsuleOption" | "capsuleBranch" | "capsuleSession" | "capsuleEvent" | "favorite" | "message" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -921,6 +937,76 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      SubscriptionUsage: {
+        payload: Prisma.$SubscriptionUsagePayload<ExtArgs>
+        fields: Prisma.SubscriptionUsageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SubscriptionUsageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SubscriptionUsageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>
+          }
+          findFirst: {
+            args: Prisma.SubscriptionUsageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SubscriptionUsageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>
+          }
+          findMany: {
+            args: Prisma.SubscriptionUsageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>[]
+          }
+          create: {
+            args: Prisma.SubscriptionUsageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>
+          }
+          createMany: {
+            args: Prisma.SubscriptionUsageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SubscriptionUsageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>[]
+          }
+          delete: {
+            args: Prisma.SubscriptionUsageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>
+          }
+          update: {
+            args: Prisma.SubscriptionUsageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>
+          }
+          deleteMany: {
+            args: Prisma.SubscriptionUsageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SubscriptionUsageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SubscriptionUsageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubscriptionUsagePayload>
+          }
+          aggregate: {
+            args: Prisma.SubscriptionUsageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSubscriptionUsage>
+          }
+          groupBy: {
+            args: Prisma.SubscriptionUsageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SubscriptionUsageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SubscriptionUsageCountArgs<ExtArgs>
+            result: $Utils.Optional<SubscriptionUsageCountAggregateOutputType> | number
           }
         }
       }
@@ -2073,6 +2159,7 @@ export namespace Prisma {
     studioAsClient: number
     studioInvitesSent: number
     studioInvitesAccepted: number
+    subscriptionUsages: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2084,6 +2171,7 @@ export namespace Prisma {
     studioAsClient?: boolean | UserCountOutputTypeCountStudioAsClientArgs
     studioInvitesSent?: boolean | UserCountOutputTypeCountStudioInvitesSentArgs
     studioInvitesAccepted?: boolean | UserCountOutputTypeCountStudioInvitesAcceptedArgs
+    subscriptionUsages?: boolean | UserCountOutputTypeCountSubscriptionUsagesArgs
   }
 
   // Custom InputTypes
@@ -2151,6 +2239,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountStudioInvitesAcceptedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StudioClientInviteWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSubscriptionUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SubscriptionUsageWhereInput
   }
 
 
@@ -2313,6 +2408,11 @@ export namespace Prisma {
     role: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    stripeCustomerId: string | null
+    stripeSubscriptionId: string | null
+    subscriptionStatus: string | null
+    subscriptionPlan: string | null
+    currentPeriodEnd: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2322,6 +2422,11 @@ export namespace Prisma {
     role: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    stripeCustomerId: string | null
+    stripeSubscriptionId: string | null
+    subscriptionStatus: string | null
+    subscriptionPlan: string | null
+    currentPeriodEnd: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2331,6 +2436,11 @@ export namespace Prisma {
     role: number
     createdAt: number
     updatedAt: number
+    stripeCustomerId: number
+    stripeSubscriptionId: number
+    subscriptionStatus: number
+    subscriptionPlan: number
+    currentPeriodEnd: number
     _all: number
   }
 
@@ -2342,6 +2452,11 @@ export namespace Prisma {
     role?: true
     createdAt?: true
     updatedAt?: true
+    stripeCustomerId?: true
+    stripeSubscriptionId?: true
+    subscriptionStatus?: true
+    subscriptionPlan?: true
+    currentPeriodEnd?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2351,6 +2466,11 @@ export namespace Prisma {
     role?: true
     createdAt?: true
     updatedAt?: true
+    stripeCustomerId?: true
+    stripeSubscriptionId?: true
+    subscriptionStatus?: true
+    subscriptionPlan?: true
+    currentPeriodEnd?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2360,6 +2480,11 @@ export namespace Prisma {
     role?: true
     createdAt?: true
     updatedAt?: true
+    stripeCustomerId?: true
+    stripeSubscriptionId?: true
+    subscriptionStatus?: true
+    subscriptionPlan?: true
+    currentPeriodEnd?: true
     _all?: true
   }
 
@@ -2442,6 +2567,11 @@ export namespace Prisma {
     role: string
     createdAt: Date
     updatedAt: Date
+    stripeCustomerId: string | null
+    stripeSubscriptionId: string | null
+    subscriptionStatus: string | null
+    subscriptionPlan: string
+    currentPeriodEnd: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2468,6 +2598,11 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    stripeCustomerId?: boolean
+    stripeSubscriptionId?: boolean
+    subscriptionStatus?: boolean
+    subscriptionPlan?: boolean
+    currentPeriodEnd?: boolean
     identityProfiles?: boolean | User$identityProfilesArgs<ExtArgs>
     favorites?: boolean | User$favoritesArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
@@ -2476,6 +2611,7 @@ export namespace Prisma {
     studioAsClient?: boolean | User$studioAsClientArgs<ExtArgs>
     studioInvitesSent?: boolean | User$studioInvitesSentArgs<ExtArgs>
     studioInvitesAccepted?: boolean | User$studioInvitesAcceptedArgs<ExtArgs>
+    subscriptionUsages?: boolean | User$subscriptionUsagesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2486,6 +2622,11 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    stripeCustomerId?: boolean
+    stripeSubscriptionId?: boolean
+    subscriptionStatus?: boolean
+    subscriptionPlan?: boolean
+    currentPeriodEnd?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2495,6 +2636,11 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    stripeCustomerId?: boolean
+    stripeSubscriptionId?: boolean
+    subscriptionStatus?: boolean
+    subscriptionPlan?: boolean
+    currentPeriodEnd?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2506,6 +2652,7 @@ export namespace Prisma {
     studioAsClient?: boolean | User$studioAsClientArgs<ExtArgs>
     studioInvitesSent?: boolean | User$studioInvitesSentArgs<ExtArgs>
     studioInvitesAccepted?: boolean | User$studioInvitesAcceptedArgs<ExtArgs>
+    subscriptionUsages?: boolean | User$subscriptionUsagesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2521,6 +2668,7 @@ export namespace Prisma {
       studioAsClient: Prisma.$AffiliateClientPayload<ExtArgs>[]
       studioInvitesSent: Prisma.$StudioClientInvitePayload<ExtArgs>[]
       studioInvitesAccepted: Prisma.$StudioClientInvitePayload<ExtArgs>[]
+      subscriptionUsages: Prisma.$SubscriptionUsagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2529,6 +2677,23 @@ export namespace Prisma {
       role: string
       createdAt: Date
       updatedAt: Date
+      /**
+       * Stripe Customer id (cus_…)
+       */
+      stripeCustomerId: string | null
+      /**
+       * Stripe Subscription id (sub_…)
+       */
+      stripeSubscriptionId: string | null
+      /**
+       * inactive | active | past_due | canceled | trialing | unpaid | incomplete …
+       */
+      subscriptionStatus: string | null
+      /**
+       * FREE | PRO | STUDIO | STUDIO_PLUS (aligné produits Stripe / appli)
+       */
+      subscriptionPlan: string
+      currentPeriodEnd: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2901,6 +3066,7 @@ export namespace Prisma {
     studioAsClient<T extends User$studioAsClientArgs<ExtArgs> = {}>(args?: Subset<T, User$studioAsClientArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AffiliateClientPayload<ExtArgs>, T, "findMany"> | Null>
     studioInvitesSent<T extends User$studioInvitesSentArgs<ExtArgs> = {}>(args?: Subset<T, User$studioInvitesSentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudioClientInvitePayload<ExtArgs>, T, "findMany"> | Null>
     studioInvitesAccepted<T extends User$studioInvitesAcceptedArgs<ExtArgs> = {}>(args?: Subset<T, User$studioInvitesAcceptedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudioClientInvitePayload<ExtArgs>, T, "findMany"> | Null>
+    subscriptionUsages<T extends User$subscriptionUsagesArgs<ExtArgs> = {}>(args?: Subset<T, User$subscriptionUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2936,6 +3102,11 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly stripeCustomerId: FieldRef<"User", 'String'>
+    readonly stripeSubscriptionId: FieldRef<"User", 'String'>
+    readonly subscriptionStatus: FieldRef<"User", 'String'>
+    readonly subscriptionPlan: FieldRef<"User", 'String'>
+    readonly currentPeriodEnd: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -3410,6 +3581,26 @@ export namespace Prisma {
   }
 
   /**
+   * User.subscriptionUsages
+   */
+  export type User$subscriptionUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    where?: SubscriptionUsageWhereInput
+    orderBy?: SubscriptionUsageOrderByWithRelationInput | SubscriptionUsageOrderByWithRelationInput[]
+    cursor?: SubscriptionUsageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SubscriptionUsageScalarFieldEnum | SubscriptionUsageScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3421,6 +3612,980 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SubscriptionUsage
+   */
+
+  export type AggregateSubscriptionUsage = {
+    _count: SubscriptionUsageCountAggregateOutputType | null
+    _avg: SubscriptionUsageAvgAggregateOutputType | null
+    _sum: SubscriptionUsageSumAggregateOutputType | null
+    _min: SubscriptionUsageMinAggregateOutputType | null
+    _max: SubscriptionUsageMaxAggregateOutputType | null
+  }
+
+  export type SubscriptionUsageAvgAggregateOutputType = {
+    exportsCount: number | null
+    invitesCount: number | null
+  }
+
+  export type SubscriptionUsageSumAggregateOutputType = {
+    exportsCount: number | null
+    invitesCount: number | null
+  }
+
+  export type SubscriptionUsageMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    periodKey: string | null
+    exportsCount: number | null
+    invitesCount: number | null
+  }
+
+  export type SubscriptionUsageMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    periodKey: string | null
+    exportsCount: number | null
+    invitesCount: number | null
+  }
+
+  export type SubscriptionUsageCountAggregateOutputType = {
+    id: number
+    userId: number
+    periodKey: number
+    exportsCount: number
+    invitesCount: number
+    _all: number
+  }
+
+
+  export type SubscriptionUsageAvgAggregateInputType = {
+    exportsCount?: true
+    invitesCount?: true
+  }
+
+  export type SubscriptionUsageSumAggregateInputType = {
+    exportsCount?: true
+    invitesCount?: true
+  }
+
+  export type SubscriptionUsageMinAggregateInputType = {
+    id?: true
+    userId?: true
+    periodKey?: true
+    exportsCount?: true
+    invitesCount?: true
+  }
+
+  export type SubscriptionUsageMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    periodKey?: true
+    exportsCount?: true
+    invitesCount?: true
+  }
+
+  export type SubscriptionUsageCountAggregateInputType = {
+    id?: true
+    userId?: true
+    periodKey?: true
+    exportsCount?: true
+    invitesCount?: true
+    _all?: true
+  }
+
+  export type SubscriptionUsageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SubscriptionUsage to aggregate.
+     */
+    where?: SubscriptionUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubscriptionUsages to fetch.
+     */
+    orderBy?: SubscriptionUsageOrderByWithRelationInput | SubscriptionUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SubscriptionUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubscriptionUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubscriptionUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SubscriptionUsages
+    **/
+    _count?: true | SubscriptionUsageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SubscriptionUsageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SubscriptionUsageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SubscriptionUsageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SubscriptionUsageMaxAggregateInputType
+  }
+
+  export type GetSubscriptionUsageAggregateType<T extends SubscriptionUsageAggregateArgs> = {
+        [P in keyof T & keyof AggregateSubscriptionUsage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSubscriptionUsage[P]>
+      : GetScalarType<T[P], AggregateSubscriptionUsage[P]>
+  }
+
+
+
+
+  export type SubscriptionUsageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SubscriptionUsageWhereInput
+    orderBy?: SubscriptionUsageOrderByWithAggregationInput | SubscriptionUsageOrderByWithAggregationInput[]
+    by: SubscriptionUsageScalarFieldEnum[] | SubscriptionUsageScalarFieldEnum
+    having?: SubscriptionUsageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SubscriptionUsageCountAggregateInputType | true
+    _avg?: SubscriptionUsageAvgAggregateInputType
+    _sum?: SubscriptionUsageSumAggregateInputType
+    _min?: SubscriptionUsageMinAggregateInputType
+    _max?: SubscriptionUsageMaxAggregateInputType
+  }
+
+  export type SubscriptionUsageGroupByOutputType = {
+    id: string
+    userId: string
+    periodKey: string
+    exportsCount: number
+    invitesCount: number
+    _count: SubscriptionUsageCountAggregateOutputType | null
+    _avg: SubscriptionUsageAvgAggregateOutputType | null
+    _sum: SubscriptionUsageSumAggregateOutputType | null
+    _min: SubscriptionUsageMinAggregateOutputType | null
+    _max: SubscriptionUsageMaxAggregateOutputType | null
+  }
+
+  type GetSubscriptionUsageGroupByPayload<T extends SubscriptionUsageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SubscriptionUsageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SubscriptionUsageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SubscriptionUsageGroupByOutputType[P]>
+            : GetScalarType<T[P], SubscriptionUsageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SubscriptionUsageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    periodKey?: boolean
+    exportsCount?: boolean
+    invitesCount?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["subscriptionUsage"]>
+
+  export type SubscriptionUsageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    periodKey?: boolean
+    exportsCount?: boolean
+    invitesCount?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["subscriptionUsage"]>
+
+  export type SubscriptionUsageSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    periodKey?: boolean
+    exportsCount?: boolean
+    invitesCount?: boolean
+  }
+
+  export type SubscriptionUsageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SubscriptionUsageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SubscriptionUsagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SubscriptionUsage"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      /**
+       * Clé mois UTC, ex. "2026-05"
+       */
+      periodKey: string
+      exportsCount: number
+      invitesCount: number
+    }, ExtArgs["result"]["subscriptionUsage"]>
+    composites: {}
+  }
+
+  type SubscriptionUsageGetPayload<S extends boolean | null | undefined | SubscriptionUsageDefaultArgs> = $Result.GetResult<Prisma.$SubscriptionUsagePayload, S>
+
+  type SubscriptionUsageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SubscriptionUsageFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SubscriptionUsageCountAggregateInputType | true
+    }
+
+  export interface SubscriptionUsageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SubscriptionUsage'], meta: { name: 'SubscriptionUsage' } }
+    /**
+     * Find zero or one SubscriptionUsage that matches the filter.
+     * @param {SubscriptionUsageFindUniqueArgs} args - Arguments to find a SubscriptionUsage
+     * @example
+     * // Get one SubscriptionUsage
+     * const subscriptionUsage = await prisma.subscriptionUsage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SubscriptionUsageFindUniqueArgs>(args: SelectSubset<T, SubscriptionUsageFindUniqueArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SubscriptionUsage that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SubscriptionUsageFindUniqueOrThrowArgs} args - Arguments to find a SubscriptionUsage
+     * @example
+     * // Get one SubscriptionUsage
+     * const subscriptionUsage = await prisma.subscriptionUsage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SubscriptionUsageFindUniqueOrThrowArgs>(args: SelectSubset<T, SubscriptionUsageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SubscriptionUsage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageFindFirstArgs} args - Arguments to find a SubscriptionUsage
+     * @example
+     * // Get one SubscriptionUsage
+     * const subscriptionUsage = await prisma.subscriptionUsage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SubscriptionUsageFindFirstArgs>(args?: SelectSubset<T, SubscriptionUsageFindFirstArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SubscriptionUsage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageFindFirstOrThrowArgs} args - Arguments to find a SubscriptionUsage
+     * @example
+     * // Get one SubscriptionUsage
+     * const subscriptionUsage = await prisma.subscriptionUsage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SubscriptionUsageFindFirstOrThrowArgs>(args?: SelectSubset<T, SubscriptionUsageFindFirstOrThrowArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SubscriptionUsages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SubscriptionUsages
+     * const subscriptionUsages = await prisma.subscriptionUsage.findMany()
+     * 
+     * // Get first 10 SubscriptionUsages
+     * const subscriptionUsages = await prisma.subscriptionUsage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const subscriptionUsageWithIdOnly = await prisma.subscriptionUsage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SubscriptionUsageFindManyArgs>(args?: SelectSubset<T, SubscriptionUsageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SubscriptionUsage.
+     * @param {SubscriptionUsageCreateArgs} args - Arguments to create a SubscriptionUsage.
+     * @example
+     * // Create one SubscriptionUsage
+     * const SubscriptionUsage = await prisma.subscriptionUsage.create({
+     *   data: {
+     *     // ... data to create a SubscriptionUsage
+     *   }
+     * })
+     * 
+     */
+    create<T extends SubscriptionUsageCreateArgs>(args: SelectSubset<T, SubscriptionUsageCreateArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SubscriptionUsages.
+     * @param {SubscriptionUsageCreateManyArgs} args - Arguments to create many SubscriptionUsages.
+     * @example
+     * // Create many SubscriptionUsages
+     * const subscriptionUsage = await prisma.subscriptionUsage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SubscriptionUsageCreateManyArgs>(args?: SelectSubset<T, SubscriptionUsageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SubscriptionUsages and returns the data saved in the database.
+     * @param {SubscriptionUsageCreateManyAndReturnArgs} args - Arguments to create many SubscriptionUsages.
+     * @example
+     * // Create many SubscriptionUsages
+     * const subscriptionUsage = await prisma.subscriptionUsage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SubscriptionUsages and only return the `id`
+     * const subscriptionUsageWithIdOnly = await prisma.subscriptionUsage.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SubscriptionUsageCreateManyAndReturnArgs>(args?: SelectSubset<T, SubscriptionUsageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SubscriptionUsage.
+     * @param {SubscriptionUsageDeleteArgs} args - Arguments to delete one SubscriptionUsage.
+     * @example
+     * // Delete one SubscriptionUsage
+     * const SubscriptionUsage = await prisma.subscriptionUsage.delete({
+     *   where: {
+     *     // ... filter to delete one SubscriptionUsage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SubscriptionUsageDeleteArgs>(args: SelectSubset<T, SubscriptionUsageDeleteArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SubscriptionUsage.
+     * @param {SubscriptionUsageUpdateArgs} args - Arguments to update one SubscriptionUsage.
+     * @example
+     * // Update one SubscriptionUsage
+     * const subscriptionUsage = await prisma.subscriptionUsage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SubscriptionUsageUpdateArgs>(args: SelectSubset<T, SubscriptionUsageUpdateArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SubscriptionUsages.
+     * @param {SubscriptionUsageDeleteManyArgs} args - Arguments to filter SubscriptionUsages to delete.
+     * @example
+     * // Delete a few SubscriptionUsages
+     * const { count } = await prisma.subscriptionUsage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SubscriptionUsageDeleteManyArgs>(args?: SelectSubset<T, SubscriptionUsageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SubscriptionUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SubscriptionUsages
+     * const subscriptionUsage = await prisma.subscriptionUsage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SubscriptionUsageUpdateManyArgs>(args: SelectSubset<T, SubscriptionUsageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SubscriptionUsage.
+     * @param {SubscriptionUsageUpsertArgs} args - Arguments to update or create a SubscriptionUsage.
+     * @example
+     * // Update or create a SubscriptionUsage
+     * const subscriptionUsage = await prisma.subscriptionUsage.upsert({
+     *   create: {
+     *     // ... data to create a SubscriptionUsage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SubscriptionUsage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SubscriptionUsageUpsertArgs>(args: SelectSubset<T, SubscriptionUsageUpsertArgs<ExtArgs>>): Prisma__SubscriptionUsageClient<$Result.GetResult<Prisma.$SubscriptionUsagePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SubscriptionUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageCountArgs} args - Arguments to filter SubscriptionUsages to count.
+     * @example
+     * // Count the number of SubscriptionUsages
+     * const count = await prisma.subscriptionUsage.count({
+     *   where: {
+     *     // ... the filter for the SubscriptionUsages we want to count
+     *   }
+     * })
+    **/
+    count<T extends SubscriptionUsageCountArgs>(
+      args?: Subset<T, SubscriptionUsageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SubscriptionUsageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SubscriptionUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SubscriptionUsageAggregateArgs>(args: Subset<T, SubscriptionUsageAggregateArgs>): Prisma.PrismaPromise<GetSubscriptionUsageAggregateType<T>>
+
+    /**
+     * Group by SubscriptionUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubscriptionUsageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SubscriptionUsageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SubscriptionUsageGroupByArgs['orderBy'] }
+        : { orderBy?: SubscriptionUsageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SubscriptionUsageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSubscriptionUsageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SubscriptionUsage model
+   */
+  readonly fields: SubscriptionUsageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SubscriptionUsage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SubscriptionUsageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SubscriptionUsage model
+   */ 
+  interface SubscriptionUsageFieldRefs {
+    readonly id: FieldRef<"SubscriptionUsage", 'String'>
+    readonly userId: FieldRef<"SubscriptionUsage", 'String'>
+    readonly periodKey: FieldRef<"SubscriptionUsage", 'String'>
+    readonly exportsCount: FieldRef<"SubscriptionUsage", 'Int'>
+    readonly invitesCount: FieldRef<"SubscriptionUsage", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SubscriptionUsage findUnique
+   */
+  export type SubscriptionUsageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which SubscriptionUsage to fetch.
+     */
+    where: SubscriptionUsageWhereUniqueInput
+  }
+
+  /**
+   * SubscriptionUsage findUniqueOrThrow
+   */
+  export type SubscriptionUsageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which SubscriptionUsage to fetch.
+     */
+    where: SubscriptionUsageWhereUniqueInput
+  }
+
+  /**
+   * SubscriptionUsage findFirst
+   */
+  export type SubscriptionUsageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which SubscriptionUsage to fetch.
+     */
+    where?: SubscriptionUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubscriptionUsages to fetch.
+     */
+    orderBy?: SubscriptionUsageOrderByWithRelationInput | SubscriptionUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SubscriptionUsages.
+     */
+    cursor?: SubscriptionUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubscriptionUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubscriptionUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SubscriptionUsages.
+     */
+    distinct?: SubscriptionUsageScalarFieldEnum | SubscriptionUsageScalarFieldEnum[]
+  }
+
+  /**
+   * SubscriptionUsage findFirstOrThrow
+   */
+  export type SubscriptionUsageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which SubscriptionUsage to fetch.
+     */
+    where?: SubscriptionUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubscriptionUsages to fetch.
+     */
+    orderBy?: SubscriptionUsageOrderByWithRelationInput | SubscriptionUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SubscriptionUsages.
+     */
+    cursor?: SubscriptionUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubscriptionUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubscriptionUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SubscriptionUsages.
+     */
+    distinct?: SubscriptionUsageScalarFieldEnum | SubscriptionUsageScalarFieldEnum[]
+  }
+
+  /**
+   * SubscriptionUsage findMany
+   */
+  export type SubscriptionUsageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which SubscriptionUsages to fetch.
+     */
+    where?: SubscriptionUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubscriptionUsages to fetch.
+     */
+    orderBy?: SubscriptionUsageOrderByWithRelationInput | SubscriptionUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SubscriptionUsages.
+     */
+    cursor?: SubscriptionUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubscriptionUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubscriptionUsages.
+     */
+    skip?: number
+    distinct?: SubscriptionUsageScalarFieldEnum | SubscriptionUsageScalarFieldEnum[]
+  }
+
+  /**
+   * SubscriptionUsage create
+   */
+  export type SubscriptionUsageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SubscriptionUsage.
+     */
+    data: XOR<SubscriptionUsageCreateInput, SubscriptionUsageUncheckedCreateInput>
+  }
+
+  /**
+   * SubscriptionUsage createMany
+   */
+  export type SubscriptionUsageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SubscriptionUsages.
+     */
+    data: SubscriptionUsageCreateManyInput | SubscriptionUsageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SubscriptionUsage createManyAndReturn
+   */
+  export type SubscriptionUsageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SubscriptionUsages.
+     */
+    data: SubscriptionUsageCreateManyInput | SubscriptionUsageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SubscriptionUsage update
+   */
+  export type SubscriptionUsageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SubscriptionUsage.
+     */
+    data: XOR<SubscriptionUsageUpdateInput, SubscriptionUsageUncheckedUpdateInput>
+    /**
+     * Choose, which SubscriptionUsage to update.
+     */
+    where: SubscriptionUsageWhereUniqueInput
+  }
+
+  /**
+   * SubscriptionUsage updateMany
+   */
+  export type SubscriptionUsageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SubscriptionUsages.
+     */
+    data: XOR<SubscriptionUsageUpdateManyMutationInput, SubscriptionUsageUncheckedUpdateManyInput>
+    /**
+     * Filter which SubscriptionUsages to update
+     */
+    where?: SubscriptionUsageWhereInput
+  }
+
+  /**
+   * SubscriptionUsage upsert
+   */
+  export type SubscriptionUsageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SubscriptionUsage to update in case it exists.
+     */
+    where: SubscriptionUsageWhereUniqueInput
+    /**
+     * In case the SubscriptionUsage found by the `where` argument doesn't exist, create a new SubscriptionUsage with this data.
+     */
+    create: XOR<SubscriptionUsageCreateInput, SubscriptionUsageUncheckedCreateInput>
+    /**
+     * In case the SubscriptionUsage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SubscriptionUsageUpdateInput, SubscriptionUsageUncheckedUpdateInput>
+  }
+
+  /**
+   * SubscriptionUsage delete
+   */
+  export type SubscriptionUsageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
+    /**
+     * Filter which SubscriptionUsage to delete.
+     */
+    where: SubscriptionUsageWhereUniqueInput
+  }
+
+  /**
+   * SubscriptionUsage deleteMany
+   */
+  export type SubscriptionUsageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SubscriptionUsages to delete
+     */
+    where?: SubscriptionUsageWhereInput
+  }
+
+  /**
+   * SubscriptionUsage without action
+   */
+  export type SubscriptionUsageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubscriptionUsage
+     */
+    select?: SubscriptionUsageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubscriptionUsageInclude<ExtArgs> | null
   }
 
 
@@ -17279,10 +18444,26 @@ export namespace Prisma {
     password: 'password',
     role: 'role',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    stripeCustomerId: 'stripeCustomerId',
+    stripeSubscriptionId: 'stripeSubscriptionId',
+    subscriptionStatus: 'subscriptionStatus',
+    subscriptionPlan: 'subscriptionPlan',
+    currentPeriodEnd: 'currentPeriodEnd'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const SubscriptionUsageScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    periodKey: 'periodKey',
+    exportsCount: 'exportsCount',
+    invitesCount: 'invitesCount'
+  };
+
+  export type SubscriptionUsageScalarFieldEnum = (typeof SubscriptionUsageScalarFieldEnum)[keyof typeof SubscriptionUsageScalarFieldEnum]
 
 
   export const AffiliateClientScalarFieldEnum: {
@@ -17548,20 +18729,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'UserAssetKind'
-   */
-  export type EnumUserAssetKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserAssetKind'>
-    
-
-
-  /**
-   * Reference to a field of type 'UserAssetKind[]'
-   */
-  export type ListEnumUserAssetKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserAssetKind[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -17572,6 +18739,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserAssetKind'
+   */
+  export type EnumUserAssetKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserAssetKind'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserAssetKind[]'
+   */
+  export type ListEnumUserAssetKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserAssetKind[]'>
     
 
 
@@ -17616,6 +18797,11 @@ export namespace Prisma {
     role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    stripeCustomerId?: StringNullableFilter<"User"> | string | null
+    stripeSubscriptionId?: StringNullableFilter<"User"> | string | null
+    subscriptionStatus?: StringNullableFilter<"User"> | string | null
+    subscriptionPlan?: StringFilter<"User"> | string
+    currentPeriodEnd?: DateTimeNullableFilter<"User"> | Date | string | null
     identityProfiles?: IdentityProfileListRelationFilter
     favorites?: FavoriteListRelationFilter
     notifications?: NotificationListRelationFilter
@@ -17624,6 +18810,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientListRelationFilter
     studioInvitesSent?: StudioClientInviteListRelationFilter
     studioInvitesAccepted?: StudioClientInviteListRelationFilter
+    subscriptionUsages?: SubscriptionUsageListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -17633,6 +18820,11 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
+    stripeSubscriptionId?: SortOrderInput | SortOrder
+    subscriptionStatus?: SortOrderInput | SortOrder
+    subscriptionPlan?: SortOrder
+    currentPeriodEnd?: SortOrderInput | SortOrder
     identityProfiles?: IdentityProfileOrderByRelationAggregateInput
     favorites?: FavoriteOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
@@ -17641,11 +18833,14 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientOrderByRelationAggregateInput
     studioInvitesSent?: StudioClientInviteOrderByRelationAggregateInput
     studioInvitesAccepted?: StudioClientInviteOrderByRelationAggregateInput
+    subscriptionUsages?: SubscriptionUsageOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    stripeCustomerId?: string
+    stripeSubscriptionId?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -17653,6 +18848,9 @@ export namespace Prisma {
     role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    subscriptionStatus?: StringNullableFilter<"User"> | string | null
+    subscriptionPlan?: StringFilter<"User"> | string
+    currentPeriodEnd?: DateTimeNullableFilter<"User"> | Date | string | null
     identityProfiles?: IdentityProfileListRelationFilter
     favorites?: FavoriteListRelationFilter
     notifications?: NotificationListRelationFilter
@@ -17661,7 +18859,8 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientListRelationFilter
     studioInvitesSent?: StudioClientInviteListRelationFilter
     studioInvitesAccepted?: StudioClientInviteListRelationFilter
-  }, "id" | "email">
+    subscriptionUsages?: SubscriptionUsageListRelationFilter
+  }, "id" | "email" | "stripeCustomerId" | "stripeSubscriptionId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -17670,6 +18869,11 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
+    stripeSubscriptionId?: SortOrderInput | SortOrder
+    subscriptionStatus?: SortOrderInput | SortOrder
+    subscriptionPlan?: SortOrder
+    currentPeriodEnd?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -17685,6 +18889,69 @@ export namespace Prisma {
     role?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    stripeCustomerId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    stripeSubscriptionId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    subscriptionStatus?: StringNullableWithAggregatesFilter<"User"> | string | null
+    subscriptionPlan?: StringWithAggregatesFilter<"User"> | string
+    currentPeriodEnd?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  }
+
+  export type SubscriptionUsageWhereInput = {
+    AND?: SubscriptionUsageWhereInput | SubscriptionUsageWhereInput[]
+    OR?: SubscriptionUsageWhereInput[]
+    NOT?: SubscriptionUsageWhereInput | SubscriptionUsageWhereInput[]
+    id?: StringFilter<"SubscriptionUsage"> | string
+    userId?: StringFilter<"SubscriptionUsage"> | string
+    periodKey?: StringFilter<"SubscriptionUsage"> | string
+    exportsCount?: IntFilter<"SubscriptionUsage"> | number
+    invitesCount?: IntFilter<"SubscriptionUsage"> | number
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type SubscriptionUsageOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    periodKey?: SortOrder
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type SubscriptionUsageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_periodKey?: SubscriptionUsageUserIdPeriodKeyCompoundUniqueInput
+    AND?: SubscriptionUsageWhereInput | SubscriptionUsageWhereInput[]
+    OR?: SubscriptionUsageWhereInput[]
+    NOT?: SubscriptionUsageWhereInput | SubscriptionUsageWhereInput[]
+    userId?: StringFilter<"SubscriptionUsage"> | string
+    periodKey?: StringFilter<"SubscriptionUsage"> | string
+    exportsCount?: IntFilter<"SubscriptionUsage"> | number
+    invitesCount?: IntFilter<"SubscriptionUsage"> | number
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id" | "userId_periodKey">
+
+  export type SubscriptionUsageOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    periodKey?: SortOrder
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+    _count?: SubscriptionUsageCountOrderByAggregateInput
+    _avg?: SubscriptionUsageAvgOrderByAggregateInput
+    _max?: SubscriptionUsageMaxOrderByAggregateInput
+    _min?: SubscriptionUsageMinOrderByAggregateInput
+    _sum?: SubscriptionUsageSumOrderByAggregateInput
+  }
+
+  export type SubscriptionUsageScalarWhereWithAggregatesInput = {
+    AND?: SubscriptionUsageScalarWhereWithAggregatesInput | SubscriptionUsageScalarWhereWithAggregatesInput[]
+    OR?: SubscriptionUsageScalarWhereWithAggregatesInput[]
+    NOT?: SubscriptionUsageScalarWhereWithAggregatesInput | SubscriptionUsageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SubscriptionUsage"> | string
+    userId?: StringWithAggregatesFilter<"SubscriptionUsage"> | string
+    periodKey?: StringWithAggregatesFilter<"SubscriptionUsage"> | string
+    exportsCount?: IntWithAggregatesFilter<"SubscriptionUsage"> | number
+    invitesCount?: IntWithAggregatesFilter<"SubscriptionUsage"> | number
   }
 
   export type AffiliateClientWhereInput = {
@@ -18678,6 +19945,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -18686,6 +19958,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -18695,6 +19968,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -18703,6 +19981,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -18712,6 +19991,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -18720,6 +20004,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -18729,6 +20014,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -18737,6 +20027,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -18746,6 +20037,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -18755,6 +20051,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -18764,6 +20065,66 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SubscriptionUsageCreateInput = {
+    id?: string
+    periodKey: string
+    exportsCount?: number
+    invitesCount?: number
+    user: UserCreateNestedOneWithoutSubscriptionUsagesInput
+  }
+
+  export type SubscriptionUsageUncheckedCreateInput = {
+    id?: string
+    userId: string
+    periodKey: string
+    exportsCount?: number
+    invitesCount?: number
+  }
+
+  export type SubscriptionUsageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
+    user?: UserUpdateOneRequiredWithoutSubscriptionUsagesNestedInput
+  }
+
+  export type SubscriptionUsageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SubscriptionUsageCreateManyInput = {
+    id?: string
+    userId: string
+    periodKey: string
+    exportsCount?: number
+    invitesCount?: number
+  }
+
+  export type SubscriptionUsageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SubscriptionUsageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type AffiliateClientCreateInput = {
@@ -19833,6 +21194,32 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type IdentityProfileListRelationFilter = {
     every?: IdentityProfileWhereInput
     some?: IdentityProfileWhereInput
@@ -19869,6 +21256,17 @@ export namespace Prisma {
     none?: StudioClientInviteWhereInput
   }
 
+  export type SubscriptionUsageListRelationFilter = {
+    every?: SubscriptionUsageWhereInput
+    some?: SubscriptionUsageWhereInput
+    none?: SubscriptionUsageWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type IdentityProfileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -19893,6 +21291,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type SubscriptionUsageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -19900,6 +21302,11 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    stripeCustomerId?: SortOrder
+    stripeSubscriptionId?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionPlan?: SortOrder
+    currentPeriodEnd?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -19909,6 +21316,11 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    stripeCustomerId?: SortOrder
+    stripeSubscriptionId?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionPlan?: SortOrder
+    currentPeriodEnd?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -19918,6 +21330,11 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    stripeCustomerId?: SortOrder
+    stripeSubscriptionId?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionPlan?: SortOrder
+    currentPeriodEnd?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -19952,9 +21369,107 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type UserRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type SubscriptionUsageUserIdPeriodKeyCompoundUniqueInput = {
+    userId: string
+    periodKey: string
+  }
+
+  export type SubscriptionUsageCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    periodKey?: SortOrder
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+  }
+
+  export type SubscriptionUsageAvgOrderByAggregateInput = {
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+  }
+
+  export type SubscriptionUsageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    periodKey?: SortOrder
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+  }
+
+  export type SubscriptionUsageMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    periodKey?: SortOrder
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+  }
+
+  export type SubscriptionUsageSumOrderByAggregateInput = {
+    exportsCount?: SortOrder
+    invitesCount?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type AffiliateClientAffiliateUserIdClientUserIdCompoundUniqueInput = {
@@ -19983,40 +21498,9 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type StudioClientInviteCountOrderByAggregateInput = {
@@ -20055,54 +21539,11 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type EnumUserAssetKindFilter<$PrismaModel = never> = {
     equals?: $Enums.UserAssetKind | EnumUserAssetKindFieldRefInput<$PrismaModel>
     in?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
     notIn?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
     not?: NestedEnumUserAssetKindFilter<$PrismaModel> | $Enums.UserAssetKind
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type UserAssetCountOrderByAggregateInput = {
@@ -20151,22 +21592,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserAssetKindFilter<$PrismaModel>
     _max?: NestedEnumUserAssetKindFilter<$PrismaModel>
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -20775,6 +22200,13 @@ export namespace Prisma {
     connect?: StudioClientInviteWhereUniqueInput | StudioClientInviteWhereUniqueInput[]
   }
 
+  export type SubscriptionUsageCreateNestedManyWithoutUserInput = {
+    create?: XOR<SubscriptionUsageCreateWithoutUserInput, SubscriptionUsageUncheckedCreateWithoutUserInput> | SubscriptionUsageCreateWithoutUserInput[] | SubscriptionUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SubscriptionUsageCreateOrConnectWithoutUserInput | SubscriptionUsageCreateOrConnectWithoutUserInput[]
+    createMany?: SubscriptionUsageCreateManyUserInputEnvelope
+    connect?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+  }
+
   export type IdentityProfileUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<IdentityProfileCreateWithoutUserInput, IdentityProfileUncheckedCreateWithoutUserInput> | IdentityProfileCreateWithoutUserInput[] | IdentityProfileUncheckedCreateWithoutUserInput[]
     connectOrCreate?: IdentityProfileCreateOrConnectWithoutUserInput | IdentityProfileCreateOrConnectWithoutUserInput[]
@@ -20831,12 +22263,27 @@ export namespace Prisma {
     connect?: StudioClientInviteWhereUniqueInput | StudioClientInviteWhereUniqueInput[]
   }
 
+  export type SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SubscriptionUsageCreateWithoutUserInput, SubscriptionUsageUncheckedCreateWithoutUserInput> | SubscriptionUsageCreateWithoutUserInput[] | SubscriptionUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SubscriptionUsageCreateOrConnectWithoutUserInput | SubscriptionUsageCreateOrConnectWithoutUserInput[]
+    createMany?: SubscriptionUsageCreateManyUserInputEnvelope
+    connect?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type IdentityProfileUpdateManyWithoutUserNestedInput = {
@@ -20951,6 +22398,20 @@ export namespace Prisma {
     deleteMany?: StudioClientInviteScalarWhereInput | StudioClientInviteScalarWhereInput[]
   }
 
+  export type SubscriptionUsageUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SubscriptionUsageCreateWithoutUserInput, SubscriptionUsageUncheckedCreateWithoutUserInput> | SubscriptionUsageCreateWithoutUserInput[] | SubscriptionUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SubscriptionUsageCreateOrConnectWithoutUserInput | SubscriptionUsageCreateOrConnectWithoutUserInput[]
+    upsert?: SubscriptionUsageUpsertWithWhereUniqueWithoutUserInput | SubscriptionUsageUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SubscriptionUsageCreateManyUserInputEnvelope
+    set?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    disconnect?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    delete?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    connect?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    update?: SubscriptionUsageUpdateWithWhereUniqueWithoutUserInput | SubscriptionUsageUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SubscriptionUsageUpdateManyWithWhereWithoutUserInput | SubscriptionUsageUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SubscriptionUsageScalarWhereInput | SubscriptionUsageScalarWhereInput[]
+  }
+
   export type IdentityProfileUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<IdentityProfileCreateWithoutUserInput, IdentityProfileUncheckedCreateWithoutUserInput> | IdentityProfileCreateWithoutUserInput[] | IdentityProfileUncheckedCreateWithoutUserInput[]
     connectOrCreate?: IdentityProfileCreateOrConnectWithoutUserInput | IdentityProfileCreateOrConnectWithoutUserInput[]
@@ -21063,6 +22524,42 @@ export namespace Prisma {
     deleteMany?: StudioClientInviteScalarWhereInput | StudioClientInviteScalarWhereInput[]
   }
 
+  export type SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SubscriptionUsageCreateWithoutUserInput, SubscriptionUsageUncheckedCreateWithoutUserInput> | SubscriptionUsageCreateWithoutUserInput[] | SubscriptionUsageUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SubscriptionUsageCreateOrConnectWithoutUserInput | SubscriptionUsageCreateOrConnectWithoutUserInput[]
+    upsert?: SubscriptionUsageUpsertWithWhereUniqueWithoutUserInput | SubscriptionUsageUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SubscriptionUsageCreateManyUserInputEnvelope
+    set?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    disconnect?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    delete?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    connect?: SubscriptionUsageWhereUniqueInput | SubscriptionUsageWhereUniqueInput[]
+    update?: SubscriptionUsageUpdateWithWhereUniqueWithoutUserInput | SubscriptionUsageUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SubscriptionUsageUpdateManyWithWhereWithoutUserInput | SubscriptionUsageUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SubscriptionUsageScalarWhereInput | SubscriptionUsageScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutSubscriptionUsagesInput = {
+    create?: XOR<UserCreateWithoutSubscriptionUsagesInput, UserUncheckedCreateWithoutSubscriptionUsagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSubscriptionUsagesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutSubscriptionUsagesNestedInput = {
+    create?: XOR<UserCreateWithoutSubscriptionUsagesInput, UserUncheckedCreateWithoutSubscriptionUsagesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSubscriptionUsagesInput
+    upsert?: UserUpsertWithoutSubscriptionUsagesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSubscriptionUsagesInput, UserUpdateWithoutSubscriptionUsagesInput>, UserUncheckedUpdateWithoutSubscriptionUsagesInput>
+  }
+
   export type UserCreateNestedOneWithoutAffiliateClientsInput = {
     create?: XOR<UserCreateWithoutAffiliateClientsInput, UserUncheckedCreateWithoutAffiliateClientsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAffiliateClientsInput
@@ -21103,14 +22600,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type UserUpdateOneRequiredWithoutStudioInvitesSentNestedInput = {
     create?: XOR<UserCreateWithoutStudioInvitesSentInput, UserUncheckedCreateWithoutStudioInvitesSentInput>
     connectOrCreate?: UserCreateOrConnectWithoutStudioInvitesSentInput
@@ -21137,14 +22626,6 @@ export namespace Prisma {
 
   export type EnumUserAssetKindFieldUpdateOperationsInput = {
     set?: $Enums.UserAssetKind
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutUserAssetsNestedInput = {
@@ -21728,6 +23209,31 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -21768,31 +23274,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -21837,23 +23318,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedEnumUserAssetKindFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserAssetKind | EnumUserAssetKindFieldRefInput<$PrismaModel>
-    in?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserAssetKindFilter<$PrismaModel> | $Enums.UserAssetKind
-  }
-
-  export type NestedEnumUserAssetKindWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserAssetKind | EnumUserAssetKindFieldRefInput<$PrismaModel>
-    in?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
-    notIn?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
-    not?: NestedEnumUserAssetKindWithAggregatesFilter<$PrismaModel> | $Enums.UserAssetKind
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumUserAssetKindFilter<$PrismaModel>
-    _max?: NestedEnumUserAssetKindFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -21879,6 +23343,23 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumUserAssetKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserAssetKind | EnumUserAssetKindFieldRefInput<$PrismaModel>
+    in?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserAssetKindFilter<$PrismaModel> | $Enums.UserAssetKind
+  }
+
+  export type NestedEnumUserAssetKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserAssetKind | EnumUserAssetKindFieldRefInput<$PrismaModel>
+    in?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserAssetKind[] | ListEnumUserAssetKindFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserAssetKindWithAggregatesFilter<$PrismaModel> | $Enums.UserAssetKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserAssetKindFilter<$PrismaModel>
+    _max?: NestedEnumUserAssetKindFilter<$PrismaModel>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -22185,6 +23666,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SubscriptionUsageCreateWithoutUserInput = {
+    id?: string
+    periodKey: string
+    exportsCount?: number
+    invitesCount?: number
+  }
+
+  export type SubscriptionUsageUncheckedCreateWithoutUserInput = {
+    id?: string
+    periodKey: string
+    exportsCount?: number
+    invitesCount?: number
+  }
+
+  export type SubscriptionUsageCreateOrConnectWithoutUserInput = {
+    where: SubscriptionUsageWhereUniqueInput
+    create: XOR<SubscriptionUsageCreateWithoutUserInput, SubscriptionUsageUncheckedCreateWithoutUserInput>
+  }
+
+  export type SubscriptionUsageCreateManyUserInputEnvelope = {
+    data: SubscriptionUsageCreateManyUserInput | SubscriptionUsageCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type IdentityProfileUpsertWithWhereUniqueWithoutUserInput = {
     where: IdentityProfileWhereUniqueInput
     update: XOR<IdentityProfileUpdateWithoutUserInput, IdentityProfileUncheckedUpdateWithoutUserInput>
@@ -22397,6 +23902,137 @@ export namespace Prisma {
     data: XOR<StudioClientInviteUpdateManyMutationInput, StudioClientInviteUncheckedUpdateManyWithoutClientInput>
   }
 
+  export type SubscriptionUsageUpsertWithWhereUniqueWithoutUserInput = {
+    where: SubscriptionUsageWhereUniqueInput
+    update: XOR<SubscriptionUsageUpdateWithoutUserInput, SubscriptionUsageUncheckedUpdateWithoutUserInput>
+    create: XOR<SubscriptionUsageCreateWithoutUserInput, SubscriptionUsageUncheckedCreateWithoutUserInput>
+  }
+
+  export type SubscriptionUsageUpdateWithWhereUniqueWithoutUserInput = {
+    where: SubscriptionUsageWhereUniqueInput
+    data: XOR<SubscriptionUsageUpdateWithoutUserInput, SubscriptionUsageUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SubscriptionUsageUpdateManyWithWhereWithoutUserInput = {
+    where: SubscriptionUsageScalarWhereInput
+    data: XOR<SubscriptionUsageUpdateManyMutationInput, SubscriptionUsageUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SubscriptionUsageScalarWhereInput = {
+    AND?: SubscriptionUsageScalarWhereInput | SubscriptionUsageScalarWhereInput[]
+    OR?: SubscriptionUsageScalarWhereInput[]
+    NOT?: SubscriptionUsageScalarWhereInput | SubscriptionUsageScalarWhereInput[]
+    id?: StringFilter<"SubscriptionUsage"> | string
+    userId?: StringFilter<"SubscriptionUsage"> | string
+    periodKey?: StringFilter<"SubscriptionUsage"> | string
+    exportsCount?: IntFilter<"SubscriptionUsage"> | number
+    invitesCount?: IntFilter<"SubscriptionUsage"> | number
+  }
+
+  export type UserCreateWithoutSubscriptionUsagesInput = {
+    id?: string
+    email: string
+    password: string
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
+    identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
+    favorites?: FavoriteCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    userAssets?: UserAssetCreateNestedManyWithoutUserInput
+    affiliateClients?: AffiliateClientCreateNestedManyWithoutAffiliateInput
+    studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
+    studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
+    studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+  }
+
+  export type UserUncheckedCreateWithoutSubscriptionUsagesInput = {
+    id?: string
+    email: string
+    password: string
+    role?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
+    identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
+    favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    userAssets?: UserAssetUncheckedCreateNestedManyWithoutUserInput
+    affiliateClients?: AffiliateClientUncheckedCreateNestedManyWithoutAffiliateInput
+    studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
+    studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
+    studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+  }
+
+  export type UserCreateOrConnectWithoutSubscriptionUsagesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSubscriptionUsagesInput, UserUncheckedCreateWithoutSubscriptionUsagesInput>
+  }
+
+  export type UserUpsertWithoutSubscriptionUsagesInput = {
+    update: XOR<UserUpdateWithoutSubscriptionUsagesInput, UserUncheckedUpdateWithoutSubscriptionUsagesInput>
+    create: XOR<UserCreateWithoutSubscriptionUsagesInput, UserUncheckedCreateWithoutSubscriptionUsagesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSubscriptionUsagesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSubscriptionUsagesInput, UserUncheckedUpdateWithoutSubscriptionUsagesInput>
+  }
+
+  export type UserUpdateWithoutSubscriptionUsagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
+    favorites?: FavoriteUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    userAssets?: UserAssetUpdateManyWithoutUserNestedInput
+    affiliateClients?: AffiliateClientUpdateManyWithoutAffiliateNestedInput
+    studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
+    studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
+    studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSubscriptionUsagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
+    favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    userAssets?: UserAssetUncheckedUpdateManyWithoutUserNestedInput
+    affiliateClients?: AffiliateClientUncheckedUpdateManyWithoutAffiliateNestedInput
+    studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
+    studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
+    studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+  }
+
   export type UserCreateWithoutAffiliateClientsInput = {
     id?: string
     email: string
@@ -22404,6 +24040,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -22411,6 +24052,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAffiliateClientsInput = {
@@ -22420,6 +24062,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22427,6 +24074,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAffiliateClientsInput = {
@@ -22441,6 +24089,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -22448,6 +24101,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientCreateNestedManyWithoutAffiliateInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudioAsClientInput = {
@@ -22457,6 +24111,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22464,6 +24123,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudioAsClientInput = {
@@ -22489,6 +24149,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -22496,6 +24161,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAffiliateClientsInput = {
@@ -22505,6 +24171,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22512,6 +24183,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutStudioAsClientInput = {
@@ -22532,6 +24204,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -22539,6 +24216,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUpdateManyWithoutAffiliateNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudioAsClientInput = {
@@ -22548,6 +24226,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22555,6 +24238,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStudioInvitesSentInput = {
@@ -22564,6 +24248,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -22571,6 +24260,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientCreateNestedManyWithoutAffiliateInput
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudioInvitesSentInput = {
@@ -22580,6 +24270,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22587,6 +24282,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUncheckedCreateNestedManyWithoutAffiliateInput
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudioInvitesSentInput = {
@@ -22601,6 +24297,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -22608,6 +24309,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientCreateNestedManyWithoutAffiliateInput
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudioInvitesAcceptedInput = {
@@ -22617,6 +24319,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22624,6 +24331,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUncheckedCreateNestedManyWithoutAffiliateInput
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudioInvitesAcceptedInput = {
@@ -22649,6 +24357,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -22656,6 +24369,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUpdateManyWithoutAffiliateNestedInput
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudioInvitesSentInput = {
@@ -22665,6 +24379,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22672,6 +24391,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUncheckedUpdateManyWithoutAffiliateNestedInput
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutStudioInvitesAcceptedInput = {
@@ -22692,6 +24412,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -22699,6 +24424,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUpdateManyWithoutAffiliateNestedInput
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudioInvitesAcceptedInput = {
@@ -22708,6 +24434,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22715,6 +24446,7 @@ export namespace Prisma {
     affiliateClients?: AffiliateClientUncheckedUpdateManyWithoutAffiliateNestedInput
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutUserAssetsInput = {
@@ -22724,6 +24456,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -22731,6 +24468,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAssetsInput = {
@@ -22740,6 +24478,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -22747,6 +24490,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAssetsInput = {
@@ -22772,6 +24516,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -22779,6 +24528,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAssetsInput = {
@@ -22788,6 +24538,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -22795,6 +24550,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutIdentityProfilesInput = {
@@ -22804,6 +24560,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     userAssets?: UserAssetCreateNestedManyWithoutUserInput
@@ -22811,6 +24572,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIdentityProfilesInput = {
@@ -22820,6 +24582,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     userAssets?: UserAssetUncheckedCreateNestedManyWithoutUserInput
@@ -22827,6 +24594,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIdentityProfilesInput = {
@@ -22980,6 +24748,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     userAssets?: UserAssetUpdateManyWithoutUserNestedInput
@@ -22987,6 +24760,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIdentityProfilesInput = {
@@ -22996,6 +24770,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     userAssets?: UserAssetUncheckedUpdateManyWithoutUserNestedInput
@@ -23003,6 +24782,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PortfolioProjectUpsertWithWhereUniqueWithoutIdentityInput = {
@@ -23936,6 +25716,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     userAssets?: UserAssetCreateNestedManyWithoutUserInput
@@ -23943,6 +25728,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFavoritesInput = {
@@ -23952,6 +25738,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     userAssets?: UserAssetUncheckedCreateNestedManyWithoutUserInput
@@ -23959,6 +25750,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFavoritesInput = {
@@ -24017,6 +25809,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     userAssets?: UserAssetUpdateManyWithoutUserNestedInput
@@ -24024,6 +25821,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFavoritesInput = {
@@ -24033,6 +25831,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     userAssets?: UserAssetUncheckedUpdateManyWithoutUserNestedInput
@@ -24040,6 +25843,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CapsuleUpsertWithoutFavoritesInput = {
@@ -24192,6 +25996,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileCreateNestedManyWithoutUserInput
     favorites?: FavoriteCreateNestedManyWithoutUserInput
     userAssets?: UserAssetCreateNestedManyWithoutUserInput
@@ -24199,6 +26008,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -24208,6 +26018,11 @@ export namespace Prisma {
     role?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    stripeCustomerId?: string | null
+    stripeSubscriptionId?: string | null
+    subscriptionStatus?: string | null
+    subscriptionPlan?: string
+    currentPeriodEnd?: Date | string | null
     identityProfiles?: IdentityProfileUncheckedCreateNestedManyWithoutUserInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutUserInput
     userAssets?: UserAssetUncheckedCreateNestedManyWithoutUserInput
@@ -24215,6 +26030,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedCreateNestedManyWithoutClientInput
     studioInvitesSent?: StudioClientInviteUncheckedCreateNestedManyWithoutAffiliateInput
     studioInvitesAccepted?: StudioClientInviteUncheckedCreateNestedManyWithoutClientInput
+    subscriptionUsages?: SubscriptionUsageUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -24240,6 +26056,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUpdateManyWithoutUserNestedInput
     userAssets?: UserAssetUpdateManyWithoutUserNestedInput
@@ -24247,6 +26068,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -24256,6 +26078,11 @@ export namespace Prisma {
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriptionPlan?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     identityProfiles?: IdentityProfileUncheckedUpdateManyWithoutUserNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutUserNestedInput
     userAssets?: UserAssetUncheckedUpdateManyWithoutUserNestedInput
@@ -24263,6 +26090,7 @@ export namespace Prisma {
     studioAsClient?: AffiliateClientUncheckedUpdateManyWithoutClientNestedInput
     studioInvitesSent?: StudioClientInviteUncheckedUpdateManyWithoutAffiliateNestedInput
     studioInvitesAccepted?: StudioClientInviteUncheckedUpdateManyWithoutClientNestedInput
+    subscriptionUsages?: SubscriptionUsageUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IdentityProfileCreateManyUserInput = {
@@ -24340,6 +26168,13 @@ export namespace Prisma {
     acceptedAt?: Date | string | null
     revokedAt?: Date | string | null
     createdAt?: Date | string
+  }
+
+  export type SubscriptionUsageCreateManyUserInput = {
+    id?: string
+    periodKey: string
+    exportsCount?: number
+    invitesCount?: number
   }
 
   export type IdentityProfileUpdateWithoutUserInput = {
@@ -24579,6 +26414,27 @@ export namespace Prisma {
     acceptedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SubscriptionUsageUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SubscriptionUsageUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SubscriptionUsageUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    periodKey?: StringFieldUpdateOperationsInput | string
+    exportsCount?: IntFieldUpdateOperationsInput | number
+    invitesCount?: IntFieldUpdateOperationsInput | number
   }
 
   export type PortfolioProjectCreateManyIdentityInput = {
@@ -24888,6 +26744,10 @@ export namespace Prisma {
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SubscriptionUsageDefaultArgs instead
+     */
+    export type SubscriptionUsageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SubscriptionUsageDefaultArgs<ExtArgs>
     /**
      * @deprecated Use AffiliateClientDefaultArgs instead
      */

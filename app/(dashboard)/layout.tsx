@@ -82,6 +82,19 @@ const navItems = [
       </svg>
     ),
   },
+  {
+    label: "Facturation",
+    href: "/dashboard/billing",
+    icon: (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M2.25 8.25h19.5M2.25 15.75h19.5M3.375 4.5h17.25a1.125 1.125 0 011.125 1.125v13.125a1.125 1.125 0 01-1.125 1.125H3.375a1.125 1.125 0 01-1.125-1.125V5.625a1.125 1.125 0 011.125-1.125z"
+        />
+      </svg>
+    ),
+  },
 ];
 
 const studioNavItem = {

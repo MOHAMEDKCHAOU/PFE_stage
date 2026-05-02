@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { requireAffiliate } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-memory";
 import { buildStudioClientsPdfBuffer } from "@/lib/studio-clients-pdf";
+import { requireStudioSubscriptionOrResponse } from "@/lib/studio-plan-guard";
+import { assertCanStudioExport, incrementExportUsage } from "@/lib/subscription-guards";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -22,8 +24,15 @@ function toCsvRow(cells: string[]): string {
 /** GET — export CSV ou PDF des clients liés (+ dates) pour reporting / facturation */
 export async function GET(req: Request) {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+  }
+
+  const quota = await assertCanStudioExport(affiliateId);
+  if (quota) {
+    return NextResponse.json({ error: quota.error }, { status: quota.status });
   }
 
   const rawFmt = new URL(req.url).searchParams.get("format")?.toLowerCase() ?? "csv";
@@ -113,6 +122,8 @@ export async function GET(req: Request) {
       },
     });
 
+    await incrementExportUsage(affiliateId);
+
     return new NextResponse(buffer, {
       status: 200,
       headers: {
@@ -169,6 +180,8 @@ export async function GET(req: Request) {
 
   const body = [header, ...lines].join("\r\n");
   const csv = `\uFEFF${body}`;
+
+  await incrementExportUsage(affiliateId);
 
   return new NextResponse(csv, {
     status: 200,

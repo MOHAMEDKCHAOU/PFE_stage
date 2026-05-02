@@ -3,6 +3,8 @@ import { requireAffiliate } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-memory";
 import { normalizeStudioClientEmail } from "@/lib/studio-client-email";
 import { generateInviteToken } from "@/lib/studio-invite-token";
+import { requireStudioSubscriptionOrResponse } from "@/lib/studio-plan-guard";
+import { assertCanCreateStudioInvite } from "@/lib/subscription-guards";
 import { Prisma } from "@/generated/prisma";
 import { NextResponse } from "next/server";
 
@@ -24,6 +26,8 @@ function inviteOrigin(req: Request): string {
 /** GET — invitations récentes (affilié) */
 export async function GET(req: Request) {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }
@@ -68,6 +72,8 @@ export async function GET(req: Request) {
 /** POST — créer une invitation (retourne le lien une seule fois) */
 export async function POST(req: Request) {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }
@@ -99,6 +105,11 @@ export async function POST(req: Request) {
       { error: "Trop d’invitations créées. Réessayez plus tard." },
       { status: 429, headers: { "Retry-After": String(sec) } },
     );
+  }
+
+  const inviteQuota = await assertCanCreateStudioInvite(affiliateId);
+  if (inviteQuota) {
+    return NextResponse.json({ error: inviteQuota.error }, { status: inviteQuota.status });
   }
 
   const expiresAt = new Date(Date.now() + validityDays * 24 * 60 * 60 * 1000);
@@ -175,6 +186,8 @@ export async function POST(req: Request) {
 /** DELETE — révoquer une invitation ?id= */
 export async function DELETE(req: Request) {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }

@@ -2,7 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { requireAffiliate } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-memory";
 import { normalizeStudioClientEmail } from "@/lib/studio-client-email";
+import { requireStudioSubscriptionOrResponse } from "@/lib/studio-plan-guard";
+import { assertCanAddStudioClient } from "@/lib/subscription-guards";
 import { NextResponse } from "next/server";
+
+export const runtime = "nodejs";
 
 /** Max. liaisons par affilié / fenêtre (anti-abus & énumération d’emails). */
 const POST_LINK_LIMIT = 25;
@@ -13,6 +17,8 @@ const DELETE_LINK_WINDOW_MS = 60 * 60 * 1000;
 /** GET /api/studio/clients — clients liés au Studio (rôle AFFILIATE). */
 export async function GET() {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }
@@ -38,6 +44,8 @@ export async function GET() {
 /** POST /api/studio/clients — lier un client par email (compte existant). */
 export async function POST(req: Request) {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }
@@ -55,6 +63,11 @@ export async function POST(req: Request) {
       { error: "Vous devez confirmer disposer d’un mandat ou d’un accord du client." },
       { status: 400 },
     );
+  }
+
+  const linkQuota = await assertCanAddStudioClient(affiliateId);
+  if (linkQuota) {
+    return NextResponse.json({ error: linkQuota.error }, { status: linkQuota.status });
   }
 
   const normalized = typeof body.email === "string" ? normalizeStudioClientEmail(body.email) : null;
@@ -125,6 +138,8 @@ export async function POST(req: Request) {
 /** DELETE /api/studio/clients?clientUserId= — retirer le lien. */
 export async function DELETE(req: Request) {
   const affiliateId = await requireAffiliate();
+  const denied = await requireStudioSubscriptionOrResponse(affiliateId);
+  if (denied) return denied;
   if (!affiliateId) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }

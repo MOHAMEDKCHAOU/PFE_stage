@@ -3,8 +3,16 @@ import { prisma } from "@/lib/prisma";
 import * as auth from "@/lib/auth";
 import { GET, POST, PUT, DELETE } from "@/route-handlers/api/identity/route";
 
+vi.mock("@/lib/subscription-guards", () => ({
+  assertCanCreateIdentity: vi.fn().mockResolvedValue(null),
+}));
+
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    affiliateClient: {
+      findMany: vi.fn().mockResolvedValue([]),
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
     identityProfile: {
       findMany: vi.fn(),
       findUnique: vi.fn(),

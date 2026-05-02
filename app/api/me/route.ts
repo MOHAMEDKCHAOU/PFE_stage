@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { getBillingSnapshotForUser } from "@/lib/subscription-guards";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -42,12 +43,15 @@ export async function GET() {
 
     if (!raw) return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
 
+    const billing = await getBillingSnapshotForUser(userId);
+
     const user = {
       ...raw,
       identityProfiles: raw.identityProfiles.map(({ ctaWebhookSecret, ...p }) => ({
         ...p,
         hasCtaWebhookSecret: !!ctaWebhookSecret,
       })),
+      billing,
     };
 
     return NextResponse.json(user);
