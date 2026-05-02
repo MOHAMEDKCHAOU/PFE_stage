@@ -3,7 +3,7 @@ import { requireAffiliate } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-memory";
 import { normalizeStudioClientEmail } from "@/lib/studio-client-email";
 import { generateInviteToken } from "@/lib/studio-invite-token";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/generated/prisma";
 import { NextResponse } from "next/server";
 
 /** Prisma / Node APIs (crypto dans `studio-invite-token`) */

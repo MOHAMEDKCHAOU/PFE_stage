@@ -1,0 +1,264 @@
+generator client {
+  provider = "prisma-client-js"
+  // Sortie sous src/ : chemins stables pour le langage service TypeScript.
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   @default("USER") // "USER" | "ADMIN" | "AFFILIATE"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  identityProfiles      IdentityProfile[]
+  favorites             Favorite[]
+  notifications         Notification[]
+  userAssets            UserAsset[]
+  affiliateClients      AffiliateClient[]    @relation("AffiliateToClients")
+  studioAsClient        AffiliateClient[]    @relation("ClientOfAffiliate")
+  studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
+  studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
+}
+
+/// Lien Studio (affilié) → compte client géré
+model AffiliateClient {
+  id              String   @id @default(uuid())
+  affiliateUserId String
+  clientUserId    String
+  createdAt       DateTime @default(now())
+
+  affiliate User @relation("AffiliateToClients", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  client    User @relation("ClientOfAffiliate", fields: [clientUserId], references: [id], onDelete: Cascade)
+
+  @@unique([affiliateUserId, clientUserId])
+  @@index([affiliateUserId])
+  @@index([clientUserId])
+}
+
+/// Invitation Studio (lien + acceptation par le client)
+model StudioClientInvite {
+  id              String    @id @default(uuid())
+  /// SHA-256 hex du jeton brut (jamais stocker le jeton en clair)
+  tokenHash       String    @unique
+  affiliateUserId String
+  affiliate       User      @relation("StudioInvitesSent", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  /// Si renseigné, seul ce compte (e-mail) peut accepter
+  inviteeEmail    String?
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  clientUserId    String?
+  client          User?     @relation("StudioInviteAcceptedClient", fields: [clientUserId], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now())
+
+  @@index([affiliateUserId])
+  @@index([expiresAt])
+}
+
+/// Médias personnels réutilisables (hub Asset Library)
+model UserAsset {
+  id        String        @id @default(uuid())
+  url       String
+  kind      UserAssetKind
+  mimeType  String
+  sizeBytes Int
+  createdAt DateTime      @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, kind, createdAt(sort: Desc)])
+}
+
+enum UserAssetKind {
+  IMAGE
+  VIDEO
+  MODEL_3D
+}
+
+model IdentityProfile {
+  id   String  @id @default(uuid())
+  name String
+  slug String  @unique
+  type String
+  bio  String?
+
+  // 🔥 AJOUTS IMPORTANTS
+  headline    String?
+  avatar      String?
+  cover       String?
+  theme       String?
+  socialLinks Json?
+
+  /// Premium / Zapier : masquer le branding Faymoos sur la capsule publique
+  hideBranding     Boolean @default(false)
+  /// URL webhook HTTPS appelée à chaque CTA_CLICK (corps JSON signé si secret défini)
+  ctaWebhookUrl    String?
+  ctaWebhookSecret String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  portfolioProjects PortfolioProject[]
+  testimonials      Testimonial[]
+  capsules          Capsule[]
+  messages          Message[]
+}
+
+model PortfolioProject {
+  id          String @id @default(uuid())
+  title       String
+  description String
+
+  // 🔥 AJOUTS IMPORTANTS
+  image    String?
+  year     Int?
+  isPublic Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  identityId String
+  identity   IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+model Testimonial {
+  id      String @id @default(uuid())
+  author  String
+  content String
+
+  // 🔥 AJOUTS IMPORTANTS
+  role    String?
+  company String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  identityId String
+  identity   IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+model Capsule {
+  id        String @id @default(uuid())
+  title     String
+  objective String
+
+  /// Preset visuel Space (ocean, sunset, …) — aligné sur IdentityProfile.theme
+  layoutPreset   String?
+  /// Brouillon : false jusqu’au bouton Publier dans Space Editor
+  isPublished    Boolean @default(true)
+  /// Hotspots { hotspots: [{ optionId, x, y, w, h, ... }] } — JSON libre
+  editorHotspots Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  identityId String
+  identity   IdentityProfile @relation(fields: [identityId], references: [id])
+
+  options   CapsuleOption[]
+  sessions  CapsuleSession[]
+  favorites Favorite[]
+}
+
+model CapsuleOption {
+  id        String @id @default(uuid())
+  label     String
+  sortOrder Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  capsuleId String
+  capsule   Capsule @relation(fields: [capsuleId], references: [id])
+
+  // ⚠️ gardé comme tu as fait (1 branch)
+  branch CapsuleBranch?
+}
+
+model CapsuleBranch {
+  id       String        @id @default(uuid())
+  optionId String        @unique
+  option   CapsuleOption @relation(fields: [optionId], references: [id])
+
+  headline    String
+  description String
+  cta         String
+
+  // 🔥 AJOUT IMPORTANT (core du projet)
+  proof String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 🔥 ANALYTICS — Tracking des interactions visiteurs
+model CapsuleSession {
+  id        String    @id @default(uuid())
+  capsuleId String
+  capsule   Capsule   @relation(fields: [capsuleId], references: [id])
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  events CapsuleEvent[]
+}
+
+model CapsuleEvent {
+  id        String   @id @default(uuid())
+  sessionId String
+  type      String // "START" | "OPTION_CLICK" | "CTA_CLICK"
+  value     String?
+  createdAt DateTime @default(now())
+
+  session CapsuleSession @relation(fields: [sessionId], references: [id])
+}
+
+// ⭐ FAVORIS — Capsules favorites des utilisateurs
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  capsuleId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  capsule Capsule @relation(fields: [capsuleId], references: [id])
+
+  @@unique([userId, capsuleId])
+}
+
+// 📩 MESSAGES — Formulaire de contact sur les capsules
+model Message {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  identityId String
+  identity   IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+// 🔔 NOTIFICATIONS — Alertes pour le propriétaire de capsule
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String // "CTA_CLICK" | "NEW_MESSAGE"
+  title     String
+  body      String
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}

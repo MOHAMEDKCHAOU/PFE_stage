@@ -1,6 +1,6 @@
 import { getUserId } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import type { UserAssetKind } from "@prisma/client";
+import type { UserAssetKind } from "@/generated/prisma";
 import { NextResponse } from "next/server";
 
 const PAGE = 24;

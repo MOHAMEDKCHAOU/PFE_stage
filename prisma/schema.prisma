@@ -1,5 +1,7 @@
 generator client {
   provider = "prisma-client-js"
+  // Sortie sous src/ : chemins stables pour le langage service TypeScript.
+  output   = "../src/generated/prisma"
 }
 
 datasource db {

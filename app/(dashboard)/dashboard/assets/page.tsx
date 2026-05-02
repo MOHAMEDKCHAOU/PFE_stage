@@ -1,6 +1,6 @@
 "use client";
 
-import type { UserAssetKind } from "@prisma/client";
+import type { UserAssetKind } from "@/generated/prisma";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 

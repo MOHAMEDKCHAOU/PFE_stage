@@ -1,4 +1,4 @@
-import type { UserAssetKind } from "@prisma/client";
+import type { UserAssetKind } from "@/generated/prisma";
 
 export type ClassifiedUpload =
   | { ok: true; kind: UserAssetKind; maxBytes: number }

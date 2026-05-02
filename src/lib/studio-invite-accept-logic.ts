@@ -55,8 +55,9 @@ export async function acceptStudioInviteForSessionUser(
   }
 
   if (invite.inviteeEmail) {
+    const targetEmail = normalizeStudioClientEmail(invite.inviteeEmail);
     const userEmail = normalizeStudioClientEmail(user.email);
-    if (!userEmail || userEmail !== invite.inviteeEmail) {
+    if (!targetEmail || !userEmail || userEmail !== targetEmail) {
       return {
         ok: false,
         status: 403,
