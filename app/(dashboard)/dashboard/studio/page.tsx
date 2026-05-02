@@ -319,10 +319,11 @@ export default function StudioPage() {
           <div>
             <h2 className="text-base font-semibold text-stone-900">Invitation sécurisée (recommandé)</h2>
             <p className="mt-1 max-w-3xl text-xs leading-relaxed text-stone-600">
-              Générez un lien unique. Le client l’ouvre, se connecte (ou crée un compte), puis{" "}
-              <strong className="text-stone-800">accepte lui-même</strong> la liaison — preuve d’accord plus claire
-              qu’une saisie d’e-mail seule. Le jeton est stocké haché côté serveur ; copiez le lien tout de suite : il ne
-              sera plus affiché en clair.
+              Générez un lien unique. Le client peut{" "}
+              <strong className="text-stone-800">accepter depuis son tableau de bord Faymoos</strong> dès que son e-mail
+              est renseigné ci-dessous — ou ouvrir le lien (connexion / inscription puis accepter). Le jeton est stocké
+              haché côté serveur ; copiez le lien tout de suite si vous souhaitez aussi le transmettre par message : il
+              ne sera plus affiché en clair.
             </p>
           </div>
         </div>
@@ -342,7 +343,8 @@ export default function StudioPage() {
               className="block w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/60"
             />
             <p className="text-[11px] text-stone-500">
-              Si renseigné, seul un utilisateur connecté avec cet e-mail pourra accepter.
+              Si renseigné : seul ce compte pourra accepter, et l’invitation apparaît sur son tableau de bord après
+              connexion (plus besoin d’ouvrir le lien).
             </p>
           </div>
           <div className="space-y-1.5">
@@ -445,7 +447,7 @@ export default function StudioPage() {
             {
               step: "02",
               title: "Invitation ou liaison",
-              desc: "Idéal : envoyez un lien d’invitation — le client accepte dans son compte. À défaut : liaison directe par e-mail (option avancée, avec confirmation).",
+              desc: "Indiquez l’e-mail du client : il verra l’invitation sur son tableau de bord et pourra accepter dans l’app. Vous pouvez aussi lui envoyer le lien généré (WhatsApp, mail, etc.). Option avancée : liaison directe par e-mail avec confirmation.",
             },
             {
               step: "03",

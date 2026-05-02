@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { EditProfileModal } from "@/components/EditProfileModal";
+import { StudioInviteInbox } from "@/components/StudioInviteInbox";
 
 type IdentityProfile = {
   id: string;
@@ -170,6 +171,8 @@ export default function DashboardPage() {
           Voir ma capsule
         </a>
       </div>
+
+      <StudioInviteInbox onAccepted={fetchUser} />
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
