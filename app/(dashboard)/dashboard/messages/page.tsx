@@ -77,7 +77,14 @@ export default function MessagesPage() {
               : "Tous les messages sont lus"}
           </p>
         </div>
-        <div className="flex gap-1.5 rounded-xl bg-white border border-violet-100 p-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/api/messages/export"
+            className="rounded-xl border border-violet-200 bg-white px-4 py-2 text-sm font-medium text-violet-700 shadow-sm transition hover:bg-violet-50"
+          >
+            Exporter CSV
+          </a>
+          <div className="flex gap-1.5 rounded-xl bg-white border border-violet-100 p-1">
           {(["all", "unread", "read"] as const).map((f) => (
             <button
               key={f}
@@ -96,6 +103,7 @@ export default function MessagesPage() {
               )}
             </button>
           ))}
+          </div>
         </div>
       </div>
 

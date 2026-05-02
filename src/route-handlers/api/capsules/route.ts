@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
 // REST Route: GET /api/capsules (Public = for visitors)
@@ -22,7 +23,7 @@ export async function GET(req: Request) {
           },
         },
       });
-      if (!cap || cap.identity.userId !== userId) {
+      if (!cap || !(await canManageIdentityAsOwner(userId, cap.identity.userId))) {
         return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
       }
       return NextResponse.json(cap);
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
 
     // Sécurité : vérifier que l'identité appartient bien au userId session
     const identity = await prisma.identityProfile.findUnique({ where: { id: identityId }});
-    if (!identity || identity.userId !== userId) {
+    if (!identity || !(await canManageIdentityAsOwner(userId, identity.userId))) {
       return NextResponse.json({ error: "Identité non autorisée" }, { status: 403 });
     }
 
@@ -107,7 +108,7 @@ export async function PUT(req: Request) {
       include: { identity: true },
     });
 
-    if (!capsule || capsule.identity.userId !== userId) {
+    if (!capsule || !(await canManageIdentityAsOwner(userId, capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
@@ -145,7 +146,7 @@ export async function DELETE(req: Request) {
       include: { identity: true }
     });
 
-    if (!capsule || capsule.identity.userId !== userId) {
+    if (!capsule || !(await canManageIdentityAsOwner(userId, capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 

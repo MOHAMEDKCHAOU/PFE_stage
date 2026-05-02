@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
 // GET /api/analytics?identityId=xxx OR ?capsuleId=xxx (Protected)
@@ -33,7 +34,7 @@ export async function GET(req: Request) {
           },
         },
       });
-      if (!capsule || capsule.identity.userId !== userId) {
+      if (!capsule || !(await canManageIdentityAsOwner(userId, capsule.identity.userId))) {
         return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
       }
       return NextResponse.json([buildCapsuleAnalytics(capsule)]);
@@ -43,7 +44,7 @@ export async function GET(req: Request) {
     const identity = await prisma.identityProfile.findUnique({
       where: { id: identityId! },
     });
-    if (!identity || identity.userId !== userId) {
+    if (!identity || !(await canManageIdentityAsOwner(userId, identity.userId))) {
       return NextResponse.json(
         { error: "Non autorisé" },
         { status: 403 }

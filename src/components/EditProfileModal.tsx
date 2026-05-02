@@ -13,6 +13,10 @@ type Profile = {
   cover: string | null;
   theme: string | null;
   socialLinks: Record<string, string> | null;
+  hideBranding?: boolean;
+  ctaWebhookUrl?: string | null;
+  ctaWebhookSecret?: string | null;
+  hasCtaWebhookSecret?: boolean;
 };
 
 const socialPlatforms = [
@@ -230,7 +234,11 @@ export function EditProfileModal({
     avatar: profile.avatar || "",
     cover: profile.cover || "",
     theme: profile.theme || "",
+    hideBranding: profile.hideBranding ?? false,
+    ctaWebhookUrl: profile.ctaWebhookUrl ?? "",
+    ctaWebhookSecret: profile.ctaWebhookSecret ?? "",
   });
+  const [ctaSecretDirty, setCtaSecretDirty] = useState(false);
   const [socialLinks, setSocialLinks] = useState<Record<string, string>>(
     (profile.socialLinks as Record<string, string>) || {}
   );
@@ -254,22 +262,31 @@ export function EditProfileModal({
     setError("");
 
     try {
+      const body: Record<string, unknown> = {
+        id: profile.id,
+        name: form.name,
+        type: form.type,
+        headline: form.headline || null,
+        bio: form.bio || null,
+        avatar: form.avatar || null,
+        cover: form.cover || null,
+        theme: form.theme || null,
+        socialLinks: Object.fromEntries(
+          Object.entries(socialLinks).filter(([, v]) => v.trim())
+        ),
+        hideBranding: form.hideBranding,
+        ctaWebhookUrl: form.ctaWebhookUrl.trim() || null,
+      };
+      if (ctaSecretDirty) {
+        body.ctaWebhookSecret = form.ctaWebhookSecret.trim()
+          ? form.ctaWebhookSecret.trim()
+          : null;
+      }
+
       const res = await fetch("/api/identity", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: profile.id,
-          name: form.name,
-          type: form.type,
-          headline: form.headline || null,
-          bio: form.bio || null,
-          avatar: form.avatar || null,
-          cover: form.cover || null,
-          theme: form.theme || null,
-          socialLinks: Object.fromEntries(
-            Object.entries(socialLinks).filter(([, v]) => v.trim())
-          ),
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -439,6 +456,67 @@ export function EditProfileModal({
                   </span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Premium / intégrations */}
+          <div className="space-y-3 rounded-xl border border-violet-200/80 bg-violet-950/20 px-4 py-4">
+            <p className="text-xs font-semibold text-violet-200">Premium & intégrations</p>
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.hideBranding}
+                onChange={(e) => {
+                  setForm((prev) => ({ ...prev, hideBranding: e.target.checked }));
+                  setError("");
+                  setSuccess(false);
+                }}
+                className="mt-1 rounded border-slate-500 text-violet-600 focus:ring-violet-500"
+              />
+              <span className="text-sm text-slate-300">
+                White-label : masquer le pied de page « Propulsé par Faymoos » sur la capsule publique
+              </span>
+            </label>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-500">Webhook CTA (HTTPS, Zapier / Make)</label>
+              <input
+                type="url"
+                value={form.ctaWebhookUrl}
+                onChange={(e) => {
+                  setForm((prev) => ({ ...prev, ctaWebhookUrl: e.target.value }));
+                  setError("");
+                  setSuccess(false);
+                }}
+                placeholder="https://hooks.zapier.com/..."
+                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              />
+              <p className="text-[11px] text-slate-500">
+                Envoyé en JSON sur chaque clic CTA (événement <code className="text-violet-300">cta_click</code>), en-tête{" "}
+                <code className="text-violet-300">X-Faymoos-Signature</code> si un secret est défini.
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-slate-500">Secret webhook (HMAC-SHA256, optionnel)</label>
+              <input
+                type="password"
+                autoComplete="off"
+                value={form.ctaWebhookSecret}
+                onChange={(e) => {
+                  setForm((prev) => ({ ...prev, ctaWebhookSecret: e.target.value }));
+                  setCtaSecretDirty(true);
+                  setError("");
+                  setSuccess(false);
+                }}
+                placeholder={
+                  profile.hasCtaWebhookSecret && !ctaSecretDirty
+                    ? "Secret enregistré — saisir pour remplacer"
+                    : "Optionnel"
+                }
+                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              />
+              <p className="text-[11px] text-slate-500">
+                Laissez vide et enregistrez sans modifier ce champ pour conserver le secret actuel. Saisissez vide après l’avoir touché pour le supprimer.
+              </p>
             </div>
           </div>
 

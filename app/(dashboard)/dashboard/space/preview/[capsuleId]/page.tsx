@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { CapsuleViewer } from "../../../../../capsule/[slug]/CapsuleViewer";
@@ -24,7 +25,7 @@ export default async function SpacePreviewPage({ params }: PageProps) {
     },
   });
 
-  if (!cap || cap.identity.userId !== userId) notFound();
+  if (!cap || !(await canManageIdentityAsOwner(userId, cap.identity.userId))) notFound();
 
   const [projects, testimonials] = await Promise.all([
     prisma.portfolioProject.findMany({
@@ -43,6 +44,7 @@ export default async function SpacePreviewPage({ params }: PageProps) {
         capsules publiées.
       </div>
       <CapsuleViewer
+        hideBranding={identity.hideBranding}
         identity={{
           id: identity.id,
           name: identity.name,

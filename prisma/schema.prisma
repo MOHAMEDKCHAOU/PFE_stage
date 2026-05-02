@@ -11,7 +11,7 @@ model User {
   id               String            @id @default(uuid())
   email            String            @unique
   password         String
-  role             String            @default("USER") // "USER" | "ADMIN"
+  role             String            @default("USER") // "USER" | "ADMIN" | "AFFILIATE"
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
 
@@ -19,6 +19,23 @@ model User {
   favorites        Favorite[]
   notifications    Notification[]
   userAssets       UserAsset[]
+  affiliateClients AffiliateClient[] @relation("AffiliateToClients")
+  studioAsClient   AffiliateClient[] @relation("ClientOfAffiliate")
+}
+
+/// Lien Studio (affilié) → compte client géré
+model AffiliateClient {
+  id              String   @id @default(uuid())
+  affiliateUserId String
+  clientUserId    String
+  createdAt       DateTime @default(now())
+
+  affiliate User @relation("AffiliateToClients", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  client    User @relation("ClientOfAffiliate", fields: [clientUserId], references: [id], onDelete: Cascade)
+
+  @@unique([affiliateUserId, clientUserId])
+  @@index([affiliateUserId])
+  @@index([clientUserId])
 }
 
 /// Médias personnels réutilisables (hub Asset Library)
@@ -55,6 +72,12 @@ model IdentityProfile {
   cover             String?
   theme             String?
   socialLinks       Json?
+
+  /// Premium / Zapier : masquer le branding Faymoos sur la capsule publique
+  hideBranding      Boolean            @default(false)
+  /// URL webhook HTTPS appelée à chaque CTA_CLICK (corps JSON signé si secret défini)
+  ctaWebhookUrl     String?
+  ctaWebhookSecret  String?
 
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt

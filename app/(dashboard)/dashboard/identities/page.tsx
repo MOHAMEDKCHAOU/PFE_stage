@@ -33,6 +33,10 @@ type IdentityProfile = {
   cover: string | null;
   theme: string | null;
   socialLinks: Record<string, string> | null;
+  hideBranding?: boolean;
+  ctaWebhookUrl?: string | null;
+  ctaWebhookSecret?: string | null;
+  hasCtaWebhookSecret?: boolean;
   createdAt: string;
   portfolioProjects: PortfolioProject[];
   testimonials: Testimonial[];

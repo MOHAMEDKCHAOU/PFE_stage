@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
 // REST Route: POST /api/branches (Protégé)
@@ -15,6 +16,14 @@ export async function POST(req: Request) {
         { error: "Champs requis manquants : optionId, headline, description, cta" },
         { status: 400 }
       );
+    }
+
+    const optionRow = await prisma.capsuleOption.findUnique({
+      where: { id: optionId },
+      include: { capsule: { include: { identity: true } } },
+    });
+    if (!optionRow || !(await canManageIdentityAsOwner(userId, optionRow.capsule.identity.userId))) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
     const branch = await prisma.capsuleBranch.create({
@@ -45,7 +54,7 @@ export async function PUT(req: Request) {
       },
     });
 
-    if (!existing || existing.option.capsule.identity.userId !== userId) {
+    if (!existing || !(await canManageIdentityAsOwner(userId, existing.option.capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
@@ -80,7 +89,7 @@ export async function DELETE(req: Request) {
       },
     });
 
-    if (!existing || existing.option.capsule.identity.userId !== userId) {
+    if (!existing || !(await canManageIdentityAsOwner(userId, existing.option.capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 

@@ -52,7 +52,7 @@ export async function PUT(req: NextRequest) {
   const body = await req.json();
   const { id, role } = body;
 
-  if (!id || !role || !["USER", "ADMIN"].includes(role)) {
+  if (!id || !role || !["USER", "ADMIN", "AFFILIATE"].includes(role)) {
     return NextResponse.json({ error: "Données invalides" }, { status: 400 });
   }
 

@@ -1,33 +1,53 @@
 import { prisma } from "@/lib/prisma";
+import { createHmac } from "crypto";
 import { NextResponse } from "next/server";
 
+function dispatchCtaWebhook(args: {
+  url: string;
+  secret: string | null;
+  payload: Record<string, unknown>;
+}) {
+  const body = JSON.stringify(args.payload);
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "User-Agent": "Faymoos-Webhook/1.0",
+  };
+  if (args.secret) {
+    const sig = createHmac("sha256", args.secret).update(body).digest("hex");
+    headers["X-Faymoos-Signature"] = `sha256=${sig}`;
+  }
+  void fetch(args.url, { method: "POST", headers, body }).catch(() => {});
+}
+
 // POST /api/analytics/track — Public (called by capsule visitors)
-// Creates sessions and logs events
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { action, capsuleId, sessionId, optionId, optionLabel } = body;
 
     if (!action || !capsuleId) {
-      return NextResponse.json(
-        { error: "action et capsuleId requis" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "action et capsuleId requis" }, { status: 400 });
     }
 
-    // Verify capsule exists (include identity for notification)
     const capsule = await prisma.capsule.findUnique({
       where: { id: capsuleId },
-      include: { identity: { select: { userId: true, name: true } } },
+      include: {
+        identity: {
+          select: {
+            userId: true,
+            name: true,
+            slug: true,
+            id: true,
+            ctaWebhookUrl: true,
+            ctaWebhookSecret: true,
+          },
+        },
+      },
     });
     if (!capsule) {
-      return NextResponse.json(
-        { error: "Capsule introuvable" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Capsule introuvable" }, { status: 404 });
     }
 
-    // START → create session + START event
     if (action === "START") {
       const session = await prisma.capsuleSession.create({
         data: {
@@ -43,7 +63,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ sessionId: session.id }, { status: 201 });
     }
 
-    // OPTION_CLICK or CTA_CLICK → add event to existing session
     if (
       (action === "OPTION_CLICK" || action === "CTA_CLICK") &&
       sessionId
@@ -52,10 +71,7 @@ export async function POST(req: Request) {
         where: { id: sessionId },
       });
       if (!session) {
-        return NextResponse.json(
-          { error: "Session introuvable" },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "Session introuvable" }, { status: 404 });
       }
 
       const event = await prisma.capsuleEvent.create({
@@ -69,23 +85,42 @@ export async function POST(req: Request) {
         },
       });
 
-      // If CTA_CLICK → mark session as ended + notify owner
       if (action === "CTA_CLICK") {
         await prisma.capsuleSession.update({
           where: { id: sessionId },
           data: { endedAt: new Date() },
         });
 
-        // Create notification for capsule owner
-        await prisma.notification.create({
-          data: {
-            userId: capsule.identity.userId,
-            type: "CTA_CLICK",
-            title: "🎯 Clic sur votre CTA",
-            body: `Un visiteur a cliqué sur le CTA de votre capsule "${capsule.title}" (option: ${optionLabel || "inconnue"})`,
-            link: "/dashboard/analytics",
-          },
-        }).catch(() => {});
+        await prisma.notification
+          .create({
+            data: {
+              userId: capsule.identity.userId,
+              type: "CTA_CLICK",
+              title: "🎯 Clic sur votre CTA",
+              body: `Un visiteur a cliqué sur le CTA de votre capsule "${capsule.title}" (option: ${optionLabel || "inconnue"})`,
+              link: "/dashboard/analytics",
+            },
+          })
+          .catch(() => {});
+
+        const hook = capsule.identity.ctaWebhookUrl?.trim();
+        if (hook && /^https:\/\//i.test(hook)) {
+          dispatchCtaWebhook({
+            url: hook,
+            secret: capsule.identity.ctaWebhookSecret,
+            payload: {
+              event: "cta_click",
+              capsuleId: capsule.id,
+              capsuleTitle: capsule.title,
+              identityId: capsule.identity.id,
+              identitySlug: capsule.identity.slug,
+              optionLabel: optionLabel ?? null,
+              sessionId,
+              eventId: event.id,
+              occurredAt: new Date().toISOString(),
+            },
+          });
+        }
       }
 
       return NextResponse.json({ eventId: event.id }, { status: 201 });

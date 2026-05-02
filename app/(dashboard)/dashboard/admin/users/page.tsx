@@ -60,17 +60,17 @@ export default function AdminUsersPage() {
     await fetchUsers();
   }
 
-  async function toggleRole(userId: string, currentRole: string) {
+  async function setUserRole(userId: string, newRole: string) {
     setActionLoading(userId);
-    const newRole = currentRole === "ADMIN" ? "USER" : "ADMIN";
     const res = await fetch("/api/admin/users", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId, role: newRole }),
     });
     if (res.ok) {
+      const updated = await res.json();
       setUsers((prev) =>
-        prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+        prev.map((u) => (u.id === userId ? { ...u, role: updated.role } : u))
       );
     } else {
       const err = await res.json();
@@ -163,7 +163,9 @@ export default function AdminUsersPage() {
                         className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                           user.role === "ADMIN"
                             ? "bg-red-100 text-red-600"
-                            : "bg-slate-100 text-slate-500"
+                            : user.role === "AFFILIATE"
+                              ? "bg-amber-100 text-amber-800"
+                              : "bg-slate-100 text-slate-500"
                         }`}
                       >
                         {user.role}
@@ -194,15 +196,18 @@ export default function AdminUsersPage() {
                       {new Date(user.createdAt).toLocaleDateString("fr-FR")}
                     </td>
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => toggleRole(user.id, user.role)}
+                      <div className="flex items-center justify-end gap-2 flex-wrap">
+                        <select
+                          value={user.role}
                           disabled={actionLoading === user.id}
-                          className="text-xs px-3 py-1.5 rounded-lg font-medium bg-amber-50 text-amber-600 hover:bg-amber-100 transition-colors disabled:opacity-50"
-                          title={user.role === "ADMIN" ? "Retirer admin" : "Promouvoir admin"}
+                          onChange={(e) => setUserRole(user.id, e.target.value)}
+                          className="text-xs rounded-lg border border-slate-200 bg-white px-2 py-1.5 font-medium text-slate-700 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-200 disabled:opacity-50"
+                          title="Rôle"
                         >
-                          {user.role === "ADMIN" ? "Retirer admin" : "→ Admin"}
-                        </button>
+                          <option value="USER">USER</option>
+                          <option value="AFFILIATE">AFFILIATE (Studio)</option>
+                          <option value="ADMIN">ADMIN</option>
+                        </select>
                         {confirmDelete === user.id ? (
                           <div className="flex items-center gap-1">
                             <button

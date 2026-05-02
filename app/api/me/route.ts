@@ -7,7 +7,7 @@ export async function GET() {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-    const user = await prisma.user.findUnique({
+    const raw = await prisma.user.findUnique({
       where: { id: userId },
       select: {
         id: true,
@@ -25,6 +25,9 @@ export async function GET() {
             avatar: true,
             cover: true,
             createdAt: true,
+            hideBranding: true,
+            ctaWebhookUrl: true,
+            ctaWebhookSecret: true,
             _count: {
               select: {
                 portfolioProjects: true,
@@ -37,7 +40,15 @@ export async function GET() {
       },
     });
 
-    if (!user) return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
+    if (!raw) return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
+
+    const user = {
+      ...raw,
+      identityProfiles: raw.identityProfiles.map(({ ctaWebhookSecret, ...p }) => ({
+        ...p,
+        hasCtaWebhookSecret: !!ctaWebhookSecret,
+      })),
+    };
 
     return NextResponse.json(user);
   } catch (error) {

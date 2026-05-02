@@ -50,6 +50,7 @@ type Testimonial = {
 };
 
 type CapsuleViewerProps = {
+  hideBranding?: boolean;
   identity: {
     id: string;
     name: string;
@@ -93,7 +94,7 @@ const themeOverrides: Record<string, { gradient: string; accent: string }> = {
 };
 
 /* ───────── Component ───────── */
-export function CapsuleViewer({ identity, capsules, projects, testimonials }: CapsuleViewerProps) {
+export function CapsuleViewer({ identity, capsules, projects, testimonials, hideBranding = false }: CapsuleViewerProps) {
   const [activeCapsule, setActiveCapsule] = useState<Capsule>(capsules[0]);
   const [journeyImmersed, setJourneyImmersed] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
@@ -116,6 +117,9 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
   const baseTC = typeConfig[identity.type] || typeConfig.FREELANCER;
   const themeOv = identity.theme ? themeOverrides[identity.theme] : null;
   const tc = themeOv ? { ...baseTC, ...themeOv } : baseTC;
+  const shareBlurb = hideBranding
+    ? `Découvrez ${identity.name}`
+    : `Découvrez ${identity.name} sur Faymoos`;
 
   const showJourneyMap = activeCapsule.options.length > 0 && !journeyImmersed;
 
@@ -383,7 +387,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
                   <button
                     onClick={() => {
                       const url = encodeURIComponent(window.location.href);
-                      const text = encodeURIComponent(`Découvrez ${identity.name} sur Faymoos`);
+                      const text = encodeURIComponent(shareBlurb);
                       window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, "_blank", "width=600,height=400");
                       setShowShare(false);
                     }}
@@ -395,7 +399,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
                   <button
                     onClick={() => {
                       const url = encodeURIComponent(window.location.href);
-                      const text = encodeURIComponent(`Découvrez ${identity.name} sur Faymoos`);
+                      const text = encodeURIComponent(shareBlurb);
                       window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank", "width=600,height=400");
                       setShowShare(false);
                     }}
@@ -407,7 +411,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
                   <button
                     onClick={() => {
                       const url = encodeURIComponent(window.location.href);
-                      const text = encodeURIComponent(`Découvrez ${identity.name} sur Faymoos`);
+                      const text = encodeURIComponent(shareBlurb);
                       window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
                       setShowShare(false);
                     }}
@@ -536,7 +540,9 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
                   </span>
                 </button>
                 <p className="max-w-md text-center text-xs leading-relaxed text-zinc-500">
-                  Ensuite : choix interactifs, portfolio, témoignages et contact — tout le parcours Faymoos.
+                  {hideBranding
+                    ? "Ensuite : choix interactifs, portfolio, témoignages et formulaire de contact."
+                    : "Ensuite : choix interactifs, portfolio, témoignages et contact — tout le parcours Faymoos."}
                 </p>
               </div>
             </div>
@@ -855,7 +861,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials }: Ca
       )}
 
       {/* ──── Footer ──── */}
-      {!showJourneyMap && (
+      {!showJourneyMap && !hideBranding && (
       <footer className="max-w-3xl mx-auto px-6 mt-20 mb-10 text-center">
         <div className="h-px w-16 mx-auto bg-gradient-to-r from-transparent via-zinc-700 to-transparent mb-6" />
         <p className="text-xs text-zinc-700">

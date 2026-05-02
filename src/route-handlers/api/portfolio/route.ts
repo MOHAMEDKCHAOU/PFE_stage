@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -12,7 +13,7 @@ export async function GET(req: Request) {
     if (!identityId) return NextResponse.json({ error: "identityId requis" }, { status: 400 });
 
     const identity = await prisma.identityProfile.findUnique({ where: { id: identityId } });
-    if (!identity || identity.userId !== userId) {
+    if (!identity || !(await canManageIdentityAsOwner(userId, identity.userId))) {
       return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });
     }
 
@@ -40,7 +41,7 @@ export async function POST(req: Request) {
     }
 
     const identity = await prisma.identityProfile.findUnique({ where: { id: identityId } });
-    if (!identity || identity.userId !== userId) {
+    if (!identity || !(await canManageIdentityAsOwner(userId, identity.userId))) {
       return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });
     }
 
@@ -75,7 +76,7 @@ export async function PUT(req: Request) {
       where: { id },
       include: { identity: true },
     });
-    if (!project || project.identity.userId !== userId) {
+    if (!project || !(await canManageIdentityAsOwner(userId, project.identity.userId))) {
       return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });
     }
 
@@ -109,7 +110,7 @@ export async function DELETE(req: Request) {
       where: { id },
       include: { identity: true },
     });
-    if (!project || project.identity.userId !== userId) {
+    if (!project || !(await canManageIdentityAsOwner(userId, project.identity.userId))) {
       return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });
     }
 

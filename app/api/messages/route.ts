@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { canManageIdentityAsOwner, getManagedUserIdsForViewer } from "@/lib/studio-access";
 import { NextRequest, NextResponse } from "next/server";
 
 // POST — visitor sends a message (public, no auth required)
@@ -62,9 +63,10 @@ export async function GET() {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
+    const ownerIds = await getManagedUserIdsForViewer(userId);
     const messages = await prisma.message.findMany({
       where: {
-        identity: { userId },
+        identity: { userId: { in: ownerIds } },
       },
       orderBy: { createdAt: "desc" },
       include: {
@@ -95,7 +97,7 @@ export async function PATCH(req: NextRequest) {
       where: { id },
       include: { identity: { select: { userId: true } } },
     });
-    if (!message || message.identity.userId !== userId) {
+    if (!message || !(await canManageIdentityAsOwner(userId, message.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
@@ -124,7 +126,7 @@ export async function DELETE(req: NextRequest) {
       where: { id },
       include: { identity: { select: { userId: true } } },
     });
-    if (!message || message.identity.userId !== userId) {
+    if (!message || !(await canManageIdentityAsOwner(userId, message.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 

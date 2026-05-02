@@ -36,6 +36,7 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
   return (
     <main className="theme-capsule min-h-screen bg-zinc-950 text-white">
       <CapsuleViewer
+        hideBranding={identity.hideBranding}
         identity={{
           id: identity.id,
           name: identity.name,

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
+import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
 // REST Route: POST /api/options (Protégé)
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
       include: { identity: true },
     });
 
-    if (!capsule || capsule.identity.userId !== userId) {
+    if (!capsule || !(await canManageIdentityAsOwner(userId, capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
@@ -59,7 +60,7 @@ export async function PUT(req: Request) {
       include: { capsule: { include: { identity: true } } },
     });
 
-    if (!existing || existing.capsule.identity.userId !== userId) {
+    if (!existing || !(await canManageIdentityAsOwner(userId, existing.capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
@@ -95,7 +96,7 @@ export async function DELETE(req: Request) {
       include: { capsule: { include: { identity: true } } },
     });
 
-    if (!existing || existing.capsule.identity.userId !== userId) {
+    if (!existing || !(await canManageIdentityAsOwner(userId, existing.capsule.identity.userId))) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
