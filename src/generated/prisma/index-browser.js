@@ -144,6 +144,17 @@ exports.Prisma.SubscriptionUsageScalarFieldEnum = {
   invitesCount: 'invitesCount'
 };
 
+exports.Prisma.SubscriptionPlanPriceScalarFieldEnum = {
+  planKey: 'planKey',
+  name: 'name',
+  description: 'description',
+  monthlyCents: 'monthlyCents',
+  yearlyCents: 'yearlyCents',
+  currency: 'currency',
+  sortOrder: 'sortOrder',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AffiliateClientScalarFieldEnum = {
   id: 'id',
   affiliateUserId: 'affiliateUserId',
@@ -324,6 +335,7 @@ exports.UserAssetKind = exports.$Enums.UserAssetKind = {
 exports.Prisma.ModelName = {
   User: 'User',
   SubscriptionUsage: 'SubscriptionUsage',
+  SubscriptionPlanPrice: 'SubscriptionPlanPrice',
   AffiliateClient: 'AffiliateClient',
   StudioClientInvite: 'StudioClientInvite',
   UserAsset: 'UserAsset',

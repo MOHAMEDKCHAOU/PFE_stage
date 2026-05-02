@@ -1,4 +1,5 @@
 import { getUserId } from "@/lib/auth";
+import { isBillingDemoMode } from "@/lib/billing-demo-mode";
 import { prisma } from "@/lib/prisma";
 import { getStripe, planToPriceIds } from "@/lib/stripe-server";
 import type { SubscriptionPlanKey } from "@/lib/subscription-plans";
@@ -17,7 +18,18 @@ function appOrigin(): string {
 /** POST { plan: "PRO"|"STUDIO"|"STUDIO_PLUS", interval: "month"|"year" } */
 export async function POST(req: Request) {
   try {
+    if (isBillingDemoMode()) {
+      return NextResponse.json(
+        {
+          error:
+            "Stripe est désactivé (mode démo PFE ou développement sans STRIPE_SECRET_KEY). Utilisez les boutons « Activer — … (démo) » sur la page Facturation.",
+        },
+        { status: 400 },
+      );
+    }
+
     if (!process.env.STRIPE_SECRET_KEY) {
+      console.warn("[billing/checkout] STRIPE_SECRET_KEY manquante — ajoutez-la dans .env");
       return NextResponse.json(
         { error: "Paiements non configurés (STRIPE_SECRET_KEY)." },
         { status: 503 },
@@ -43,8 +55,13 @@ export async function POST(req: Request) {
     const prices = planToPriceIds(plan);
     const priceId = interval === "year" ? prices.year : prices.month;
     if (!priceId) {
+      const suffix = interval === "year" ? "_YEARLY" : "_MONTHLY";
+      const hint = `Ex. STRIPE_PRICE_${plan}${suffix}=price_… (voir .env.example)`;
+      console.warn(`[billing/checkout] Prix Stripe absent pour plan=${plan} interval=${interval}. ${hint}`);
       return NextResponse.json(
-        { error: "Identifiant de prix Stripe manquant pour ce plan. Vérifiez les variables d’environnement." },
+        {
+          error: `Identifiant de prix Stripe manquant pour ${plan} (${interval}). Définissez la variable d’environnement correspondante.`,
+        },
         { status: 503 },
       );
     }

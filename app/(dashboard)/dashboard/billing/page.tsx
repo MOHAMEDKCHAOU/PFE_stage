@@ -21,6 +21,19 @@ type BillingSnapshot = {
   };
 };
 
+type CatalogPlanRow = {
+  planKey: string;
+  name: string;
+  description: string | null;
+  monthlyCents: number;
+  yearlyCents: number;
+  currency: string;
+};
+
+function formatMoney(cents: number, currency: string) {
+  return new Intl.NumberFormat("fr-FR", { style: "currency", currency }).format(cents / 100);
+}
+
 function UsageBar({
   label,
   used,
@@ -64,6 +77,10 @@ function BillingPageContent() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
   const [banner, setBanner] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
+  const [catalog, setCatalog] = useState<{
+    demoMode: boolean;
+    plans: CatalogPlanRow[];
+  } | null>(null);
 
   useEffect(() => {
     if (checkout === "success") {
@@ -92,8 +109,40 @@ function BillingPageContent() {
 
   useEffect(() => {
     load();
+    void fetch("/api/billing/plans")
+      .then((r) => r.json())
+      .then((data: { demoMode?: boolean; plans?: CatalogPlanRow[] }) => {
+        setCatalog({
+          demoMode: !!data.demoMode,
+          plans: Array.isArray(data.plans) ? data.plans : [],
+        });
+      })
+      .catch(() => setCatalog({ demoMode: false, plans: [] }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function activateDemoPlan(plan: SubscriptionPlanKey, interval: "month" | "year") {
+    setCheckoutLoading(`${plan}-${interval}`);
+    setBanner(null);
+    try {
+      const res = await fetch("/api/billing/demo-activate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan, interval }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setBanner({ kind: "err", text: data.error || "Activation démo impossible" });
+        return;
+      }
+      setBanner({ kind: "ok", text: data.message || "Plan mis à jour (démo)." });
+      await load();
+    } catch {
+      setBanner({ kind: "err", text: "Erreur réseau" });
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }
 
   async function startCheckout(plan: SubscriptionPlanKey, interval: "month" | "year") {
     setCheckoutLoading(`${plan}-${interval}`);
@@ -154,15 +203,31 @@ function BillingPageContent() {
     : null;
 
   const paidCatalog = BILLING_PLAN_CATALOG.filter((p) => p.key !== "FREE");
+  const catalogLoaded = catalog !== null;
+  const demoMode = catalog?.demoMode ?? false;
+
+  function rowFor(planKey: SubscriptionPlanKey) {
+    return catalog?.plans.find((r) => r.planKey === planKey);
+  }
 
   return (
     <div className="space-y-10">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-stone-900">Facturation</h1>
         <p className="mt-1 text-stone-600">
-          Plans Faymoos, usage du mois et accès au portail Stripe pour gérer carte et renouvellement.
+          {!catalogLoaded
+            ? "Chargement des offres…"
+            : demoMode
+              ? "Mode démonstration (PFE) : tarifs issus de la base de données, abonnement simulé sans paiement Stripe."
+              : "Plans Faymoos et usage. Les tarifs affichés viennent du catalogue en base ; le paiement réel passe par Stripe."}
         </p>
       </div>
+
+      {catalogLoaded && demoMode && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          Projet universitaire : activez un plan avec les boutons ci-dessous pour tester les quotas. Aucun paiement n’est effectué.
+        </div>
+      )}
 
       {banner && (
         <div
@@ -186,7 +251,9 @@ function BillingPageContent() {
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase tracking-wide text-stone-500">Statut Stripe</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-stone-500">
+              {demoMode ? "Statut (démo)" : "Statut Stripe"}
+            </dt>
             <dd className="mt-0.5 font-medium capitalize text-stone-800">{statusLabel}</dd>
           </div>
           {periodEnd && (
@@ -197,7 +264,7 @@ function BillingPageContent() {
           )}
         </dl>
 
-        {billing.hasStripeCustomer && (
+        {!demoMode && billing.hasStripeCustomer && (
           <button
             type="button"
             onClick={() => void openPortal()}
@@ -235,12 +302,17 @@ function BillingPageContent() {
       <section>
         <h2 className="text-lg font-semibold text-stone-900">Choisir un plan</h2>
         <p className="mt-1 text-sm text-stone-600">
-          Le paiement est traité par Stripe. Les plans payants nécessitent des identifiants de prix configurés côté serveur.
+          {!catalogLoaded
+            ? "Chargement du catalogue tarifaire…"
+            : demoMode
+            ? "Montants enregistrés en base (table SubscriptionPlanPrice). Choisissez une période pour mettre à jour votre compte en mode démo."
+            : "Checkout Stripe pour souscrire. Les montants affichés sont ceux du catalogue base (référence) ; le prix facturé est celui du prix Stripe configuré."}
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-3">
           {paidCatalog.map((plan) => {
             const lim = PLAN_LIMITS[plan.key];
             const isCurrent = billing.effectivePlan === plan.key;
+            const dbRow = rowFor(plan.key);
             return (
               <div
                 key={plan.key}
@@ -256,7 +328,14 @@ function BillingPageContent() {
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-sm text-stone-600">{plan.description}</p>
+                <p className="mt-2 text-sm text-stone-600">{dbRow?.description ?? plan.description}</p>
+                {dbRow && (
+                  <p className="mt-2 text-sm font-semibold text-stone-800">
+                    {formatMoney(dbRow.monthlyCents, dbRow.currency)} <span className="font-normal text-stone-500">/ mois</span>
+                    <span className="mx-1 text-stone-400">·</span>
+                    {formatMoney(dbRow.yearlyCents, dbRow.currency)} <span className="font-normal text-stone-500">/ an</span>
+                  </p>
+                )}
                 <ul className="mt-4 space-y-1 text-xs text-stone-600">
                   <li>Jusqu’à {lim.maxIdentities} identités</li>
                   <li>Jusqu’à {lim.maxCapsules} capsules</li>
@@ -272,23 +351,41 @@ function BillingPageContent() {
                 <div className="mt-auto flex flex-col gap-2 pt-6">
                   <button
                     type="button"
-                    disabled={!!checkoutLoading || isCurrent}
-                    onClick={() => void startCheckout(plan.key, "month")}
+                    disabled={!!checkoutLoading || isCurrent || !catalogLoaded}
+                    onClick={() =>
+                      void (demoMode ? activateDemoPlan(plan.key, "month") : startCheckout(plan.key, "month"))
+                    }
                     className="w-full rounded-xl bg-bordeaux-700 py-2.5 text-sm font-medium text-white transition hover:bg-bordeaux-800 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {checkoutLoading === `${plan.key}-month`
-                      ? "Redirection…"
-                      : isCurrent
-                        ? "Déjà sur ce plan"
-                        : "Mensuel"}
+                    {!catalogLoaded
+                      ? "Chargement…"
+                      : checkoutLoading === `${plan.key}-month`
+                        ? demoMode
+                          ? "…"
+                          : "Redirection…"
+                        : isCurrent
+                          ? "Déjà sur ce plan"
+                          : demoMode
+                            ? "Activer — mensuel (démo)"
+                            : "Mensuel — Stripe"}
                   </button>
                   <button
                     type="button"
-                    disabled={!!checkoutLoading || isCurrent}
-                    onClick={() => void startCheckout(plan.key, "year")}
+                    disabled={!!checkoutLoading || isCurrent || !catalogLoaded}
+                    onClick={() =>
+                      void (demoMode ? activateDemoPlan(plan.key, "year") : startCheckout(plan.key, "year"))
+                    }
                     className="w-full rounded-xl border border-stone-300 bg-white py-2.5 text-sm font-medium text-stone-800 transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {checkoutLoading === `${plan.key}-year` ? "Redirection…" : "Annuel"}
+                    {!catalogLoaded
+                      ? "Chargement…"
+                      : checkoutLoading === `${plan.key}-year`
+                        ? demoMode
+                          ? "…"
+                          : "Redirection…"
+                        : demoMode
+                          ? "Activer — annuel (démo)"
+                          : "Annuel — Stripe"}
                   </button>
                 </div>
               </div>

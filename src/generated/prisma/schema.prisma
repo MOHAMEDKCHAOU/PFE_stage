@@ -52,6 +52,18 @@ model SubscriptionUsage {
   @@index([userId])
 }
 
+/// Tarifs affichés (PFE / catalogue) — montants en centimes, sans passer par Stripe en mode démo.
+model SubscriptionPlanPrice {
+  planKey      String   @id
+  name         String
+  description  String?
+  monthlyCents Int
+  yearlyCents  Int
+  currency     String   @default("EUR")
+  sortOrder    Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
 /// Lien Studio (affilié) → compte client géré
 model AffiliateClient {
   id              String   @id @default(uuid())

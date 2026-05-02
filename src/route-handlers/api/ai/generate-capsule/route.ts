@@ -1,12 +1,22 @@
 import { getUserId } from "@/lib/auth";
 import openai from "@/lib/openai";
+import { APIError } from "openai";
 import { NextResponse } from "next/server";
+
+export const runtime = "nodejs";
 
 // POST /api/ai/generate-capsule
 // Body: { description: string }
 // Returns: { title, objective, options: [{ label, branch: { headline, description, cta } }] }
 export async function POST(req: Request) {
   try {
+    if (!process.env.OPENAI_API_KEY?.trim()) {
+      return NextResponse.json(
+        { error: "OPENAI_API_KEY manquante. Ajoutez-la dans .env pour utiliser la génération IA." },
+        { status: 503 },
+      );
+    }
+
     const userId = await getUserId();
     if (!userId)
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
@@ -22,6 +32,7 @@ export async function POST(req: Request) {
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.7,
+      response_format: { type: "json_object" },
       messages: [
         {
           role: "system",
@@ -50,7 +61,7 @@ Règles :
 - Chaque branche doit être unique et détaillée
 - Les CTAs doivent être actionnables
 - Tout le contenu en français
-- Réponds UNIQUEMENT avec le JSON, sans markdown ni explication`,
+- Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de texte autour)`,
         },
         {
           role: "user",
@@ -67,12 +78,26 @@ Règles :
       );
     }
 
-    // Parse JSON from response (handle possible markdown code blocks)
     const jsonStr = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const capsule = JSON.parse(jsonStr);
+    let capsule: unknown;
+    try {
+      capsule = JSON.parse(jsonStr);
+    } catch {
+      console.error("AI GENERATE CAPSULE: JSON parse failed, raw:", content.slice(0, 500));
+      return NextResponse.json(
+        { error: "Réponse IA invalide. Réessayez dans un instant." },
+        { status: 502 },
+      );
+    }
 
-    // Validate structure
-    if (!capsule.title || !capsule.objective || !Array.isArray(capsule.options)) {
+    if (
+      !capsule ||
+      typeof capsule !== "object" ||
+      !("title" in capsule) ||
+      !("objective" in capsule) ||
+      !("options" in capsule) ||
+      !Array.isArray((capsule as { options: unknown }).options)
+    ) {
       return NextResponse.json(
         { error: "Structure de réponse invalide" },
         { status: 500 }
@@ -82,6 +107,19 @@ Règles :
     return NextResponse.json(capsule);
   } catch (error) {
     console.error("AI GENERATE CAPSULE ERROR:", error);
+    if (error instanceof APIError) {
+      return NextResponse.json(
+        {
+          error:
+            error.status === 401
+              ? "Clé OpenAI refusée (vérifiez OPENAI_API_KEY)."
+              : error.status === 429
+                ? "Quota OpenAI dépassé ou limite de débit. Réessayez plus tard."
+                : error.message || "Erreur API OpenAI",
+        },
+        { status: error.status && error.status < 600 ? error.status : 502 },
+      );
+    }
     return NextResponse.json(
       { error: "Erreur lors de la génération IA" },
       { status: 500 }
