@@ -25,6 +25,15 @@ type StudioInviteListRow = {
   state: "pending" | "accepted" | "revoked" | "expired";
 };
 
+type StudioMetrics = {
+  activeClients: number;
+  pendingInvites: number;
+  invitesCreatedLast30Days: number;
+  invitesAcceptedLast30Days: number;
+  acceptanceRateLast30Days: number | null;
+  windowDays: number;
+};
+
 function initialsFromEmail(email: string) {
   const local = email.split("@")[0] ?? "?";
   const parts = local.replace(/[._-]+/g, " ").trim().split(/\s+/).filter(Boolean);
@@ -53,6 +62,9 @@ export default function StudioPage() {
   const [lastInviteUrl, setLastInviteUrl] = useState<string | null>(null);
   const [lastInviteExpires, setLastInviteExpires] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [metrics, setMetrics] = useState<StudioMetrics | null>(null);
+  const [exportKind, setExportKind] = useState<null | "csv" | "pdf">(null);
+  const [exportNote, setExportNote] = useState("");
 
   const totals = useMemo(() => {
     const clients = links.length;
@@ -84,6 +96,14 @@ export default function StudioPage() {
       setInvites(Array.isArray(invData) ? invData : []);
     } else {
       setInvites([]);
+    }
+    const mr = await fetch("/api/studio/metrics");
+    if (mr.ok) {
+      const m = await mr.json();
+      if (m && typeof m.activeClients === "number") setMetrics(m as StudioMetrics);
+      else setMetrics(null);
+    } else {
+      setMetrics(null);
     }
     setLoading(false);
 
@@ -171,6 +191,47 @@ export default function StudioPage() {
       await load();
     }
     setInviteBusy(false);
+  }
+
+  async function handleExport(kind: "csv" | "pdf") {
+    setExportNote("");
+    setExportKind(kind);
+    try {
+      const url =
+        kind === "pdf" ? "/api/studio/clients/export?format=pdf" : "/api/studio/clients/export";
+      const res = await fetch(url, { credentials: "include" });
+      if (res.status === 429) {
+        setExportNote("Trop de téléchargements. Réessayez dans une heure.");
+        setExportKind(null);
+        return;
+      }
+      if (!res.ok) {
+        setExportNote("Export impossible pour le moment.");
+        setExportKind(null);
+        return;
+      }
+      const blob = await res.blob();
+      const cd = res.headers.get("Content-Disposition");
+      const match = cd?.match(/filename="([^"]+)"/);
+      const fallback =
+        kind === "pdf"
+          ? `faymoos-studio-rapport-${new Date().toISOString().slice(0, 10)}.pdf`
+          : `faymoos-studio-clients-${new Date().toISOString().slice(0, 10)}.csv`;
+      const filename = match?.[1] ?? fallback;
+      const objUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objUrl;
+      a.download = filename;
+      a.rel = "noopener";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objUrl);
+    } catch {
+      setExportNote("Export impossible (réseau ou navigateur).");
+    } finally {
+      setExportKind(null);
+    }
   }
 
   async function copyLastLink() {
@@ -292,17 +353,105 @@ export default function StudioPage() {
         </div>
       </header>
 
-      {/* KPIs */}
-      <section className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm ring-1 ring-stone-100">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Clients liés</p>
-          <p className="mt-2 text-3xl font-bold tabular-nums text-stone-900">{totals.clients}</p>
-          <p className="mt-1 text-xs text-stone-500">Comptes rattachés à votre Studio</p>
+      {/* KPIs + pilotage */}
+      <section className="space-y-4">
+        <div className="rounded-2xl border border-stone-200/90 bg-gradient-to-br from-white via-stone-50/40 to-bordeaux-50/30 p-5 shadow-sm ring-1 ring-stone-100/80">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0 space-y-1">
+              <h2 className="text-sm font-semibold text-stone-900">Pilotage & exports</h2>
+              <p className="max-w-xl text-xs leading-relaxed text-stone-600">
+                Rapport PDF prêt à partager (synthèse + tableau clients), ou fichier CSV pour Excel / outils
+                métier. Les dates ISO du CSV sont en UTC ; le PDF affiche les dates en format lisible.
+              </p>
+            </div>
+            <div className="flex flex-shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                disabled={exportKind !== null}
+                onClick={() => handleExport("pdf")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-bordeaux-800 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-bordeaux-900/15 transition hover:bg-bordeaux-900 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {exportKind === "pdf" ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    PDF…
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9m4.125 0a2.251 2.251 0 012.25 2.25M6.75 18.75h7.5M6.75 15h6.375m-9 3.75h10.5a3 3 0 003-3v-9a3 3 0 00-3-3h-9a3 3 0 00-3 3v9a3 3 0 003 3z"
+                      />
+                    </svg>
+                    Télécharger le rapport PDF
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                disabled={exportKind !== null}
+                onClick={() => handleExport("csv")}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-bordeaux-200 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {exportKind === "csv" ? (
+                  <>
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-stone-200 border-t-bordeaux-600" />
+                    CSV…
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                      />
+                    </svg>
+                    Tableur CSV
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm ring-1 ring-stone-100">
-          <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Identités gérées</p>
-          <p className="mt-2 text-3xl font-bold tabular-nums text-bordeaux-800">{totals.identities}</p>
-          <p className="mt-1 text-xs text-stone-500">Total côté clients (aperçu)</p>
+        {exportNote ? <p className="text-xs font-medium text-amber-800">{exportNote}</p> : null}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm ring-1 ring-stone-100">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Clients actifs</p>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-stone-900">
+              {metrics?.activeClients ?? totals.clients}
+            </p>
+            <p className="mt-1 text-xs text-stone-500">Comptes liés à votre Studio</p>
+          </div>
+          <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm ring-1 ring-stone-100">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Identités gérées</p>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-bordeaux-800">{totals.identities}</p>
+            <p className="mt-1 text-xs text-stone-500">Total côté clients (aperçu)</p>
+          </div>
+          <div className="rounded-2xl border border-amber-100/90 bg-gradient-to-br from-amber-50/80 to-white p-5 shadow-sm ring-1 ring-amber-100/70">
+            <p className="text-xs font-semibold uppercase tracking-wide text-amber-900/80">Invitations en attente</p>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-stone-900">{metrics?.pendingInvites ?? "—"}</p>
+            <p className="mt-1 text-xs text-stone-500">Non expirées, non acceptées</p>
+          </div>
+          <div className="rounded-2xl border border-emerald-100/90 bg-gradient-to-br from-emerald-50/70 to-white p-5 shadow-sm ring-1 ring-emerald-100/60">
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-900/80">Taux d’acceptation</p>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-emerald-900">
+              {metrics == null
+                ? "—"
+                : metrics.acceptanceRateLast30Days == null
+                  ? "N/A"
+                  : `${metrics.acceptanceRateLast30Days}%`}
+            </p>
+            <p className="mt-1 text-xs text-stone-500">
+              {metrics == null
+                ? "Chargement…"
+                : metrics.invitesCreatedLast30Days === 0
+                  ? `Aucune invitation émise sur ${metrics.windowDays} j.`
+                  : `${metrics.invitesAcceptedLast30Days} / ${metrics.invitesCreatedLast30Days} acceptée(s) · cohorte invitations émises sur ${metrics.windowDays} j.`}
+            </p>
+          </div>
         </div>
         <div className="rounded-2xl border border-bordeaux-100 bg-gradient-to-br from-bordeaux-50 to-white p-5 shadow-sm ring-1 ring-bordeaux-100/80">
           <p className="text-xs font-semibold uppercase tracking-wide text-bordeaux-800/80">Étape suivante</p>

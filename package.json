@@ -7,6 +7,7 @@
     "admin:ensure": "node prisma/ensure-admin.js",
     "build": "next build",
     "start": "next start",
+    "postinstall": "prisma generate",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest"
