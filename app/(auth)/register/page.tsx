@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   registerSchema,
   type RegisterFormData,
@@ -44,8 +44,13 @@ const strengthColors = [
   "bg-emerald-400",
 ];
 
-export default function RegisterPage() {
+function RegisterPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextRaw = searchParams.get("next");
+  const nextSafe =
+    nextRaw && nextRaw.startsWith("/") && !nextRaw.startsWith("//") ? nextRaw : null;
+  const loginWithNext = nextSafe ? `/login?next=${encodeURIComponent(nextSafe)}` : "/login";
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -118,7 +123,7 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push("/login");
+      router.push(loginWithNext);
     } catch {
       setServerError("Impossible de se connecter au serveur");
     } finally {
@@ -467,12 +472,24 @@ export default function RegisterPage() {
       <p className="mt-8 text-center text-sm text-stone-600">
         Déjà un compte ?{" "}
         <Link
-          href="/login"
+          href={loginWithNext}
           className="font-semibold text-bordeaux-400 hover:text-bordeaux-300 transition-colors"
         >
           Se connecter
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Chargement…</div>
+      }
+    >
+      <RegisterPageContent />
+    </Suspense>
   );
 }

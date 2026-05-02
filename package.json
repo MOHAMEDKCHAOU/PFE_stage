@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "admin:ensure": "node prisma/ensure-admin.js",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

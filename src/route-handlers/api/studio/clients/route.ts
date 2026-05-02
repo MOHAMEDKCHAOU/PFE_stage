@@ -1,6 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { requireAffiliate } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit-memory";
+import { normalizeStudioClientEmail } from "@/lib/studio-client-email";
 import { NextResponse } from "next/server";
+
+/** Max. liaisons par affilié / fenêtre (anti-abus & énumération d’emails). */
+const POST_LINK_LIMIT = 25;
+const POST_LINK_WINDOW_MS = 60 * 60 * 1000;
+const DELETE_LINK_LIMIT = 40;
+const DELETE_LINK_WINDOW_MS = 60 * 60 * 1000;
 
 /** GET /api/studio/clients — clients liés au Studio (rôle AFFILIATE). */
 export async function GET() {
@@ -34,26 +42,59 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
   }
 
-  const body = await req.json();
-  const emailRaw = typeof body.email === "string" ? body.email.trim() : "";
-  if (!emailRaw) {
-    return NextResponse.json({ error: "email requis" }, { status: 400 });
+  let body: { email?: unknown; confirmConsent?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
+  }
+
+  const consent = body.confirmConsent === true;
+  if (!consent) {
+    return NextResponse.json(
+      { error: "Vous devez confirmer disposer d’un mandat ou d’un accord du client." },
+      { status: 400 },
+    );
+  }
+
+  const normalized = typeof body.email === "string" ? normalizeStudioClientEmail(body.email) : null;
+  if (!normalized) {
+    return NextResponse.json({ error: "Adresse e-mail invalide" }, { status: 400 });
+  }
+
+  const limited = checkRateLimit(`studio-client-link:${affiliateId}`, POST_LINK_LIMIT, POST_LINK_WINDOW_MS);
+  if (!limited.ok) {
+    const sec = Math.ceil(limited.retryAfterMs / 1000);
+    return NextResponse.json(
+      { error: "Trop de tentatives de liaison. Réessayez dans quelques minutes." },
+      { status: 429, headers: { "Retry-After": String(sec) } },
+    );
   }
 
   const client = await prisma.user.findFirst({
-    where: { email: { equals: emailRaw, mode: "insensitive" } },
+    where: { email: { equals: normalized, mode: "insensitive" } },
     select: { id: true, email: true, role: true },
   });
 
   if (!client) {
     return NextResponse.json(
-      { error: "Aucun compte Faymoos avec cet email — le client doit d’abord s’inscrire." },
-      { status: 404 },
+      {
+        error:
+          "Liaison impossible : vérifiez l’adresse ou assurez-vous que le titulaire a bien créé un compte Faymoos.",
+      },
+      { status: 400 },
     );
   }
 
   if (client.id === affiliateId) {
     return NextResponse.json({ error: "Vous ne pouvez pas vous ajouter comme client" }, { status: 400 });
+  }
+
+  if (client.role === "ADMIN") {
+    return NextResponse.json(
+      { error: "Les comptes administrateur ne peuvent pas être rattachés comme clients." },
+      { status: 403 },
+    );
   }
 
   try {
@@ -91,6 +132,19 @@ export async function DELETE(req: Request) {
   const clientUserId = new URL(req.url).searchParams.get("clientUserId");
   if (!clientUserId) {
     return NextResponse.json({ error: "clientUserId requis" }, { status: 400 });
+  }
+
+  const delLimited = checkRateLimit(
+    `studio-client-unlink:${affiliateId}`,
+    DELETE_LINK_LIMIT,
+    DELETE_LINK_WINDOW_MS,
+  );
+  if (!delLimited.ok) {
+    const sec = Math.ceil(delLimited.retryAfterMs / 1000);
+    return NextResponse.json(
+      { error: "Trop de suppressions de lien. Réessayez plus tard." },
+      { status: 429, headers: { "Retry-After": String(sec) } },
+    );
   }
 
   const result = await prisma.affiliateClient.deleteMany({

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
 
 // Minimal Zod resolver for react-hook-form (avoids extra dependency)
@@ -20,8 +20,9 @@ function zodResolver(schema: typeof loginSchema) {
   };
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [serverError, setServerError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +35,12 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
+
+  const nextParam = searchParams.get("next");
+  const registerHref =
+    nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+      ? `/register?next=${encodeURIComponent(nextParam)}`
+      : "/register";
 
   async function onSubmit(data: LoginFormData) {
     setIsLoading(true);
@@ -53,7 +60,11 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
+      const next = searchParams.get("next");
+      const dest =
+        next && next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+
+      router.push(dest);
     } catch {
       setServerError("Impossible de se connecter au serveur");
     } finally {
@@ -324,12 +335,24 @@ export default function LoginPage() {
       <p className="mt-8 text-center text-sm text-stone-600">
         Pas encore de compte ?{" "}
         <Link
-          href="/register"
+          href={registerHref}
           className="font-semibold text-bordeaux-400 hover:text-bordeaux-300 transition-colors"
         >
           Créer un compte
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Chargement…</div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

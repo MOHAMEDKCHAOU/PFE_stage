@@ -21,6 +21,8 @@ model User {
   userAssets       UserAsset[]
   affiliateClients AffiliateClient[] @relation("AffiliateToClients")
   studioAsClient   AffiliateClient[] @relation("ClientOfAffiliate")
+  studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
+  studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
 }
 
 /// Lien Studio (affilié) → compte client géré
@@ -36,6 +38,26 @@ model AffiliateClient {
   @@unique([affiliateUserId, clientUserId])
   @@index([affiliateUserId])
   @@index([clientUserId])
+}
+
+/// Invitation Studio (lien + acceptation par le client)
+model StudioClientInvite {
+  id              String    @id @default(uuid())
+  /// SHA-256 hex du jeton brut (jamais stocker le jeton en clair)
+  tokenHash       String    @unique
+  affiliateUserId String
+  affiliate       User      @relation("StudioInvitesSent", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  /// Si renseigné, seul ce compte (e-mail) peut accepter
+  inviteeEmail    String?
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  clientUserId    String?
+  client          User?     @relation("StudioInviteAcceptedClient", fields: [clientUserId], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now())
+
+  @@index([affiliateUserId])
+  @@index([expiresAt])
 }
 
 /// Médias personnels réutilisables (hub Asset Library)

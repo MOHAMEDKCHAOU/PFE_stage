@@ -85,7 +85,7 @@ const navItems = [
 ];
 
 const studioNavItem = {
-  label: "Studio",
+  label: "Espace Studio",
   href: "/dashboard/studio",
   icon: (
     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
