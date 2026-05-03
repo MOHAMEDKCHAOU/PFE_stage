@@ -93,7 +93,7 @@ export default function AdminPage() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <Link
           href="/dashboard/admin/users"
           className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 hover:ring-violet-200 transition-all"
@@ -126,6 +126,28 @@ export default function AdminPage() {
             <p className="text-sm text-slate-500">{stats.totalCapsules} capsules créées</p>
           </div>
           <svg className="h-5 w-5 text-slate-300 ml-auto group-hover:text-fuchsia-400 transition-colors" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </Link>
+
+        <Link
+          href="/dashboard/admin/badges"
+          className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 hover:ring-amber-200 transition-all"
+        >
+          <div className="h-12 w-12 rounded-xl bg-amber-100 flex items-center justify-center group-hover:bg-amber-200 transition-colors">
+            <svg className="h-6 w-6 text-amber-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 00-.84.61l-4.15-2.666a.563.563 0 00-.576 0l-4.15 2.666a.562.562 0 00-.84-.61l1.285-5.385a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 00.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-800">Badges &amp; crédibilité</h3>
+            <p className="text-sm text-slate-500">Catalogue, attribution admin, score</p>
+          </div>
+          <svg className="h-5 w-5 text-slate-300 ml-auto group-hover:text-amber-600 transition-colors" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
         </Link>

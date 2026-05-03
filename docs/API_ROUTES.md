@@ -41,6 +41,9 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `GET /api/capsule-comments/my-capsules` | `app/api/capsule-comments/my-capsules/route.ts` | `src/route-handlers/api/capsule-comments/my-capsules/route.ts` |
 | `GET /api/capsule-comments/export` | `app/api/capsule-comments/export/route.ts` | *(logique dans le stub — CSV propriétaire / Studio)* |
 | `GET /api/badges/public` | `app/api/badges/public/route.ts` | `src/route-handlers/api/badges/public/route.ts` |
+| `GET /api/admin/badges` | `app/api/admin/badges/route.ts` | `src/route-handlers/api/admin/badges/route.ts` |
+| `GET /api/admin/badges/user` | `app/api/admin/badges/user/route.ts` | `src/route-handlers/api/admin/badges/user/route.ts` |
+| `DELETE /api/admin/badges/revoke` | `app/api/admin/badges/revoke/route.ts` | `src/route-handlers/api/admin/badges/revoke/route.ts` |
 | `POST /api/admin/badges/grant` | `app/api/admin/badges/grant/route.ts` | `src/route-handlers/api/admin/badges/grant/route.ts` |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)
