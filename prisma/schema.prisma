@@ -206,6 +206,9 @@ model Capsule {
   options     CapsuleOption[]
   sessions    CapsuleSession[]
   favorites   Favorite[]
+  /// Commentaires publics (modération) — désactivables par capsule
+  commentsEnabled Boolean         @default(true)
+  comments        CapsuleComment[]
 }
 
 model CapsuleOption {
@@ -258,6 +261,33 @@ model CapsuleEvent {
   createdAt  DateTime       @default(now())
 
   session    CapsuleSession @relation(fields: [sessionId], references: [id])
+}
+
+/// Commentaires sur une capsule (visiteurs + réponses créateur) — modération PENDING / APPROVED / REJECTED
+model CapsuleComment {
+  id         String   @id @default(uuid())
+  capsuleId  String
+  capsule    Capsule  @relation(fields: [capsuleId], references: [id], onDelete: Cascade)
+
+  parentId   String?
+  parent     CapsuleComment?  @relation("CapsuleCommentThread", fields: [parentId], references: [id], onDelete: Cascade)
+  children   CapsuleComment[] @relation("CapsuleCommentThread")
+
+  authorName  String
+  authorEmail String?
+  body        String
+  /// PENDING | APPROVED | REJECTED
+  status      String   @default("PENDING")
+  isOwnerReply Boolean @default(false)
+
+  reviewedAt     DateTime?
+  reviewerUserId String?
+
+  createdAt  DateTime @default(now())
+
+  @@index([capsuleId, status])
+  @@index([capsuleId, createdAt(sort: Desc)])
+  @@index([parentId])
 }
 
 // ⭐ FAVORIS — Capsules favorites des utilisateurs

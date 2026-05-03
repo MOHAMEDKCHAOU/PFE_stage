@@ -84,6 +84,11 @@ export type CapsuleSession = $Result.DefaultSelection<Prisma.$CapsuleSessionPayl
  */
 export type CapsuleEvent = $Result.DefaultSelection<Prisma.$CapsuleEventPayload>
 /**
+ * Model CapsuleComment
+ * Commentaires sur une capsule (visiteurs + réponses créateur) — modération PENDING / APPROVED / REJECTED
+ */
+export type CapsuleComment = $Result.DefaultSelection<Prisma.$CapsuleCommentPayload>
+/**
  * Model Favorite
  * 
  */
@@ -379,6 +384,16 @@ export class PrismaClient<
     * ```
     */
   get capsuleEvent(): Prisma.CapsuleEventDelegate<ExtArgs>;
+
+  /**
+   * `prisma.capsuleComment`: Exposes CRUD operations for the **CapsuleComment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CapsuleComments
+    * const capsuleComments = await prisma.capsuleComment.findMany()
+    * ```
+    */
+  get capsuleComment(): Prisma.CapsuleCommentDelegate<ExtArgs>;
 
   /**
    * `prisma.favorite`: Exposes CRUD operations for the **Favorite** model.
@@ -864,6 +879,7 @@ export namespace Prisma {
     CapsuleBranch: 'CapsuleBranch',
     CapsuleSession: 'CapsuleSession',
     CapsuleEvent: 'CapsuleEvent',
+    CapsuleComment: 'CapsuleComment',
     Favorite: 'Favorite',
     Message: 'Message',
     Notification: 'Notification'
@@ -882,7 +898,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "subscriptionUsage" | "subscriptionPlanPrice" | "affiliateClient" | "studioClientInvite" | "userAsset" | "identityProfile" | "portfolioProject" | "testimonial" | "capsule" | "capsuleOption" | "capsuleBranch" | "capsuleSession" | "capsuleEvent" | "favorite" | "message" | "notification"
+      modelProps: "user" | "subscriptionUsage" | "subscriptionPlanPrice" | "affiliateClient" | "studioClientInvite" | "userAsset" | "identityProfile" | "portfolioProject" | "testimonial" | "capsule" | "capsuleOption" | "capsuleBranch" | "capsuleSession" | "capsuleEvent" | "capsuleComment" | "favorite" | "message" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1866,6 +1882,76 @@ export namespace Prisma {
           }
         }
       }
+      CapsuleComment: {
+        payload: Prisma.$CapsuleCommentPayload<ExtArgs>
+        fields: Prisma.CapsuleCommentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CapsuleCommentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CapsuleCommentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>
+          }
+          findFirst: {
+            args: Prisma.CapsuleCommentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CapsuleCommentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>
+          }
+          findMany: {
+            args: Prisma.CapsuleCommentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>[]
+          }
+          create: {
+            args: Prisma.CapsuleCommentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>
+          }
+          createMany: {
+            args: Prisma.CapsuleCommentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CapsuleCommentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>[]
+          }
+          delete: {
+            args: Prisma.CapsuleCommentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>
+          }
+          update: {
+            args: Prisma.CapsuleCommentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>
+          }
+          deleteMany: {
+            args: Prisma.CapsuleCommentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CapsuleCommentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CapsuleCommentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CapsuleCommentPayload>
+          }
+          aggregate: {
+            args: Prisma.CapsuleCommentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCapsuleComment>
+          }
+          groupBy: {
+            args: Prisma.CapsuleCommentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CapsuleCommentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CapsuleCommentCountArgs<ExtArgs>
+            result: $Utils.Optional<CapsuleCommentCountAggregateOutputType> | number
+          }
+        }
+      }
       Favorite: {
         payload: Prisma.$FavoritePayload<ExtArgs>
         fields: Prisma.FavoriteFieldRefs
@@ -2401,12 +2487,14 @@ export namespace Prisma {
     options: number
     sessions: number
     favorites: number
+    comments: number
   }
 
   export type CapsuleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     options?: boolean | CapsuleCountOutputTypeCountOptionsArgs
     sessions?: boolean | CapsuleCountOutputTypeCountSessionsArgs
     favorites?: boolean | CapsuleCountOutputTypeCountFavoritesArgs
+    comments?: boolean | CapsuleCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -2441,6 +2529,13 @@ export namespace Prisma {
     where?: FavoriteWhereInput
   }
 
+  /**
+   * CapsuleCountOutputType without action
+   */
+  export type CapsuleCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CapsuleCommentWhereInput
+  }
+
 
   /**
    * Count Type CapsuleSessionCountOutputType
@@ -2470,6 +2565,37 @@ export namespace Prisma {
    */
   export type CapsuleSessionCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CapsuleEventWhereInput
+  }
+
+
+  /**
+   * Count Type CapsuleCommentCountOutputType
+   */
+
+  export type CapsuleCommentCountOutputType = {
+    children: number
+  }
+
+  export type CapsuleCommentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    children?: boolean | CapsuleCommentCountOutputTypeCountChildrenArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CapsuleCommentCountOutputType without action
+   */
+  export type CapsuleCommentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleCommentCountOutputType
+     */
+    select?: CapsuleCommentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CapsuleCommentCountOutputType without action
+   */
+  export type CapsuleCommentCountOutputTypeCountChildrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CapsuleCommentWhereInput
   }
 
 
@@ -11725,6 +11851,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     identityId: string | null
+    commentsEnabled: boolean | null
   }
 
   export type CapsuleMaxAggregateOutputType = {
@@ -11736,6 +11863,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     identityId: string | null
+    commentsEnabled: boolean | null
   }
 
   export type CapsuleCountAggregateOutputType = {
@@ -11748,6 +11876,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     identityId: number
+    commentsEnabled: number
     _all: number
   }
 
@@ -11761,6 +11890,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     identityId?: true
+    commentsEnabled?: true
   }
 
   export type CapsuleMaxAggregateInputType = {
@@ -11772,6 +11902,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     identityId?: true
+    commentsEnabled?: true
   }
 
   export type CapsuleCountAggregateInputType = {
@@ -11784,6 +11915,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     identityId?: true
+    commentsEnabled?: true
     _all?: true
   }
 
@@ -11869,6 +12001,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     identityId: string
+    commentsEnabled: boolean
     _count: CapsuleCountAggregateOutputType | null
     _min: CapsuleMinAggregateOutputType | null
     _max: CapsuleMaxAggregateOutputType | null
@@ -11898,10 +12031,12 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     identityId?: boolean
+    commentsEnabled?: boolean
     identity?: boolean | IdentityProfileDefaultArgs<ExtArgs>
     options?: boolean | Capsule$optionsArgs<ExtArgs>
     sessions?: boolean | Capsule$sessionsArgs<ExtArgs>
     favorites?: boolean | Capsule$favoritesArgs<ExtArgs>
+    comments?: boolean | Capsule$commentsArgs<ExtArgs>
     _count?: boolean | CapsuleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["capsule"]>
 
@@ -11915,6 +12050,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     identityId?: boolean
+    commentsEnabled?: boolean
     identity?: boolean | IdentityProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["capsule"]>
 
@@ -11928,6 +12064,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     identityId?: boolean
+    commentsEnabled?: boolean
   }
 
   export type CapsuleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11935,6 +12072,7 @@ export namespace Prisma {
     options?: boolean | Capsule$optionsArgs<ExtArgs>
     sessions?: boolean | Capsule$sessionsArgs<ExtArgs>
     favorites?: boolean | Capsule$favoritesArgs<ExtArgs>
+    comments?: boolean | Capsule$commentsArgs<ExtArgs>
     _count?: boolean | CapsuleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CapsuleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11948,6 +12086,7 @@ export namespace Prisma {
       options: Prisma.$CapsuleOptionPayload<ExtArgs>[]
       sessions: Prisma.$CapsuleSessionPayload<ExtArgs>[]
       favorites: Prisma.$FavoritePayload<ExtArgs>[]
+      comments: Prisma.$CapsuleCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11968,6 +12107,10 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       identityId: string
+      /**
+       * Commentaires publics (modération) — désactivables par capsule
+       */
+      commentsEnabled: boolean
     }, ExtArgs["result"]["capsule"]>
     composites: {}
   }
@@ -12336,6 +12479,7 @@ export namespace Prisma {
     options<T extends Capsule$optionsArgs<ExtArgs> = {}>(args?: Subset<T, Capsule$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapsuleOptionPayload<ExtArgs>, T, "findMany"> | Null>
     sessions<T extends Capsule$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, Capsule$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapsuleSessionPayload<ExtArgs>, T, "findMany"> | Null>
     favorites<T extends Capsule$favoritesArgs<ExtArgs> = {}>(args?: Subset<T, Capsule$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany"> | Null>
+    comments<T extends Capsule$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Capsule$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12374,6 +12518,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Capsule", 'DateTime'>
     readonly updatedAt: FieldRef<"Capsule", 'DateTime'>
     readonly identityId: FieldRef<"Capsule", 'String'>
+    readonly commentsEnabled: FieldRef<"Capsule", 'Boolean'>
   }
     
 
@@ -12749,6 +12894,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FavoriteScalarFieldEnum | FavoriteScalarFieldEnum[]
+  }
+
+  /**
+   * Capsule.comments
+   */
+  export type Capsule$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    where?: CapsuleCommentWhereInput
+    orderBy?: CapsuleCommentOrderByWithRelationInput | CapsuleCommentOrderByWithRelationInput[]
+    cursor?: CapsuleCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CapsuleCommentScalarFieldEnum | CapsuleCommentScalarFieldEnum[]
   }
 
   /**
@@ -16614,6 +16779,1061 @@ export namespace Prisma {
 
 
   /**
+   * Model CapsuleComment
+   */
+
+  export type AggregateCapsuleComment = {
+    _count: CapsuleCommentCountAggregateOutputType | null
+    _min: CapsuleCommentMinAggregateOutputType | null
+    _max: CapsuleCommentMaxAggregateOutputType | null
+  }
+
+  export type CapsuleCommentMinAggregateOutputType = {
+    id: string | null
+    capsuleId: string | null
+    parentId: string | null
+    authorName: string | null
+    authorEmail: string | null
+    body: string | null
+    status: string | null
+    isOwnerReply: boolean | null
+    reviewedAt: Date | null
+    reviewerUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type CapsuleCommentMaxAggregateOutputType = {
+    id: string | null
+    capsuleId: string | null
+    parentId: string | null
+    authorName: string | null
+    authorEmail: string | null
+    body: string | null
+    status: string | null
+    isOwnerReply: boolean | null
+    reviewedAt: Date | null
+    reviewerUserId: string | null
+    createdAt: Date | null
+  }
+
+  export type CapsuleCommentCountAggregateOutputType = {
+    id: number
+    capsuleId: number
+    parentId: number
+    authorName: number
+    authorEmail: number
+    body: number
+    status: number
+    isOwnerReply: number
+    reviewedAt: number
+    reviewerUserId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CapsuleCommentMinAggregateInputType = {
+    id?: true
+    capsuleId?: true
+    parentId?: true
+    authorName?: true
+    authorEmail?: true
+    body?: true
+    status?: true
+    isOwnerReply?: true
+    reviewedAt?: true
+    reviewerUserId?: true
+    createdAt?: true
+  }
+
+  export type CapsuleCommentMaxAggregateInputType = {
+    id?: true
+    capsuleId?: true
+    parentId?: true
+    authorName?: true
+    authorEmail?: true
+    body?: true
+    status?: true
+    isOwnerReply?: true
+    reviewedAt?: true
+    reviewerUserId?: true
+    createdAt?: true
+  }
+
+  export type CapsuleCommentCountAggregateInputType = {
+    id?: true
+    capsuleId?: true
+    parentId?: true
+    authorName?: true
+    authorEmail?: true
+    body?: true
+    status?: true
+    isOwnerReply?: true
+    reviewedAt?: true
+    reviewerUserId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CapsuleCommentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CapsuleComment to aggregate.
+     */
+    where?: CapsuleCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CapsuleComments to fetch.
+     */
+    orderBy?: CapsuleCommentOrderByWithRelationInput | CapsuleCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CapsuleCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CapsuleComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CapsuleComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CapsuleComments
+    **/
+    _count?: true | CapsuleCommentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CapsuleCommentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CapsuleCommentMaxAggregateInputType
+  }
+
+  export type GetCapsuleCommentAggregateType<T extends CapsuleCommentAggregateArgs> = {
+        [P in keyof T & keyof AggregateCapsuleComment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCapsuleComment[P]>
+      : GetScalarType<T[P], AggregateCapsuleComment[P]>
+  }
+
+
+
+
+  export type CapsuleCommentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CapsuleCommentWhereInput
+    orderBy?: CapsuleCommentOrderByWithAggregationInput | CapsuleCommentOrderByWithAggregationInput[]
+    by: CapsuleCommentScalarFieldEnum[] | CapsuleCommentScalarFieldEnum
+    having?: CapsuleCommentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CapsuleCommentCountAggregateInputType | true
+    _min?: CapsuleCommentMinAggregateInputType
+    _max?: CapsuleCommentMaxAggregateInputType
+  }
+
+  export type CapsuleCommentGroupByOutputType = {
+    id: string
+    capsuleId: string
+    parentId: string | null
+    authorName: string
+    authorEmail: string | null
+    body: string
+    status: string
+    isOwnerReply: boolean
+    reviewedAt: Date | null
+    reviewerUserId: string | null
+    createdAt: Date
+    _count: CapsuleCommentCountAggregateOutputType | null
+    _min: CapsuleCommentMinAggregateOutputType | null
+    _max: CapsuleCommentMaxAggregateOutputType | null
+  }
+
+  type GetCapsuleCommentGroupByPayload<T extends CapsuleCommentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CapsuleCommentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CapsuleCommentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CapsuleCommentGroupByOutputType[P]>
+            : GetScalarType<T[P], CapsuleCommentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CapsuleCommentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    capsuleId?: boolean
+    parentId?: boolean
+    authorName?: boolean
+    authorEmail?: boolean
+    body?: boolean
+    status?: boolean
+    isOwnerReply?: boolean
+    reviewedAt?: boolean
+    reviewerUserId?: boolean
+    createdAt?: boolean
+    capsule?: boolean | CapsuleDefaultArgs<ExtArgs>
+    parent?: boolean | CapsuleComment$parentArgs<ExtArgs>
+    children?: boolean | CapsuleComment$childrenArgs<ExtArgs>
+    _count?: boolean | CapsuleCommentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["capsuleComment"]>
+
+  export type CapsuleCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    capsuleId?: boolean
+    parentId?: boolean
+    authorName?: boolean
+    authorEmail?: boolean
+    body?: boolean
+    status?: boolean
+    isOwnerReply?: boolean
+    reviewedAt?: boolean
+    reviewerUserId?: boolean
+    createdAt?: boolean
+    capsule?: boolean | CapsuleDefaultArgs<ExtArgs>
+    parent?: boolean | CapsuleComment$parentArgs<ExtArgs>
+  }, ExtArgs["result"]["capsuleComment"]>
+
+  export type CapsuleCommentSelectScalar = {
+    id?: boolean
+    capsuleId?: boolean
+    parentId?: boolean
+    authorName?: boolean
+    authorEmail?: boolean
+    body?: boolean
+    status?: boolean
+    isOwnerReply?: boolean
+    reviewedAt?: boolean
+    reviewerUserId?: boolean
+    createdAt?: boolean
+  }
+
+  export type CapsuleCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    capsule?: boolean | CapsuleDefaultArgs<ExtArgs>
+    parent?: boolean | CapsuleComment$parentArgs<ExtArgs>
+    children?: boolean | CapsuleComment$childrenArgs<ExtArgs>
+    _count?: boolean | CapsuleCommentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CapsuleCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    capsule?: boolean | CapsuleDefaultArgs<ExtArgs>
+    parent?: boolean | CapsuleComment$parentArgs<ExtArgs>
+  }
+
+  export type $CapsuleCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CapsuleComment"
+    objects: {
+      capsule: Prisma.$CapsulePayload<ExtArgs>
+      parent: Prisma.$CapsuleCommentPayload<ExtArgs> | null
+      children: Prisma.$CapsuleCommentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      capsuleId: string
+      parentId: string | null
+      authorName: string
+      authorEmail: string | null
+      body: string
+      /**
+       * PENDING | APPROVED | REJECTED
+       */
+      status: string
+      isOwnerReply: boolean
+      reviewedAt: Date | null
+      reviewerUserId: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["capsuleComment"]>
+    composites: {}
+  }
+
+  type CapsuleCommentGetPayload<S extends boolean | null | undefined | CapsuleCommentDefaultArgs> = $Result.GetResult<Prisma.$CapsuleCommentPayload, S>
+
+  type CapsuleCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CapsuleCommentFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CapsuleCommentCountAggregateInputType | true
+    }
+
+  export interface CapsuleCommentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CapsuleComment'], meta: { name: 'CapsuleComment' } }
+    /**
+     * Find zero or one CapsuleComment that matches the filter.
+     * @param {CapsuleCommentFindUniqueArgs} args - Arguments to find a CapsuleComment
+     * @example
+     * // Get one CapsuleComment
+     * const capsuleComment = await prisma.capsuleComment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CapsuleCommentFindUniqueArgs>(args: SelectSubset<T, CapsuleCommentFindUniqueArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one CapsuleComment that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CapsuleCommentFindUniqueOrThrowArgs} args - Arguments to find a CapsuleComment
+     * @example
+     * // Get one CapsuleComment
+     * const capsuleComment = await prisma.capsuleComment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CapsuleCommentFindUniqueOrThrowArgs>(args: SelectSubset<T, CapsuleCommentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first CapsuleComment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentFindFirstArgs} args - Arguments to find a CapsuleComment
+     * @example
+     * // Get one CapsuleComment
+     * const capsuleComment = await prisma.capsuleComment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CapsuleCommentFindFirstArgs>(args?: SelectSubset<T, CapsuleCommentFindFirstArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first CapsuleComment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentFindFirstOrThrowArgs} args - Arguments to find a CapsuleComment
+     * @example
+     * // Get one CapsuleComment
+     * const capsuleComment = await prisma.capsuleComment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CapsuleCommentFindFirstOrThrowArgs>(args?: SelectSubset<T, CapsuleCommentFindFirstOrThrowArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more CapsuleComments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CapsuleComments
+     * const capsuleComments = await prisma.capsuleComment.findMany()
+     * 
+     * // Get first 10 CapsuleComments
+     * const capsuleComments = await prisma.capsuleComment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const capsuleCommentWithIdOnly = await prisma.capsuleComment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CapsuleCommentFindManyArgs>(args?: SelectSubset<T, CapsuleCommentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a CapsuleComment.
+     * @param {CapsuleCommentCreateArgs} args - Arguments to create a CapsuleComment.
+     * @example
+     * // Create one CapsuleComment
+     * const CapsuleComment = await prisma.capsuleComment.create({
+     *   data: {
+     *     // ... data to create a CapsuleComment
+     *   }
+     * })
+     * 
+     */
+    create<T extends CapsuleCommentCreateArgs>(args: SelectSubset<T, CapsuleCommentCreateArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many CapsuleComments.
+     * @param {CapsuleCommentCreateManyArgs} args - Arguments to create many CapsuleComments.
+     * @example
+     * // Create many CapsuleComments
+     * const capsuleComment = await prisma.capsuleComment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CapsuleCommentCreateManyArgs>(args?: SelectSubset<T, CapsuleCommentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CapsuleComments and returns the data saved in the database.
+     * @param {CapsuleCommentCreateManyAndReturnArgs} args - Arguments to create many CapsuleComments.
+     * @example
+     * // Create many CapsuleComments
+     * const capsuleComment = await prisma.capsuleComment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CapsuleComments and only return the `id`
+     * const capsuleCommentWithIdOnly = await prisma.capsuleComment.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CapsuleCommentCreateManyAndReturnArgs>(args?: SelectSubset<T, CapsuleCommentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a CapsuleComment.
+     * @param {CapsuleCommentDeleteArgs} args - Arguments to delete one CapsuleComment.
+     * @example
+     * // Delete one CapsuleComment
+     * const CapsuleComment = await prisma.capsuleComment.delete({
+     *   where: {
+     *     // ... filter to delete one CapsuleComment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CapsuleCommentDeleteArgs>(args: SelectSubset<T, CapsuleCommentDeleteArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one CapsuleComment.
+     * @param {CapsuleCommentUpdateArgs} args - Arguments to update one CapsuleComment.
+     * @example
+     * // Update one CapsuleComment
+     * const capsuleComment = await prisma.capsuleComment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CapsuleCommentUpdateArgs>(args: SelectSubset<T, CapsuleCommentUpdateArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more CapsuleComments.
+     * @param {CapsuleCommentDeleteManyArgs} args - Arguments to filter CapsuleComments to delete.
+     * @example
+     * // Delete a few CapsuleComments
+     * const { count } = await prisma.capsuleComment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CapsuleCommentDeleteManyArgs>(args?: SelectSubset<T, CapsuleCommentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CapsuleComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CapsuleComments
+     * const capsuleComment = await prisma.capsuleComment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CapsuleCommentUpdateManyArgs>(args: SelectSubset<T, CapsuleCommentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CapsuleComment.
+     * @param {CapsuleCommentUpsertArgs} args - Arguments to update or create a CapsuleComment.
+     * @example
+     * // Update or create a CapsuleComment
+     * const capsuleComment = await prisma.capsuleComment.upsert({
+     *   create: {
+     *     // ... data to create a CapsuleComment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CapsuleComment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CapsuleCommentUpsertArgs>(args: SelectSubset<T, CapsuleCommentUpsertArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of CapsuleComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentCountArgs} args - Arguments to filter CapsuleComments to count.
+     * @example
+     * // Count the number of CapsuleComments
+     * const count = await prisma.capsuleComment.count({
+     *   where: {
+     *     // ... the filter for the CapsuleComments we want to count
+     *   }
+     * })
+    **/
+    count<T extends CapsuleCommentCountArgs>(
+      args?: Subset<T, CapsuleCommentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CapsuleCommentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CapsuleComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CapsuleCommentAggregateArgs>(args: Subset<T, CapsuleCommentAggregateArgs>): Prisma.PrismaPromise<GetCapsuleCommentAggregateType<T>>
+
+    /**
+     * Group by CapsuleComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CapsuleCommentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CapsuleCommentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CapsuleCommentGroupByArgs['orderBy'] }
+        : { orderBy?: CapsuleCommentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CapsuleCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCapsuleCommentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CapsuleComment model
+   */
+  readonly fields: CapsuleCommentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CapsuleComment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CapsuleCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    capsule<T extends CapsuleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CapsuleDefaultArgs<ExtArgs>>): Prisma__CapsuleClient<$Result.GetResult<Prisma.$CapsulePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    parent<T extends CapsuleComment$parentArgs<ExtArgs> = {}>(args?: Subset<T, CapsuleComment$parentArgs<ExtArgs>>): Prisma__CapsuleCommentClient<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    children<T extends CapsuleComment$childrenArgs<ExtArgs> = {}>(args?: Subset<T, CapsuleComment$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CapsuleCommentPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CapsuleComment model
+   */ 
+  interface CapsuleCommentFieldRefs {
+    readonly id: FieldRef<"CapsuleComment", 'String'>
+    readonly capsuleId: FieldRef<"CapsuleComment", 'String'>
+    readonly parentId: FieldRef<"CapsuleComment", 'String'>
+    readonly authorName: FieldRef<"CapsuleComment", 'String'>
+    readonly authorEmail: FieldRef<"CapsuleComment", 'String'>
+    readonly body: FieldRef<"CapsuleComment", 'String'>
+    readonly status: FieldRef<"CapsuleComment", 'String'>
+    readonly isOwnerReply: FieldRef<"CapsuleComment", 'Boolean'>
+    readonly reviewedAt: FieldRef<"CapsuleComment", 'DateTime'>
+    readonly reviewerUserId: FieldRef<"CapsuleComment", 'String'>
+    readonly createdAt: FieldRef<"CapsuleComment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CapsuleComment findUnique
+   */
+  export type CapsuleCommentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which CapsuleComment to fetch.
+     */
+    where: CapsuleCommentWhereUniqueInput
+  }
+
+  /**
+   * CapsuleComment findUniqueOrThrow
+   */
+  export type CapsuleCommentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which CapsuleComment to fetch.
+     */
+    where: CapsuleCommentWhereUniqueInput
+  }
+
+  /**
+   * CapsuleComment findFirst
+   */
+  export type CapsuleCommentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which CapsuleComment to fetch.
+     */
+    where?: CapsuleCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CapsuleComments to fetch.
+     */
+    orderBy?: CapsuleCommentOrderByWithRelationInput | CapsuleCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CapsuleComments.
+     */
+    cursor?: CapsuleCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CapsuleComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CapsuleComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CapsuleComments.
+     */
+    distinct?: CapsuleCommentScalarFieldEnum | CapsuleCommentScalarFieldEnum[]
+  }
+
+  /**
+   * CapsuleComment findFirstOrThrow
+   */
+  export type CapsuleCommentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which CapsuleComment to fetch.
+     */
+    where?: CapsuleCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CapsuleComments to fetch.
+     */
+    orderBy?: CapsuleCommentOrderByWithRelationInput | CapsuleCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CapsuleComments.
+     */
+    cursor?: CapsuleCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CapsuleComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CapsuleComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CapsuleComments.
+     */
+    distinct?: CapsuleCommentScalarFieldEnum | CapsuleCommentScalarFieldEnum[]
+  }
+
+  /**
+   * CapsuleComment findMany
+   */
+  export type CapsuleCommentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which CapsuleComments to fetch.
+     */
+    where?: CapsuleCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CapsuleComments to fetch.
+     */
+    orderBy?: CapsuleCommentOrderByWithRelationInput | CapsuleCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CapsuleComments.
+     */
+    cursor?: CapsuleCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CapsuleComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CapsuleComments.
+     */
+    skip?: number
+    distinct?: CapsuleCommentScalarFieldEnum | CapsuleCommentScalarFieldEnum[]
+  }
+
+  /**
+   * CapsuleComment create
+   */
+  export type CapsuleCommentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CapsuleComment.
+     */
+    data: XOR<CapsuleCommentCreateInput, CapsuleCommentUncheckedCreateInput>
+  }
+
+  /**
+   * CapsuleComment createMany
+   */
+  export type CapsuleCommentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CapsuleComments.
+     */
+    data: CapsuleCommentCreateManyInput | CapsuleCommentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CapsuleComment createManyAndReturn
+   */
+  export type CapsuleCommentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many CapsuleComments.
+     */
+    data: CapsuleCommentCreateManyInput | CapsuleCommentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CapsuleComment update
+   */
+  export type CapsuleCommentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CapsuleComment.
+     */
+    data: XOR<CapsuleCommentUpdateInput, CapsuleCommentUncheckedUpdateInput>
+    /**
+     * Choose, which CapsuleComment to update.
+     */
+    where: CapsuleCommentWhereUniqueInput
+  }
+
+  /**
+   * CapsuleComment updateMany
+   */
+  export type CapsuleCommentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CapsuleComments.
+     */
+    data: XOR<CapsuleCommentUpdateManyMutationInput, CapsuleCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which CapsuleComments to update
+     */
+    where?: CapsuleCommentWhereInput
+  }
+
+  /**
+   * CapsuleComment upsert
+   */
+  export type CapsuleCommentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CapsuleComment to update in case it exists.
+     */
+    where: CapsuleCommentWhereUniqueInput
+    /**
+     * In case the CapsuleComment found by the `where` argument doesn't exist, create a new CapsuleComment with this data.
+     */
+    create: XOR<CapsuleCommentCreateInput, CapsuleCommentUncheckedCreateInput>
+    /**
+     * In case the CapsuleComment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CapsuleCommentUpdateInput, CapsuleCommentUncheckedUpdateInput>
+  }
+
+  /**
+   * CapsuleComment delete
+   */
+  export type CapsuleCommentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    /**
+     * Filter which CapsuleComment to delete.
+     */
+    where: CapsuleCommentWhereUniqueInput
+  }
+
+  /**
+   * CapsuleComment deleteMany
+   */
+  export type CapsuleCommentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CapsuleComments to delete
+     */
+    where?: CapsuleCommentWhereInput
+  }
+
+  /**
+   * CapsuleComment.parent
+   */
+  export type CapsuleComment$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    where?: CapsuleCommentWhereInput
+  }
+
+  /**
+   * CapsuleComment.children
+   */
+  export type CapsuleComment$childrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+    where?: CapsuleCommentWhereInput
+    orderBy?: CapsuleCommentOrderByWithRelationInput | CapsuleCommentOrderByWithRelationInput[]
+    cursor?: CapsuleCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CapsuleCommentScalarFieldEnum | CapsuleCommentScalarFieldEnum[]
+  }
+
+  /**
+   * CapsuleComment without action
+   */
+  export type CapsuleCommentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CapsuleComment
+     */
+    select?: CapsuleCommentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CapsuleCommentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Favorite
    */
 
@@ -19620,7 +20840,8 @@ export namespace Prisma {
     editorHotspots: 'editorHotspots',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    identityId: 'identityId'
+    identityId: 'identityId',
+    commentsEnabled: 'commentsEnabled'
   };
 
   export type CapsuleScalarFieldEnum = (typeof CapsuleScalarFieldEnum)[keyof typeof CapsuleScalarFieldEnum]
@@ -19671,6 +20892,23 @@ export namespace Prisma {
   };
 
   export type CapsuleEventScalarFieldEnum = (typeof CapsuleEventScalarFieldEnum)[keyof typeof CapsuleEventScalarFieldEnum]
+
+
+  export const CapsuleCommentScalarFieldEnum: {
+    id: 'id',
+    capsuleId: 'capsuleId',
+    parentId: 'parentId',
+    authorName: 'authorName',
+    authorEmail: 'authorEmail',
+    body: 'body',
+    status: 'status',
+    isOwnerReply: 'isOwnerReply',
+    reviewedAt: 'reviewedAt',
+    reviewerUserId: 'reviewerUserId',
+    createdAt: 'createdAt'
+  };
+
+  export type CapsuleCommentScalarFieldEnum = (typeof CapsuleCommentScalarFieldEnum)[keyof typeof CapsuleCommentScalarFieldEnum]
 
 
   export const FavoriteScalarFieldEnum: {
@@ -20560,10 +21798,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Capsule"> | Date | string
     updatedAt?: DateTimeFilter<"Capsule"> | Date | string
     identityId?: StringFilter<"Capsule"> | string
+    commentsEnabled?: BoolFilter<"Capsule"> | boolean
     identity?: XOR<IdentityProfileRelationFilter, IdentityProfileWhereInput>
     options?: CapsuleOptionListRelationFilter
     sessions?: CapsuleSessionListRelationFilter
     favorites?: FavoriteListRelationFilter
+    comments?: CapsuleCommentListRelationFilter
   }
 
   export type CapsuleOrderByWithRelationInput = {
@@ -20576,10 +21816,12 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     identityId?: SortOrder
+    commentsEnabled?: SortOrder
     identity?: IdentityProfileOrderByWithRelationInput
     options?: CapsuleOptionOrderByRelationAggregateInput
     sessions?: CapsuleSessionOrderByRelationAggregateInput
     favorites?: FavoriteOrderByRelationAggregateInput
+    comments?: CapsuleCommentOrderByRelationAggregateInput
   }
 
   export type CapsuleWhereUniqueInput = Prisma.AtLeast<{
@@ -20595,10 +21837,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Capsule"> | Date | string
     updatedAt?: DateTimeFilter<"Capsule"> | Date | string
     identityId?: StringFilter<"Capsule"> | string
+    commentsEnabled?: BoolFilter<"Capsule"> | boolean
     identity?: XOR<IdentityProfileRelationFilter, IdentityProfileWhereInput>
     options?: CapsuleOptionListRelationFilter
     sessions?: CapsuleSessionListRelationFilter
     favorites?: FavoriteListRelationFilter
+    comments?: CapsuleCommentListRelationFilter
   }, "id">
 
   export type CapsuleOrderByWithAggregationInput = {
@@ -20611,6 +21855,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     identityId?: SortOrder
+    commentsEnabled?: SortOrder
     _count?: CapsuleCountOrderByAggregateInput
     _max?: CapsuleMaxOrderByAggregateInput
     _min?: CapsuleMinOrderByAggregateInput
@@ -20629,6 +21874,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Capsule"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Capsule"> | Date | string
     identityId?: StringWithAggregatesFilter<"Capsule"> | string
+    commentsEnabled?: BoolWithAggregatesFilter<"Capsule"> | boolean
   }
 
   export type CapsuleOptionWhereInput = {
@@ -20872,6 +22118,97 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"CapsuleEvent"> | string
     value?: StringNullableWithAggregatesFilter<"CapsuleEvent"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CapsuleEvent"> | Date | string
+  }
+
+  export type CapsuleCommentWhereInput = {
+    AND?: CapsuleCommentWhereInput | CapsuleCommentWhereInput[]
+    OR?: CapsuleCommentWhereInput[]
+    NOT?: CapsuleCommentWhereInput | CapsuleCommentWhereInput[]
+    id?: StringFilter<"CapsuleComment"> | string
+    capsuleId?: StringFilter<"CapsuleComment"> | string
+    parentId?: StringNullableFilter<"CapsuleComment"> | string | null
+    authorName?: StringFilter<"CapsuleComment"> | string
+    authorEmail?: StringNullableFilter<"CapsuleComment"> | string | null
+    body?: StringFilter<"CapsuleComment"> | string
+    status?: StringFilter<"CapsuleComment"> | string
+    isOwnerReply?: BoolFilter<"CapsuleComment"> | boolean
+    reviewedAt?: DateTimeNullableFilter<"CapsuleComment"> | Date | string | null
+    reviewerUserId?: StringNullableFilter<"CapsuleComment"> | string | null
+    createdAt?: DateTimeFilter<"CapsuleComment"> | Date | string
+    capsule?: XOR<CapsuleRelationFilter, CapsuleWhereInput>
+    parent?: XOR<CapsuleCommentNullableRelationFilter, CapsuleCommentWhereInput> | null
+    children?: CapsuleCommentListRelationFilter
+  }
+
+  export type CapsuleCommentOrderByWithRelationInput = {
+    id?: SortOrder
+    capsuleId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
+    authorName?: SortOrder
+    authorEmail?: SortOrderInput | SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    isOwnerReply?: SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    reviewerUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    capsule?: CapsuleOrderByWithRelationInput
+    parent?: CapsuleCommentOrderByWithRelationInput
+    children?: CapsuleCommentOrderByRelationAggregateInput
+  }
+
+  export type CapsuleCommentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CapsuleCommentWhereInput | CapsuleCommentWhereInput[]
+    OR?: CapsuleCommentWhereInput[]
+    NOT?: CapsuleCommentWhereInput | CapsuleCommentWhereInput[]
+    capsuleId?: StringFilter<"CapsuleComment"> | string
+    parentId?: StringNullableFilter<"CapsuleComment"> | string | null
+    authorName?: StringFilter<"CapsuleComment"> | string
+    authorEmail?: StringNullableFilter<"CapsuleComment"> | string | null
+    body?: StringFilter<"CapsuleComment"> | string
+    status?: StringFilter<"CapsuleComment"> | string
+    isOwnerReply?: BoolFilter<"CapsuleComment"> | boolean
+    reviewedAt?: DateTimeNullableFilter<"CapsuleComment"> | Date | string | null
+    reviewerUserId?: StringNullableFilter<"CapsuleComment"> | string | null
+    createdAt?: DateTimeFilter<"CapsuleComment"> | Date | string
+    capsule?: XOR<CapsuleRelationFilter, CapsuleWhereInput>
+    parent?: XOR<CapsuleCommentNullableRelationFilter, CapsuleCommentWhereInput> | null
+    children?: CapsuleCommentListRelationFilter
+  }, "id">
+
+  export type CapsuleCommentOrderByWithAggregationInput = {
+    id?: SortOrder
+    capsuleId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
+    authorName?: SortOrder
+    authorEmail?: SortOrderInput | SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    isOwnerReply?: SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    reviewerUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CapsuleCommentCountOrderByAggregateInput
+    _max?: CapsuleCommentMaxOrderByAggregateInput
+    _min?: CapsuleCommentMinOrderByAggregateInput
+  }
+
+  export type CapsuleCommentScalarWhereWithAggregatesInput = {
+    AND?: CapsuleCommentScalarWhereWithAggregatesInput | CapsuleCommentScalarWhereWithAggregatesInput[]
+    OR?: CapsuleCommentScalarWhereWithAggregatesInput[]
+    NOT?: CapsuleCommentScalarWhereWithAggregatesInput | CapsuleCommentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CapsuleComment"> | string
+    capsuleId?: StringWithAggregatesFilter<"CapsuleComment"> | string
+    parentId?: StringNullableWithAggregatesFilter<"CapsuleComment"> | string | null
+    authorName?: StringWithAggregatesFilter<"CapsuleComment"> | string
+    authorEmail?: StringNullableWithAggregatesFilter<"CapsuleComment"> | string | null
+    body?: StringWithAggregatesFilter<"CapsuleComment"> | string
+    status?: StringWithAggregatesFilter<"CapsuleComment"> | string
+    isOwnerReply?: BoolWithAggregatesFilter<"CapsuleComment"> | boolean
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"CapsuleComment"> | Date | string | null
+    reviewerUserId?: StringNullableWithAggregatesFilter<"CapsuleComment"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CapsuleComment"> | Date | string
   }
 
   export type FavoriteWhereInput = {
@@ -21843,10 +23180,12 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
     identity: IdentityProfileCreateNestedOneWithoutCapsulesInput
     options?: CapsuleOptionCreateNestedManyWithoutCapsuleInput
     sessions?: CapsuleSessionCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleUncheckedCreateInput = {
@@ -21859,9 +23198,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     identityId: string
+    commentsEnabled?: boolean
     options?: CapsuleOptionUncheckedCreateNestedManyWithoutCapsuleInput
     sessions?: CapsuleSessionUncheckedCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentUncheckedCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleUpdateInput = {
@@ -21873,10 +23214,12 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     identity?: IdentityProfileUpdateOneRequiredWithoutCapsulesNestedInput
     options?: CapsuleOptionUpdateManyWithoutCapsuleNestedInput
     sessions?: CapsuleSessionUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleUncheckedUpdateInput = {
@@ -21889,9 +23232,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     identityId?: StringFieldUpdateOperationsInput | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     options?: CapsuleOptionUncheckedUpdateManyWithoutCapsuleNestedInput
     sessions?: CapsuleSessionUncheckedUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUncheckedUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleCreateManyInput = {
@@ -21904,6 +23249,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     identityId: string
+    commentsEnabled?: boolean
   }
 
   export type CapsuleUpdateManyMutationInput = {
@@ -21915,6 +23261,7 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CapsuleUncheckedUpdateManyInput = {
@@ -21927,6 +23274,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     identityId?: StringFieldUpdateOperationsInput | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CapsuleOptionCreateInput = {
@@ -22175,6 +23523,106 @@ export namespace Prisma {
     sessionId?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     value?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapsuleCommentCreateInput = {
+    id?: string
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    capsule: CapsuleCreateNestedOneWithoutCommentsInput
+    parent?: CapsuleCommentCreateNestedOneWithoutChildrenInput
+    children?: CapsuleCommentCreateNestedManyWithoutParentInput
+  }
+
+  export type CapsuleCommentUncheckedCreateInput = {
+    id?: string
+    capsuleId: string
+    parentId?: string | null
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    children?: CapsuleCommentUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CapsuleCommentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    capsule?: CapsuleUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: CapsuleCommentUpdateOneWithoutChildrenNestedInput
+    children?: CapsuleCommentUpdateManyWithoutParentNestedInput
+  }
+
+  export type CapsuleCommentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    capsuleId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: CapsuleCommentUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type CapsuleCommentCreateManyInput = {
+    id?: string
+    capsuleId: string
+    parentId?: string | null
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CapsuleCommentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapsuleCommentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    capsuleId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -23117,11 +24565,21 @@ export namespace Prisma {
     none?: CapsuleSessionWhereInput
   }
 
+  export type CapsuleCommentListRelationFilter = {
+    every?: CapsuleCommentWhereInput
+    some?: CapsuleCommentWhereInput
+    none?: CapsuleCommentWhereInput
+  }
+
   export type CapsuleOptionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type CapsuleSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CapsuleCommentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23135,6 +24593,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     identityId?: SortOrder
+    commentsEnabled?: SortOrder
   }
 
   export type CapsuleMaxOrderByAggregateInput = {
@@ -23146,6 +24605,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     identityId?: SortOrder
+    commentsEnabled?: SortOrder
   }
 
   export type CapsuleMinOrderByAggregateInput = {
@@ -23157,6 +24617,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     identityId?: SortOrder
+    commentsEnabled?: SortOrder
   }
 
   export type CapsuleRelationFilter = {
@@ -23299,6 +24760,53 @@ export namespace Prisma {
     sessionId?: SortOrder
     type?: SortOrder
     value?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CapsuleCommentNullableRelationFilter = {
+    is?: CapsuleCommentWhereInput | null
+    isNot?: CapsuleCommentWhereInput | null
+  }
+
+  export type CapsuleCommentCountOrderByAggregateInput = {
+    id?: SortOrder
+    capsuleId?: SortOrder
+    parentId?: SortOrder
+    authorName?: SortOrder
+    authorEmail?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    isOwnerReply?: SortOrder
+    reviewedAt?: SortOrder
+    reviewerUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CapsuleCommentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    capsuleId?: SortOrder
+    parentId?: SortOrder
+    authorName?: SortOrder
+    authorEmail?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    isOwnerReply?: SortOrder
+    reviewedAt?: SortOrder
+    reviewerUserId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CapsuleCommentMinOrderByAggregateInput = {
+    id?: SortOrder
+    capsuleId?: SortOrder
+    parentId?: SortOrder
+    authorName?: SortOrder
+    authorEmail?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    isOwnerReply?: SortOrder
+    reviewedAt?: SortOrder
+    reviewerUserId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -24132,6 +25640,13 @@ export namespace Prisma {
     connect?: FavoriteWhereUniqueInput | FavoriteWhereUniqueInput[]
   }
 
+  export type CapsuleCommentCreateNestedManyWithoutCapsuleInput = {
+    create?: XOR<CapsuleCommentCreateWithoutCapsuleInput, CapsuleCommentUncheckedCreateWithoutCapsuleInput> | CapsuleCommentCreateWithoutCapsuleInput[] | CapsuleCommentUncheckedCreateWithoutCapsuleInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutCapsuleInput | CapsuleCommentCreateOrConnectWithoutCapsuleInput[]
+    createMany?: CapsuleCommentCreateManyCapsuleInputEnvelope
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+  }
+
   export type CapsuleOptionUncheckedCreateNestedManyWithoutCapsuleInput = {
     create?: XOR<CapsuleOptionCreateWithoutCapsuleInput, CapsuleOptionUncheckedCreateWithoutCapsuleInput> | CapsuleOptionCreateWithoutCapsuleInput[] | CapsuleOptionUncheckedCreateWithoutCapsuleInput[]
     connectOrCreate?: CapsuleOptionCreateOrConnectWithoutCapsuleInput | CapsuleOptionCreateOrConnectWithoutCapsuleInput[]
@@ -24151,6 +25666,13 @@ export namespace Prisma {
     connectOrCreate?: FavoriteCreateOrConnectWithoutCapsuleInput | FavoriteCreateOrConnectWithoutCapsuleInput[]
     createMany?: FavoriteCreateManyCapsuleInputEnvelope
     connect?: FavoriteWhereUniqueInput | FavoriteWhereUniqueInput[]
+  }
+
+  export type CapsuleCommentUncheckedCreateNestedManyWithoutCapsuleInput = {
+    create?: XOR<CapsuleCommentCreateWithoutCapsuleInput, CapsuleCommentUncheckedCreateWithoutCapsuleInput> | CapsuleCommentCreateWithoutCapsuleInput[] | CapsuleCommentUncheckedCreateWithoutCapsuleInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutCapsuleInput | CapsuleCommentCreateOrConnectWithoutCapsuleInput[]
+    createMany?: CapsuleCommentCreateManyCapsuleInputEnvelope
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
   }
 
   export type IdentityProfileUpdateOneRequiredWithoutCapsulesNestedInput = {
@@ -24203,6 +25725,20 @@ export namespace Prisma {
     deleteMany?: FavoriteScalarWhereInput | FavoriteScalarWhereInput[]
   }
 
+  export type CapsuleCommentUpdateManyWithoutCapsuleNestedInput = {
+    create?: XOR<CapsuleCommentCreateWithoutCapsuleInput, CapsuleCommentUncheckedCreateWithoutCapsuleInput> | CapsuleCommentCreateWithoutCapsuleInput[] | CapsuleCommentUncheckedCreateWithoutCapsuleInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutCapsuleInput | CapsuleCommentCreateOrConnectWithoutCapsuleInput[]
+    upsert?: CapsuleCommentUpsertWithWhereUniqueWithoutCapsuleInput | CapsuleCommentUpsertWithWhereUniqueWithoutCapsuleInput[]
+    createMany?: CapsuleCommentCreateManyCapsuleInputEnvelope
+    set?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    disconnect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    delete?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    update?: CapsuleCommentUpdateWithWhereUniqueWithoutCapsuleInput | CapsuleCommentUpdateWithWhereUniqueWithoutCapsuleInput[]
+    updateMany?: CapsuleCommentUpdateManyWithWhereWithoutCapsuleInput | CapsuleCommentUpdateManyWithWhereWithoutCapsuleInput[]
+    deleteMany?: CapsuleCommentScalarWhereInput | CapsuleCommentScalarWhereInput[]
+  }
+
   export type CapsuleOptionUncheckedUpdateManyWithoutCapsuleNestedInput = {
     create?: XOR<CapsuleOptionCreateWithoutCapsuleInput, CapsuleOptionUncheckedCreateWithoutCapsuleInput> | CapsuleOptionCreateWithoutCapsuleInput[] | CapsuleOptionUncheckedCreateWithoutCapsuleInput[]
     connectOrCreate?: CapsuleOptionCreateOrConnectWithoutCapsuleInput | CapsuleOptionCreateOrConnectWithoutCapsuleInput[]
@@ -24243,6 +25779,20 @@ export namespace Prisma {
     update?: FavoriteUpdateWithWhereUniqueWithoutCapsuleInput | FavoriteUpdateWithWhereUniqueWithoutCapsuleInput[]
     updateMany?: FavoriteUpdateManyWithWhereWithoutCapsuleInput | FavoriteUpdateManyWithWhereWithoutCapsuleInput[]
     deleteMany?: FavoriteScalarWhereInput | FavoriteScalarWhereInput[]
+  }
+
+  export type CapsuleCommentUncheckedUpdateManyWithoutCapsuleNestedInput = {
+    create?: XOR<CapsuleCommentCreateWithoutCapsuleInput, CapsuleCommentUncheckedCreateWithoutCapsuleInput> | CapsuleCommentCreateWithoutCapsuleInput[] | CapsuleCommentUncheckedCreateWithoutCapsuleInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutCapsuleInput | CapsuleCommentCreateOrConnectWithoutCapsuleInput[]
+    upsert?: CapsuleCommentUpsertWithWhereUniqueWithoutCapsuleInput | CapsuleCommentUpsertWithWhereUniqueWithoutCapsuleInput[]
+    createMany?: CapsuleCommentCreateManyCapsuleInputEnvelope
+    set?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    disconnect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    delete?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    update?: CapsuleCommentUpdateWithWhereUniqueWithoutCapsuleInput | CapsuleCommentUpdateWithWhereUniqueWithoutCapsuleInput[]
+    updateMany?: CapsuleCommentUpdateManyWithWhereWithoutCapsuleInput | CapsuleCommentUpdateManyWithWhereWithoutCapsuleInput[]
+    deleteMany?: CapsuleCommentScalarWhereInput | CapsuleCommentScalarWhereInput[]
   }
 
   export type CapsuleCreateNestedOneWithoutOptionsInput = {
@@ -24373,6 +25923,78 @@ export namespace Prisma {
     upsert?: CapsuleSessionUpsertWithoutEventsInput
     connect?: CapsuleSessionWhereUniqueInput
     update?: XOR<XOR<CapsuleSessionUpdateToOneWithWhereWithoutEventsInput, CapsuleSessionUpdateWithoutEventsInput>, CapsuleSessionUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type CapsuleCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<CapsuleCreateWithoutCommentsInput, CapsuleUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: CapsuleCreateOrConnectWithoutCommentsInput
+    connect?: CapsuleWhereUniqueInput
+  }
+
+  export type CapsuleCommentCreateNestedOneWithoutChildrenInput = {
+    create?: XOR<CapsuleCommentCreateWithoutChildrenInput, CapsuleCommentUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutChildrenInput
+    connect?: CapsuleCommentWhereUniqueInput
+  }
+
+  export type CapsuleCommentCreateNestedManyWithoutParentInput = {
+    create?: XOR<CapsuleCommentCreateWithoutParentInput, CapsuleCommentUncheckedCreateWithoutParentInput> | CapsuleCommentCreateWithoutParentInput[] | CapsuleCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutParentInput | CapsuleCommentCreateOrConnectWithoutParentInput[]
+    createMany?: CapsuleCommentCreateManyParentInputEnvelope
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+  }
+
+  export type CapsuleCommentUncheckedCreateNestedManyWithoutParentInput = {
+    create?: XOR<CapsuleCommentCreateWithoutParentInput, CapsuleCommentUncheckedCreateWithoutParentInput> | CapsuleCommentCreateWithoutParentInput[] | CapsuleCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutParentInput | CapsuleCommentCreateOrConnectWithoutParentInput[]
+    createMany?: CapsuleCommentCreateManyParentInputEnvelope
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+  }
+
+  export type CapsuleUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<CapsuleCreateWithoutCommentsInput, CapsuleUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: CapsuleCreateOrConnectWithoutCommentsInput
+    upsert?: CapsuleUpsertWithoutCommentsInput
+    connect?: CapsuleWhereUniqueInput
+    update?: XOR<XOR<CapsuleUpdateToOneWithWhereWithoutCommentsInput, CapsuleUpdateWithoutCommentsInput>, CapsuleUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type CapsuleCommentUpdateOneWithoutChildrenNestedInput = {
+    create?: XOR<CapsuleCommentCreateWithoutChildrenInput, CapsuleCommentUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutChildrenInput
+    upsert?: CapsuleCommentUpsertWithoutChildrenInput
+    disconnect?: CapsuleCommentWhereInput | boolean
+    delete?: CapsuleCommentWhereInput | boolean
+    connect?: CapsuleCommentWhereUniqueInput
+    update?: XOR<XOR<CapsuleCommentUpdateToOneWithWhereWithoutChildrenInput, CapsuleCommentUpdateWithoutChildrenInput>, CapsuleCommentUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type CapsuleCommentUpdateManyWithoutParentNestedInput = {
+    create?: XOR<CapsuleCommentCreateWithoutParentInput, CapsuleCommentUncheckedCreateWithoutParentInput> | CapsuleCommentCreateWithoutParentInput[] | CapsuleCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutParentInput | CapsuleCommentCreateOrConnectWithoutParentInput[]
+    upsert?: CapsuleCommentUpsertWithWhereUniqueWithoutParentInput | CapsuleCommentUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: CapsuleCommentCreateManyParentInputEnvelope
+    set?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    disconnect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    delete?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    update?: CapsuleCommentUpdateWithWhereUniqueWithoutParentInput | CapsuleCommentUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: CapsuleCommentUpdateManyWithWhereWithoutParentInput | CapsuleCommentUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: CapsuleCommentScalarWhereInput | CapsuleCommentScalarWhereInput[]
+  }
+
+  export type CapsuleCommentUncheckedUpdateManyWithoutParentNestedInput = {
+    create?: XOR<CapsuleCommentCreateWithoutParentInput, CapsuleCommentUncheckedCreateWithoutParentInput> | CapsuleCommentCreateWithoutParentInput[] | CapsuleCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: CapsuleCommentCreateOrConnectWithoutParentInput | CapsuleCommentCreateOrConnectWithoutParentInput[]
+    upsert?: CapsuleCommentUpsertWithWhereUniqueWithoutParentInput | CapsuleCommentUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: CapsuleCommentCreateManyParentInputEnvelope
+    set?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    disconnect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    delete?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    connect?: CapsuleCommentWhereUniqueInput | CapsuleCommentWhereUniqueInput[]
+    update?: CapsuleCommentUpdateWithWhereUniqueWithoutParentInput | CapsuleCommentUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: CapsuleCommentUpdateManyWithWhereWithoutParentInput | CapsuleCommentUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: CapsuleCommentScalarWhereInput | CapsuleCommentScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutFavoritesInput = {
@@ -25920,9 +27542,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
     options?: CapsuleOptionCreateNestedManyWithoutCapsuleInput
     sessions?: CapsuleSessionCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleUncheckedCreateWithoutIdentityInput = {
@@ -25934,9 +27558,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
     options?: CapsuleOptionUncheckedCreateNestedManyWithoutCapsuleInput
     sessions?: CapsuleSessionUncheckedCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentUncheckedCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleCreateOrConnectWithoutIdentityInput = {
@@ -26122,6 +27748,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Capsule"> | Date | string
     updatedAt?: DateTimeFilter<"Capsule"> | Date | string
     identityId?: StringFilter<"Capsule"> | string
+    commentsEnabled?: BoolFilter<"Capsule"> | boolean
   }
 
   export type MessageUpsertWithWhereUniqueWithoutIdentityInput = {
@@ -26484,6 +28111,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CapsuleCommentCreateWithoutCapsuleInput = {
+    id?: string
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    parent?: CapsuleCommentCreateNestedOneWithoutChildrenInput
+    children?: CapsuleCommentCreateNestedManyWithoutParentInput
+  }
+
+  export type CapsuleCommentUncheckedCreateWithoutCapsuleInput = {
+    id?: string
+    parentId?: string | null
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    children?: CapsuleCommentUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CapsuleCommentCreateOrConnectWithoutCapsuleInput = {
+    where: CapsuleCommentWhereUniqueInput
+    create: XOR<CapsuleCommentCreateWithoutCapsuleInput, CapsuleCommentUncheckedCreateWithoutCapsuleInput>
+  }
+
+  export type CapsuleCommentCreateManyCapsuleInputEnvelope = {
+    data: CapsuleCommentCreateManyCapsuleInput | CapsuleCommentCreateManyCapsuleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type IdentityProfileUpsertWithoutCapsulesInput = {
     update: XOR<IdentityProfileUpdateWithoutCapsulesInput, IdentityProfileUncheckedUpdateWithoutCapsulesInput>
     create: XOR<IdentityProfileCreateWithoutCapsulesInput, IdentityProfileUncheckedCreateWithoutCapsulesInput>
@@ -26609,6 +28274,39 @@ export namespace Prisma {
     data: XOR<FavoriteUpdateManyMutationInput, FavoriteUncheckedUpdateManyWithoutCapsuleInput>
   }
 
+  export type CapsuleCommentUpsertWithWhereUniqueWithoutCapsuleInput = {
+    where: CapsuleCommentWhereUniqueInput
+    update: XOR<CapsuleCommentUpdateWithoutCapsuleInput, CapsuleCommentUncheckedUpdateWithoutCapsuleInput>
+    create: XOR<CapsuleCommentCreateWithoutCapsuleInput, CapsuleCommentUncheckedCreateWithoutCapsuleInput>
+  }
+
+  export type CapsuleCommentUpdateWithWhereUniqueWithoutCapsuleInput = {
+    where: CapsuleCommentWhereUniqueInput
+    data: XOR<CapsuleCommentUpdateWithoutCapsuleInput, CapsuleCommentUncheckedUpdateWithoutCapsuleInput>
+  }
+
+  export type CapsuleCommentUpdateManyWithWhereWithoutCapsuleInput = {
+    where: CapsuleCommentScalarWhereInput
+    data: XOR<CapsuleCommentUpdateManyMutationInput, CapsuleCommentUncheckedUpdateManyWithoutCapsuleInput>
+  }
+
+  export type CapsuleCommentScalarWhereInput = {
+    AND?: CapsuleCommentScalarWhereInput | CapsuleCommentScalarWhereInput[]
+    OR?: CapsuleCommentScalarWhereInput[]
+    NOT?: CapsuleCommentScalarWhereInput | CapsuleCommentScalarWhereInput[]
+    id?: StringFilter<"CapsuleComment"> | string
+    capsuleId?: StringFilter<"CapsuleComment"> | string
+    parentId?: StringNullableFilter<"CapsuleComment"> | string | null
+    authorName?: StringFilter<"CapsuleComment"> | string
+    authorEmail?: StringNullableFilter<"CapsuleComment"> | string | null
+    body?: StringFilter<"CapsuleComment"> | string
+    status?: StringFilter<"CapsuleComment"> | string
+    isOwnerReply?: BoolFilter<"CapsuleComment"> | boolean
+    reviewedAt?: DateTimeNullableFilter<"CapsuleComment"> | Date | string | null
+    reviewerUserId?: StringNullableFilter<"CapsuleComment"> | string | null
+    createdAt?: DateTimeFilter<"CapsuleComment"> | Date | string
+  }
+
   export type CapsuleCreateWithoutOptionsInput = {
     id?: string
     title: string
@@ -26618,9 +28316,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
     identity: IdentityProfileCreateNestedOneWithoutCapsulesInput
     sessions?: CapsuleSessionCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleUncheckedCreateWithoutOptionsInput = {
@@ -26633,8 +28333,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     identityId: string
+    commentsEnabled?: boolean
     sessions?: CapsuleSessionUncheckedCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentUncheckedCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleCreateOrConnectWithoutOptionsInput = {
@@ -26687,9 +28389,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     identity?: IdentityProfileUpdateOneRequiredWithoutCapsulesNestedInput
     sessions?: CapsuleSessionUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleUncheckedUpdateWithoutOptionsInput = {
@@ -26702,8 +28406,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     identityId?: StringFieldUpdateOperationsInput | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     sessions?: CapsuleSessionUncheckedUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUncheckedUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleBranchUpsertWithoutOptionInput = {
@@ -26798,9 +28504,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
     identity: IdentityProfileCreateNestedOneWithoutCapsulesInput
     options?: CapsuleOptionCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleUncheckedCreateWithoutSessionsInput = {
@@ -26813,8 +28521,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     identityId: string
+    commentsEnabled?: boolean
     options?: CapsuleOptionUncheckedCreateNestedManyWithoutCapsuleInput
     favorites?: FavoriteUncheckedCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentUncheckedCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleCreateOrConnectWithoutSessionsInput = {
@@ -26866,9 +28576,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     identity?: IdentityProfileUpdateOneRequiredWithoutCapsulesNestedInput
     options?: CapsuleOptionUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleUncheckedUpdateWithoutSessionsInput = {
@@ -26881,8 +28593,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     identityId?: StringFieldUpdateOperationsInput | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     options?: CapsuleOptionUncheckedUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUncheckedUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleEventUpsertWithWhereUniqueWithoutSessionInput = {
@@ -26956,6 +28670,212 @@ export namespace Prisma {
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type CapsuleCreateWithoutCommentsInput = {
+    id?: string
+    title: string
+    objective: string
+    layoutPreset?: string | null
+    isPublished?: boolean
+    editorHotspots?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    commentsEnabled?: boolean
+    identity: IdentityProfileCreateNestedOneWithoutCapsulesInput
+    options?: CapsuleOptionCreateNestedManyWithoutCapsuleInput
+    sessions?: CapsuleSessionCreateNestedManyWithoutCapsuleInput
+    favorites?: FavoriteCreateNestedManyWithoutCapsuleInput
+  }
+
+  export type CapsuleUncheckedCreateWithoutCommentsInput = {
+    id?: string
+    title: string
+    objective: string
+    layoutPreset?: string | null
+    isPublished?: boolean
+    editorHotspots?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    identityId: string
+    commentsEnabled?: boolean
+    options?: CapsuleOptionUncheckedCreateNestedManyWithoutCapsuleInput
+    sessions?: CapsuleSessionUncheckedCreateNestedManyWithoutCapsuleInput
+    favorites?: FavoriteUncheckedCreateNestedManyWithoutCapsuleInput
+  }
+
+  export type CapsuleCreateOrConnectWithoutCommentsInput = {
+    where: CapsuleWhereUniqueInput
+    create: XOR<CapsuleCreateWithoutCommentsInput, CapsuleUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type CapsuleCommentCreateWithoutChildrenInput = {
+    id?: string
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    capsule: CapsuleCreateNestedOneWithoutCommentsInput
+    parent?: CapsuleCommentCreateNestedOneWithoutChildrenInput
+  }
+
+  export type CapsuleCommentUncheckedCreateWithoutChildrenInput = {
+    id?: string
+    capsuleId: string
+    parentId?: string | null
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CapsuleCommentCreateOrConnectWithoutChildrenInput = {
+    where: CapsuleCommentWhereUniqueInput
+    create: XOR<CapsuleCommentCreateWithoutChildrenInput, CapsuleCommentUncheckedCreateWithoutChildrenInput>
+  }
+
+  export type CapsuleCommentCreateWithoutParentInput = {
+    id?: string
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    capsule: CapsuleCreateNestedOneWithoutCommentsInput
+    children?: CapsuleCommentCreateNestedManyWithoutParentInput
+  }
+
+  export type CapsuleCommentUncheckedCreateWithoutParentInput = {
+    id?: string
+    capsuleId: string
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+    children?: CapsuleCommentUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type CapsuleCommentCreateOrConnectWithoutParentInput = {
+    where: CapsuleCommentWhereUniqueInput
+    create: XOR<CapsuleCommentCreateWithoutParentInput, CapsuleCommentUncheckedCreateWithoutParentInput>
+  }
+
+  export type CapsuleCommentCreateManyParentInputEnvelope = {
+    data: CapsuleCommentCreateManyParentInput | CapsuleCommentCreateManyParentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CapsuleUpsertWithoutCommentsInput = {
+    update: XOR<CapsuleUpdateWithoutCommentsInput, CapsuleUncheckedUpdateWithoutCommentsInput>
+    create: XOR<CapsuleCreateWithoutCommentsInput, CapsuleUncheckedCreateWithoutCommentsInput>
+    where?: CapsuleWhereInput
+  }
+
+  export type CapsuleUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: CapsuleWhereInput
+    data: XOR<CapsuleUpdateWithoutCommentsInput, CapsuleUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type CapsuleUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    layoutPreset?: NullableStringFieldUpdateOperationsInput | string | null
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    editorHotspots?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    identity?: IdentityProfileUpdateOneRequiredWithoutCapsulesNestedInput
+    options?: CapsuleOptionUpdateManyWithoutCapsuleNestedInput
+    sessions?: CapsuleSessionUpdateManyWithoutCapsuleNestedInput
+    favorites?: FavoriteUpdateManyWithoutCapsuleNestedInput
+  }
+
+  export type CapsuleUncheckedUpdateWithoutCommentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    objective?: StringFieldUpdateOperationsInput | string
+    layoutPreset?: NullableStringFieldUpdateOperationsInput | string | null
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    editorHotspots?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    identityId?: StringFieldUpdateOperationsInput | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    options?: CapsuleOptionUncheckedUpdateManyWithoutCapsuleNestedInput
+    sessions?: CapsuleSessionUncheckedUpdateManyWithoutCapsuleNestedInput
+    favorites?: FavoriteUncheckedUpdateManyWithoutCapsuleNestedInput
+  }
+
+  export type CapsuleCommentUpsertWithoutChildrenInput = {
+    update: XOR<CapsuleCommentUpdateWithoutChildrenInput, CapsuleCommentUncheckedUpdateWithoutChildrenInput>
+    create: XOR<CapsuleCommentCreateWithoutChildrenInput, CapsuleCommentUncheckedCreateWithoutChildrenInput>
+    where?: CapsuleCommentWhereInput
+  }
+
+  export type CapsuleCommentUpdateToOneWithWhereWithoutChildrenInput = {
+    where?: CapsuleCommentWhereInput
+    data: XOR<CapsuleCommentUpdateWithoutChildrenInput, CapsuleCommentUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type CapsuleCommentUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    capsule?: CapsuleUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: CapsuleCommentUpdateOneWithoutChildrenNestedInput
+  }
+
+  export type CapsuleCommentUncheckedUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    capsuleId?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CapsuleCommentUpsertWithWhereUniqueWithoutParentInput = {
+    where: CapsuleCommentWhereUniqueInput
+    update: XOR<CapsuleCommentUpdateWithoutParentInput, CapsuleCommentUncheckedUpdateWithoutParentInput>
+    create: XOR<CapsuleCommentCreateWithoutParentInput, CapsuleCommentUncheckedCreateWithoutParentInput>
+  }
+
+  export type CapsuleCommentUpdateWithWhereUniqueWithoutParentInput = {
+    where: CapsuleCommentWhereUniqueInput
+    data: XOR<CapsuleCommentUpdateWithoutParentInput, CapsuleCommentUncheckedUpdateWithoutParentInput>
+  }
+
+  export type CapsuleCommentUpdateManyWithWhereWithoutParentInput = {
+    where: CapsuleCommentScalarWhereInput
+    data: XOR<CapsuleCommentUpdateManyMutationInput, CapsuleCommentUncheckedUpdateManyWithoutParentInput>
+  }
+
   export type UserCreateWithoutFavoritesInput = {
     id?: string
     email: string
@@ -27014,9 +28934,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
     identity: IdentityProfileCreateNestedOneWithoutCapsulesInput
     options?: CapsuleOptionCreateNestedManyWithoutCapsuleInput
     sessions?: CapsuleSessionCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleUncheckedCreateWithoutFavoritesInput = {
@@ -27029,8 +28951,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     identityId: string
+    commentsEnabled?: boolean
     options?: CapsuleOptionUncheckedCreateNestedManyWithoutCapsuleInput
     sessions?: CapsuleSessionUncheckedCreateNestedManyWithoutCapsuleInput
+    comments?: CapsuleCommentUncheckedCreateNestedManyWithoutCapsuleInput
   }
 
   export type CapsuleCreateOrConnectWithoutFavoritesInput = {
@@ -27113,9 +29037,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     identity?: IdentityProfileUpdateOneRequiredWithoutCapsulesNestedInput
     options?: CapsuleOptionUpdateManyWithoutCapsuleNestedInput
     sessions?: CapsuleSessionUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleUncheckedUpdateWithoutFavoritesInput = {
@@ -27128,8 +29054,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     identityId?: StringFieldUpdateOperationsInput | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     options?: CapsuleOptionUncheckedUpdateManyWithoutCapsuleNestedInput
     sessions?: CapsuleSessionUncheckedUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUncheckedUpdateManyWithoutCapsuleNestedInput
   }
 
   export type IdentityProfileCreateWithoutMessagesInput = {
@@ -27714,6 +29642,7 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    commentsEnabled?: boolean
   }
 
   export type MessageCreateManyIdentityInput = {
@@ -27797,9 +29726,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     options?: CapsuleOptionUpdateManyWithoutCapsuleNestedInput
     sessions?: CapsuleSessionUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleUncheckedUpdateWithoutIdentityInput = {
@@ -27811,9 +29742,11 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     options?: CapsuleOptionUncheckedUpdateManyWithoutCapsuleNestedInput
     sessions?: CapsuleSessionUncheckedUpdateManyWithoutCapsuleNestedInput
     favorites?: FavoriteUncheckedUpdateManyWithoutCapsuleNestedInput
+    comments?: CapsuleCommentUncheckedUpdateManyWithoutCapsuleNestedInput
   }
 
   export type CapsuleUncheckedUpdateManyWithoutIdentityInput = {
@@ -27825,6 +29758,7 @@ export namespace Prisma {
     editorHotspots?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MessageUpdateWithoutIdentityInput = {
@@ -27871,6 +29805,19 @@ export namespace Prisma {
   export type FavoriteCreateManyCapsuleInput = {
     id?: string
     userId: string
+    createdAt?: Date | string
+  }
+
+  export type CapsuleCommentCreateManyCapsuleInput = {
+    id?: string
+    parentId?: string | null
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
     createdAt?: Date | string
   }
 
@@ -27938,6 +29885,47 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CapsuleCommentUpdateWithoutCapsuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: CapsuleCommentUpdateOneWithoutChildrenNestedInput
+    children?: CapsuleCommentUpdateManyWithoutParentNestedInput
+  }
+
+  export type CapsuleCommentUncheckedUpdateWithoutCapsuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: CapsuleCommentUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type CapsuleCommentUncheckedUpdateManyWithoutCapsuleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CapsuleEventCreateManySessionInput = {
     id?: string
     type: string
@@ -27966,6 +29954,60 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CapsuleCommentCreateManyParentInput = {
+    id?: string
+    capsuleId: string
+    authorName: string
+    authorEmail?: string | null
+    body: string
+    status?: string
+    isOwnerReply?: boolean
+    reviewedAt?: Date | string | null
+    reviewerUserId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CapsuleCommentUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    capsule?: CapsuleUpdateOneRequiredWithoutCommentsNestedInput
+    children?: CapsuleCommentUpdateManyWithoutParentNestedInput
+  }
+
+  export type CapsuleCommentUncheckedUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    capsuleId?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: CapsuleCommentUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type CapsuleCommentUncheckedUpdateManyWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    capsuleId?: StringFieldUpdateOperationsInput | string
+    authorName?: StringFieldUpdateOperationsInput | string
+    authorEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    isOwnerReply?: BoolFieldUpdateOperationsInput | boolean
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    reviewerUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -27987,6 +30029,10 @@ export namespace Prisma {
      * @deprecated Use CapsuleSessionCountOutputTypeDefaultArgs instead
      */
     export type CapsuleSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CapsuleSessionCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CapsuleCommentCountOutputTypeDefaultArgs instead
+     */
+    export type CapsuleCommentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CapsuleCommentCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
@@ -28043,6 +30089,10 @@ export namespace Prisma {
      * @deprecated Use CapsuleEventDefaultArgs instead
      */
     export type CapsuleEventArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CapsuleEventDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CapsuleCommentDefaultArgs instead
+     */
+    export type CapsuleCommentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CapsuleCommentDefaultArgs<ExtArgs>
     /**
      * @deprecated Use FavoriteDefaultArgs instead
      */

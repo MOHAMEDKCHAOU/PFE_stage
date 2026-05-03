@@ -52,6 +52,7 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
           id: capsule.id,
           title: capsule.title,
           objective: capsule.objective,
+          commentsEnabled: capsule.commentsEnabled,
           options: capsule.options.map((opt) => ({
             id: opt.id,
             label: opt.label,

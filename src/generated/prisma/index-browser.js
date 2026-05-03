@@ -235,7 +235,8 @@ exports.Prisma.CapsuleScalarFieldEnum = {
   editorHotspots: 'editorHotspots',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  identityId: 'identityId'
+  identityId: 'identityId',
+  commentsEnabled: 'commentsEnabled'
 };
 
 exports.Prisma.CapsuleOptionScalarFieldEnum = {
@@ -270,6 +271,20 @@ exports.Prisma.CapsuleEventScalarFieldEnum = {
   sessionId: 'sessionId',
   type: 'type',
   value: 'value',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CapsuleCommentScalarFieldEnum = {
+  id: 'id',
+  capsuleId: 'capsuleId',
+  parentId: 'parentId',
+  authorName: 'authorName',
+  authorEmail: 'authorEmail',
+  body: 'body',
+  status: 'status',
+  isOwnerReply: 'isOwnerReply',
+  reviewedAt: 'reviewedAt',
+  reviewerUserId: 'reviewerUserId',
   createdAt: 'createdAt'
 };
 
@@ -347,6 +362,7 @@ exports.Prisma.ModelName = {
   CapsuleBranch: 'CapsuleBranch',
   CapsuleSession: 'CapsuleSession',
   CapsuleEvent: 'CapsuleEvent',
+  CapsuleComment: 'CapsuleComment',
   Favorite: 'Favorite',
   Message: 'Message',
   Notification: 'Notification'

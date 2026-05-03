@@ -15,6 +15,12 @@ type Notification = {
 
 const POLL_INTERVAL = 15_000; // 15 seconds
 
+function notifIconMeta(type: string): { box: string; glyph: string } {
+  if (type === "CTA_CLICK") return { box: "bg-emerald-500/15 text-emerald-400", glyph: "🎯" };
+  if (type === "NEW_CAPSULE_COMMENT") return { box: "bg-violet-500/15 text-violet-600", glyph: "📝" };
+  return { box: "bg-bordeaux-500/15 text-bordeaux-300", glyph: "💬" };
+}
+
 export function NotificationBell() {
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -256,14 +262,16 @@ export function NotificationBell() {
                 <p className="mt-2 text-sm text-stone-500">Aucune notification</p>
               </div>
             ) : (
-              notifications.map((notif) => (
-                <button
-                  key={notif.id}
-                  onClick={() => handleClick(notif)}
-                  className={`flex w-full items-start gap-3 border-b border-stone-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bordeaux-50/50 ${
-                    !notif.isRead ? "bg-bordeaux-50/40" : ""
-                  }`}
-                >
+              notifications.map((notif) => {
+                const meta = notifIconMeta(notif.type);
+                return (
+                  <button
+                    key={notif.id}
+                    onClick={() => handleClick(notif)}
+                    className={`flex w-full items-start gap-3 border-b border-stone-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bordeaux-50/50 ${
+                      !notif.isRead ? "bg-bordeaux-50/40" : ""
+                    }`}
+                  >
                   {/* Dot */}
                   <div className="mt-1.5 flex-shrink-0 w-2">
                     {!notif.isRead && (
@@ -272,12 +280,10 @@ export function NotificationBell() {
                   </div>
 
                   {/* Icon */}
-                  <div className={`mt-0.5 flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center text-sm ${
-                    notif.type === "CTA_CLICK"
-                      ? "bg-emerald-500/15 text-emerald-400"
-                      : "bg-bordeaux-500/15 text-bordeaux-300"
-                  }`}>
-                    {notif.type === "CTA_CLICK" ? "🎯" : "💬"}
+                  <div
+                    className={`mt-0.5 flex-shrink-0 h-8 w-8 rounded-lg flex items-center justify-center text-sm ${meta.box}`}
+                  >
+                    {meta.glyph}
                   </div>
 
                   {/* Content */}
@@ -293,7 +299,8 @@ export function NotificationBell() {
                     </p>
                   </div>
                 </button>
-              ))
+                );
+              })
             )}
           </div>
         </div>

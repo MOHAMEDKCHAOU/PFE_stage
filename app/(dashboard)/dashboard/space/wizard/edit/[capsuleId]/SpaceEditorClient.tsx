@@ -33,6 +33,7 @@ type Cap = {
   title: string;
   objective: string;
   isPublished: boolean;
+  commentsEnabled: boolean;
   layoutPreset: string | null;
   editorHotspots: unknown;
   options: Opt[];
@@ -95,6 +96,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
   const [bDesc, setBDesc] = useState("");
   const [bCta, setBCta] = useState("");
   const [togglePub, setTogglePub] = useState(false);
+  const [toggleComments, setToggleComments] = useState(true);
   const [toast, setToast] = useState("");
 
   const showToast = useCallback((msg: string) => {
@@ -117,6 +119,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
         setIdHeadline(c.identity.headline || "");
         setIdBio(c.identity.bio || "");
         setTogglePub(c.isPublished);
+        setToggleComments(c.commentsEnabled !== false);
         setHotspotDraft(
           c.editorHotspots
             ? JSON.stringify(c.editorHotspots, null, 2)
@@ -199,6 +202,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
           objective,
           editorHotspots: hs,
           isPublished: togglePub,
+          commentsEnabled: toggleComments,
         }),
       });
       await fetch("/api/identity", {
@@ -238,6 +242,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
               title,
               objective,
               isPublished: togglePub,
+              commentsEnabled: toggleComments,
               identity: {
                 ...c.identity,
                 name: displayName,
@@ -270,6 +275,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
     sortedOpt,
     title,
     togglePub,
+    toggleComments,
   ]);
 
   const publish = useCallback(async () => {
@@ -737,6 +743,18 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
                   />
                 </div>
                 <div className="se-settings-row">
+                  <span title="Bloc commentaires en bas de la page publique, avec modération">
+                    Commentaires visiteurs
+                  </span>
+                  <button
+                    type="button"
+                    className={"se-toggle" + (toggleComments ? " se-on" : "")}
+                    onClick={() => setToggleComments((v) => !v)}
+                    aria-pressed={toggleComments}
+                    aria-label="Activer ou désactiver les commentaires publics"
+                  />
+                </div>
+                <div className="se-settings-row">
                   <span>Analytics</span>
                   <button
                     type="button"
@@ -766,6 +784,14 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
                   <span className="se-add-icon">⬇</span>
                   Voir public
                 </a>
+                <Link
+                  href={`/dashboard/capsule-comments?capsuleId=${encodeURIComponent(cap.id)}`}
+                  className="se-add-block"
+                  style={{ textDecoration: "none" }}
+                >
+                  <span className="se-add-icon">💬</span>
+                  Modération commentaires
+                </Link>
                 <Link
                   href="/dashboard/identities"
                   className="se-add-block"

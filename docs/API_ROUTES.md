@@ -36,6 +36,10 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `POST /api/ai/improve-text` | `app/api/ai/improve-text/route.ts` | `src/route-handlers/api/ai/improve-text/route.ts` |
 | `POST /api/ai/insights` | `app/api/ai/insights/route.ts` | `src/route-handlers/api/ai/insights/route.ts` |
 | `POST /api/ai/generate-capsule` | `app/api/ai/generate-capsule/route.ts` | `src/route-handlers/api/ai/generate-capsule/route.ts` |
+| `GET/POST /api/capsules/[capsuleId]/comments` | `app/api/capsules/[capsuleId]/comments/route.ts` | `src/route-handlers/api/capsules/public-comments-handlers.ts` |
+| `/api/capsule-comments/moderate` | `app/api/capsule-comments/moderate/route.ts` | `src/route-handlers/api/capsule-comments/moderate/route.ts` |
+| `GET /api/capsule-comments/my-capsules` | `app/api/capsule-comments/my-capsules/route.ts` | `src/route-handlers/api/capsule-comments/my-capsules/route.ts` |
+| `GET /api/capsule-comments/export` | `app/api/capsule-comments/export/route.ts` | *(logique dans le stub — CSV propriétaire / Studio)* |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)
 

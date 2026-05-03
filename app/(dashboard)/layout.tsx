@@ -83,6 +83,19 @@ const navItems = [
     ),
   },
   {
+    label: "Commentaires",
+    href: "/dashboard/capsule-comments",
+    icon: (
+      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M7.5 8.25h9m-9 3.75h5.25m-5.25 3.75h9M3 8.25c0-1.657 1.343-3 3-3h12a3 3 0 013 3v8.25a3 3 0 01-3 3h-5.379a2.25 2.25 0 00-1.06.563l-2.539 2.27a.75.75 0 01-1.262-.555V20.25H6a3 3 0 01-3-3V8.25z"
+        />
+      </svg>
+    ),
+  },
+  {
     label: "Facturation",
     href: "/dashboard/billing",
     icon: (

@@ -105,7 +105,7 @@ export async function PUT(req: Request) {
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
     const body = await req.json();
-    const { id, title, objective, layoutPreset, isPublished, editorHotspots } = body;
+    const { id, title, objective, layoutPreset, isPublished, editorHotspots, commentsEnabled } = body;
 
     if (!id) return NextResponse.json({ error: "L'ID de la capsule est requis" }, { status: 400 });
 
@@ -125,6 +125,8 @@ export async function PUT(req: Request) {
         objective: objective ?? capsule.objective,
         layoutPreset: layoutPreset !== undefined ? layoutPreset : capsule.layoutPreset,
         isPublished: typeof isPublished === "boolean" ? isPublished : capsule.isPublished,
+        commentsEnabled:
+          typeof commentsEnabled === "boolean" ? commentsEnabled : capsule.commentsEnabled,
         ...(editorHotspots !== undefined && { editorHotspots }),
       },
     });

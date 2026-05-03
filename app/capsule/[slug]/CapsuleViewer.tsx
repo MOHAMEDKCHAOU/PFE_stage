@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react
 import QRCode from "qrcode";
 import { generatePortfolioPDF } from "@/lib/generatePDF";
 import { ChatBot } from "@/components/ChatBot";
-import { CapsuleJourneyGraph } from "@/components/CapsuleJourneyGraph";
+import { CapsuleCommentsSection } from "@/components/CapsuleCommentsSection";
 
 function readJourneyImmersed(capsuleId: string, optionCount: number): boolean {
   if (optionCount === 0) return true;
@@ -30,6 +30,7 @@ type Capsule = {
   id: string;
   title: string;
   objective: string;
+  commentsEnabled: boolean;
   options: Option[];
 };
 
@@ -136,7 +137,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
     setJourneyImmersed(true);
   }
 
-  function reopenJourneyMap() {
+  function reopenIntroduction() {
     try {
       sessionStorage.removeItem(`faymoos_journey_${activeCapsule.id}`);
     } catch {
@@ -463,7 +464,7 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
         </div>
       )}
 
-      {/* ──── Carte du parcours (pré-immersion) ──── */}
+      {/* ──── Introduction (avant l’expérience interactive) — sans graphe visuel ──── */}
       {showJourneyMap && (
         <section className="max-w-3xl mx-auto px-6 mt-10">
           <div className="relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-gradient-to-b from-white/[0.07] via-white/[0.02] to-transparent p-[1px] shadow-[0_28px_80px_-20px_rgba(0,0,0,0.75)]">
@@ -477,48 +478,21 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
                 <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-1.5 shadow-lg shadow-black/20">
                   <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${tc.gradient} animate-pulse shadow-[0_0_12px_rgba(236,72,153,0.6)]`} />
                   <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-300">
-                    Pré-immersion
+                    Avant de commencer
                   </span>
                 </div>
                 <h2
                   className={`mt-5 bg-gradient-to-r ${tc.gradient} bg-clip-text text-2xl font-bold tracking-tight text-transparent sm:text-3xl`}
                 >
-                  Aperçu narratif du parcours
+                  {activeCapsule.title}
                 </h2>
-                <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-zinc-400 sm:text-[15px]">
-                  Visualisez la structure de l’expérience : chaque chemin, chaque choix et chaque action avant de
-                  plonger dans la capsule interactive.
+                <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-zinc-300 sm:text-[15px]">
+                  {activeCapsule.objective}
                 </p>
-                <p className="mx-auto mt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-zinc-500">
-                  <span className="rounded-md bg-zinc-900/80 px-2 py-0.5 font-medium text-zinc-400 ring-1 ring-white/5">
-                    + lisible
-                  </span>
-                  <span className="rounded-md bg-zinc-900/80 px-2 py-0.5 font-medium text-zinc-400 ring-1 ring-white/5">
-                    + mémorable
-                  </span>
-                  <span className="rounded-md bg-zinc-900/80 px-2 py-0.5 font-medium text-zinc-400 ring-1 ring-white/5">
-                    + storytelling
-                  </span>
+                <p className="mx-auto mt-3 max-w-md text-xs leading-relaxed text-zinc-500">
+                  Vous pouvez aussi consulter ou laisser un commentaire ci-dessous (après modération). Ensuite : choix
+                  interactifs, portfolio et contact.
                 </p>
-              </div>
-
-              <div className="relative mt-10">
-                <CapsuleJourneyGraph
-                  identityName={identity.name}
-                  capsuleTitle={activeCapsule.title}
-                  objective={activeCapsule.objective}
-                  options={activeCapsule.options.map((o) => ({
-                    id: o.id,
-                    label: o.label,
-                    branch: o.branch
-                      ? {
-                          headline: o.branch.headline,
-                          description: o.branch.description,
-                          cta: o.branch.cta,
-                        }
-                      : null,
-                  }))}
-                />
               </div>
 
               <div className="relative mt-10 flex flex-col items-center gap-4">
@@ -541,8 +515,8 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
                 </button>
                 <p className="max-w-md text-center text-xs leading-relaxed text-zinc-500">
                   {hideBranding
-                    ? "Ensuite : choix interactifs, portfolio, témoignages et formulaire de contact."
-                    : "Ensuite : choix interactifs, portfolio, témoignages et contact — tout le parcours Faymoos."}
+                    ? "Ensuite : choix interactifs, portfolio, témoignages, commentaires et formulaire de contact."
+                    : "Ensuite : choix interactifs, portfolio, témoignages, commentaires et contact — tout le parcours Faymoos."}
                 </p>
               </div>
             </div>
@@ -566,10 +540,10 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
             {activeCapsule.options.length > 0 && (
               <button
                 type="button"
-                onClick={reopenJourneyMap}
+                onClick={reopenIntroduction}
                 className="mb-4 text-xs font-medium text-zinc-500 underline-offset-4 hover:text-zinc-300 hover:underline"
               >
-                ← Voir la carte du parcours
+                ← Retour à l’introduction
               </button>
             )}
             <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-1.5 mb-5">
@@ -737,6 +711,14 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
           </div>
         </section>
       )}
+
+      {/* ──── Commentaires publics (modération) — visibles dès l’intro, pas seulement après « Commencer » ──── */}
+      <CapsuleCommentsSection
+        capsuleId={activeCapsule.id}
+        enabled={activeCapsule.commentsEnabled !== false}
+        accentGradient={tc.gradient}
+        accentText={tc.accent}
+      />
 
       {/* ──── Contact Form ──── */}
       {!showJourneyMap && (
