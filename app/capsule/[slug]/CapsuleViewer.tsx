@@ -5,6 +5,8 @@ import QRCode from "qrcode";
 import { generatePortfolioPDF } from "@/lib/generatePDF";
 import { ChatBot } from "@/components/ChatBot";
 import { CapsuleCommentsSection } from "@/components/CapsuleCommentsSection";
+import { PublicProfileBadges } from "@/components/PublicProfileBadges";
+import type { PublicBadgeBundle } from "@/lib/faymoos-badges";
 
 function readJourneyImmersed(capsuleId: string, optionCount: number): boolean {
   if (optionCount === 0) return true;
@@ -52,6 +54,8 @@ type Testimonial = {
 
 type CapsuleViewerProps = {
   hideBranding?: boolean;
+  identitySlug: string;
+  badges?: PublicBadgeBundle | null;
   identity: {
     id: string;
     name: string;
@@ -95,7 +99,15 @@ const themeOverrides: Record<string, { gradient: string; accent: string }> = {
 };
 
 /* ───────── Component ───────── */
-export function CapsuleViewer({ identity, capsules, projects, testimonials, hideBranding = false }: CapsuleViewerProps) {
+export function CapsuleViewer({
+  identity,
+  capsules,
+  projects,
+  testimonials,
+  hideBranding = false,
+  identitySlug,
+  badges = null,
+}: CapsuleViewerProps) {
   const [activeCapsule, setActiveCapsule] = useState<Capsule>(capsules[0]);
   const [journeyImmersed, setJourneyImmersed] = useState(false);
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
@@ -283,6 +295,11 @@ export function CapsuleViewer({ identity, capsules, projects, testimonials, hide
               {identity.headline && (
                 <p className="mt-1.5 text-sm text-zinc-400 max-w-md">{identity.headline}</p>
               )}
+              {badges ? (
+                <div className="mt-4 w-full max-w-xl mx-auto sm:mx-0">
+                  <PublicProfileBadges identitySlug={identitySlug} bundle={badges} />
+                </div>
+              ) : null}
             </div>
 
             {/* Fav button */}

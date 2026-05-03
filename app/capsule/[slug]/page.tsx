@@ -1,3 +1,4 @@
+import { getPublicBadgePayloadForUser } from "@/lib/faymoos-badges";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { CapsuleViewer } from "./CapsuleViewer";
@@ -33,10 +34,19 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
     notFound();
   }
 
+  let badges = null;
+  try {
+    badges = await getPublicBadgePayloadForUser(identity.userId);
+  } catch {
+    badges = null;
+  }
+
   return (
     <main className="theme-capsule min-h-screen bg-zinc-950 text-white">
       <CapsuleViewer
         hideBranding={identity.hideBranding}
+        identitySlug={slug}
+        badges={badges}
         identity={{
           id: identity.id,
           name: identity.name,

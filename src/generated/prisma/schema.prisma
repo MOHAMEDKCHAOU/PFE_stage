@@ -36,6 +36,52 @@ model User {
   studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
   studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
   subscriptionUsages    SubscriptionUsage[]
+  userBadges            UserBadge[]
+}
+
+// ─── Badges Faymoos (profil public : 3 catégories, 2 niveaux) ───
+
+enum BadgeCategory {
+  EXPERTISE
+  CREDIBILITY
+  IMPACT
+}
+
+enum BadgeTier {
+  VERIFIED
+  EXPERT
+}
+
+enum BadgeGrantSource {
+  AUTO
+  EXTERNAL
+  ADMIN
+}
+
+model BadgeDefinition {
+  id          String        @id @default(uuid())
+  slug        String        @unique
+  label       String
+  description String
+  category    BadgeCategory
+  sortOrder   Int           @default(0)
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id         String           @id @default(uuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId    String
+  badge      BadgeDefinition  @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  tier       BadgeTier
+  source     BadgeGrantSource @default(AUTO)
+  /// Texte court pour tooltip (ex. critère, date)
+  evidence   String?
+  verifiedAt DateTime         @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
 }
 
 /// Compteurs mensuels (UTC) pour quotas facturation (exports Studio, invitations créées, etc.)
@@ -203,9 +249,12 @@ model Capsule {
   identityId String
   identity   IdentityProfile @relation(fields: [identityId], references: [id])
 
-  options   CapsuleOption[]
-  sessions  CapsuleSession[]
-  favorites Favorite[]
+  options         CapsuleOption[]
+  sessions        CapsuleSession[]
+  favorites       Favorite[]
+  /// Commentaires publics (modération) — désactivables par capsule
+  commentsEnabled Boolean          @default(true)
+  comments        CapsuleComment[]
 }
 
 model CapsuleOption {
@@ -258,6 +307,33 @@ model CapsuleEvent {
   createdAt DateTime @default(now())
 
   session CapsuleSession @relation(fields: [sessionId], references: [id])
+}
+
+/// Commentaires sur une capsule (visiteurs + réponses créateur) — modération PENDING / APPROVED / REJECTED
+model CapsuleComment {
+  id        String  @id @default(uuid())
+  capsuleId String
+  capsule   Capsule @relation(fields: [capsuleId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   CapsuleComment?  @relation("CapsuleCommentThread", fields: [parentId], references: [id], onDelete: Cascade)
+  children CapsuleComment[] @relation("CapsuleCommentThread")
+
+  authorName   String
+  authorEmail  String?
+  body         String
+  /// PENDING | APPROVED | REJECTED
+  status       String  @default("PENDING")
+  isOwnerReply Boolean @default(false)
+
+  reviewedAt     DateTime?
+  reviewerUserId String?
+
+  createdAt DateTime @default(now())
+
+  @@index([capsuleId, status])
+  @@index([capsuleId, createdAt(sort: Desc)])
+  @@index([parentId])
 }
 
 // ⭐ FAVORIS — Capsules favorites des utilisateurs

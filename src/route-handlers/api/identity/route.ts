@@ -1,6 +1,7 @@
 import { getUserId } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { assertCanCreateIdentity } from "@/lib/subscription-guards";
+import { syncAutoBadgesForUser } from "@/lib/faymoos-badges";
 import { canManageIdentityAsOwner, getManagedUserIdsForViewer, isAffiliateForClient } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
@@ -139,6 +140,7 @@ export async function PUT(req: Request) {
           : {}),
       },
     });
+    await syncAutoBadgesForUser(existing.userId);
     return NextResponse.json(identity);
   } catch (error) {
     console.error("PUT IDENTITY ERROR:", error);

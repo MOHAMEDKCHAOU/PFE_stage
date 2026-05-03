@@ -1,3 +1,4 @@
+import { getPublicBadgePayloadForUser } from "@/lib/faymoos-badges";
 import { prisma } from "@/lib/prisma";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { cookies } from "next/headers";
@@ -27,12 +28,13 @@ export default async function SpacePreviewPage({ params }: PageProps) {
 
   if (!cap || !(await canManageIdentityAsOwner(userId, cap.identity.userId))) notFound();
 
-  const [projects, testimonials] = await Promise.all([
+  const [projects, testimonials, badges] = await Promise.all([
     prisma.portfolioProject.findMany({
       where: { identityId: cap.identityId, isPublic: true },
       take: 6,
     }),
     prisma.testimonial.findMany({ where: { identityId: cap.identityId }, take: 4 }),
+    getPublicBadgePayloadForUser(cap.identity.userId).catch(() => null),
   ]);
 
   const identity = cap.identity;
@@ -45,6 +47,8 @@ export default async function SpacePreviewPage({ params }: PageProps) {
       </div>
       <CapsuleViewer
         hideBranding={identity.hideBranding}
+        identitySlug={identity.slug}
+        badges={badges}
         identity={{
           id: identity.id,
           name: identity.name,
@@ -61,6 +65,7 @@ export default async function SpacePreviewPage({ params }: PageProps) {
             id: cap.id,
             title: cap.title,
             objective: cap.objective,
+            commentsEnabled: cap.commentsEnabled,
             options: cap.options.map((opt) => ({
               id: opt.id,
               label: opt.label,

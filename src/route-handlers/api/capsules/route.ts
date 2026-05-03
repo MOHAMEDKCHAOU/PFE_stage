@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getUserId } from "@/lib/auth";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
+import { syncAutoBadgesForUser } from "@/lib/faymoos-badges";
 import { assertCanCreateCapsule } from "@/lib/subscription-guards";
 import { NextResponse } from "next/server";
 
@@ -91,6 +92,7 @@ export async function POST(req: Request) {
       },
     });
 
+    await syncAutoBadgesForUser(identity.userId);
     return NextResponse.json(capsule, { status: 201 });
   } catch (error) {
     console.error("POST CAPSULES ERROR", error);
@@ -131,6 +133,7 @@ export async function PUT(req: Request) {
       },
     });
 
+    await syncAutoBadgesForUser(capsule.identity.userId);
     return NextResponse.json(updated);
   } catch (error) {
     console.error("PUT CAPSULES ERROR", error);

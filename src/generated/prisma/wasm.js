@@ -136,6 +136,25 @@ exports.Prisma.UserScalarFieldEnum = {
   currentPeriodEnd: 'currentPeriodEnd'
 };
 
+exports.Prisma.BadgeDefinitionScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  label: 'label',
+  description: 'description',
+  category: 'category',
+  sortOrder: 'sortOrder'
+};
+
+exports.Prisma.UserBadgeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  badgeId: 'badgeId',
+  tier: 'tier',
+  source: 'source',
+  evidence: 'evidence',
+  verifiedAt: 'verifiedAt'
+};
+
 exports.Prisma.SubscriptionUsageScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -341,6 +360,23 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.BadgeCategory = exports.$Enums.BadgeCategory = {
+  EXPERTISE: 'EXPERTISE',
+  CREDIBILITY: 'CREDIBILITY',
+  IMPACT: 'IMPACT'
+};
+
+exports.BadgeTier = exports.$Enums.BadgeTier = {
+  VERIFIED: 'VERIFIED',
+  EXPERT: 'EXPERT'
+};
+
+exports.BadgeGrantSource = exports.$Enums.BadgeGrantSource = {
+  AUTO: 'AUTO',
+  EXTERNAL: 'EXTERNAL',
+  ADMIN: 'ADMIN'
+};
+
 exports.UserAssetKind = exports.$Enums.UserAssetKind = {
   IMAGE: 'IMAGE',
   VIDEO: 'VIDEO',
@@ -349,6 +385,8 @@ exports.UserAssetKind = exports.$Enums.UserAssetKind = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  BadgeDefinition: 'BadgeDefinition',
+  UserBadge: 'UserBadge',
   SubscriptionUsage: 'SubscriptionUsage',
   SubscriptionPlanPrice: 'SubscriptionPlanPrice',
   AffiliateClient: 'AffiliateClient',

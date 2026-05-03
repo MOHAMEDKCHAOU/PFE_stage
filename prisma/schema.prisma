@@ -36,6 +36,52 @@ model User {
   studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
   studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
   subscriptionUsages    SubscriptionUsage[]
+  userBadges            UserBadge[]
+}
+
+// ─── Badges Faymoos (profil public : 3 catégories, 2 niveaux) ───
+
+enum BadgeCategory {
+  EXPERTISE
+  CREDIBILITY
+  IMPACT
+}
+
+enum BadgeTier {
+  VERIFIED
+  EXPERT
+}
+
+enum BadgeGrantSource {
+  AUTO
+  EXTERNAL
+  ADMIN
+}
+
+model BadgeDefinition {
+  id          String          @id @default(uuid())
+  slug        String          @unique
+  label       String
+  description String
+  category    BadgeCategory
+  sortOrder   Int             @default(0)
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id           String           @id @default(uuid())
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId      String
+  badge        BadgeDefinition  @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  tier         BadgeTier
+  source       BadgeGrantSource @default(AUTO)
+  /// Texte court pour tooltip (ex. critère, date)
+  evidence     String?
+  verifiedAt   DateTime         @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
 }
 
 /// Compteurs mensuels (UTC) pour quotas facturation (exports Studio, invitations créées, etc.)
