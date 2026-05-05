@@ -18,6 +18,21 @@ function readJourneyImmersed(capsuleId: string, optionCount: number): boolean {
   }
 }
 
+/** Si le texte CTA est une URL (http(s), mailto, tel, domaine.tld…), retourne une href sûre pour `<a>`. */
+function resolveBranchCtaHref(raw: string): string | null {
+  const cta = raw.trim();
+  if (!cta) return null;
+  const lower = cta.toLowerCase();
+  if (lower.startsWith("http://") || lower.startsWith("https://")) return cta;
+  if (lower.startsWith("mailto:") || lower.startsWith("tel:") || lower.startsWith("sms:")) return cta;
+  if (cta.startsWith("//") && /^\/\/[^\s/]+/.test(cta)) return `https:${cta}`;
+  if (cta.startsWith("/") && !cta.startsWith("//")) return cta;
+  if (/^(?:www\.|[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?:[\/?#]|$)/i.test(cta)) {
+    return `https://${cta}`;
+  }
+  return null;
+}
+
 /* ───────── Types ───────── */
 type Branch = {
   headline: string;
@@ -635,13 +650,38 @@ export function CapsuleViewer({
                       </div>
                     )}
 
-                    {/* CTA */}
-                    <button
-                      onClick={() => trackEvent("CTA_CLICK", selectedOption!.label)}
-                      className={`w-full rounded-2xl bg-gradient-to-r ${tc.gradient} px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-xl hover:shadow-indigo-500/20 active:scale-[0.98]`}
-                    >
-                      {selectedOption.branch.cta}
-                    </button>
+                    {/* CTA — lien réel si le champ contient une URL ; sinon bouton (texte libre) */}
+                    {(() => {
+                      const ctaLabel = selectedOption.branch.cta;
+                      const ctaHref = resolveBranchCtaHref(ctaLabel);
+                      const ctaClass = `inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r ${tc.gradient} px-6 py-4 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-xl hover:shadow-indigo-500/20 active:scale-[0.98]`;
+                      if (ctaHref) {
+                        const openNewTab =
+                          /^https?:\/\//i.test(ctaHref) ||
+                          ctaHref.startsWith("//");
+                        return (
+                          <a
+                            href={ctaHref}
+                            {...(openNewTab
+                              ? { target: "_blank", rel: "noopener noreferrer" }
+                              : {})}
+                            onClick={() => trackEvent("CTA_CLICK", selectedOption!.label)}
+                            className={ctaClass}
+                          >
+                            {ctaLabel}
+                          </a>
+                        );
+                      }
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => trackEvent("CTA_CLICK", selectedOption!.label)}
+                          className={ctaClass}
+                        >
+                          {ctaLabel}
+                        </button>
+                      );
+                    })()}
 
                     {/* Back */}
                     <button onClick={handleBack} className="flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mx-auto group">
