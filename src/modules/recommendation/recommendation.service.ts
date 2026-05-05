@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 
 /** Recent window for popularity (sessions) */
 const POPULARITY_DAYS = 14;
@@ -36,6 +37,8 @@ async function fetchExploreIdentitySelect() {
       name: true,
       slug: true,
       type: true,
+      profession: true,
+      tags: true,
       headline: true,
       bio: true,
       avatar: true,
@@ -157,10 +160,10 @@ export async function getRecommendedIdentities(options: {
     userId
       ? prisma.identityProfile.findMany({
           where: { userId },
-          select: { type: true, headline: true, bio: true },
+          select: { type: true, headline: true, bio: true, profession: true, tags: true },
         })
       : Promise.resolve(
-          [] as { type: string; headline: string | null; bio: string | null }[],
+          [] as { type: string; headline: string | null; bio: string | null; profession: string | null; tags: unknown }[],
         ),
   ]);
 
@@ -203,6 +206,8 @@ export async function getRecommendedIdentities(options: {
   for (const p of userProfiles) {
     tokenize(p.headline).forEach((w) => userText.add(w));
     tokenize(p.bio).forEach((w) => userText.add(w));
+    tokenize(p.profession).forEach((w) => userText.add(w));
+    tokenize(parseTagsFromJson(p.tags).join(" ")).forEach((w) => userText.add(w));
   }
   if (favCapsuleIds.length > 0) {
     const favCaps = await prisma.capsule.findMany({
@@ -252,7 +257,12 @@ export async function getRecommendedIdentities(options: {
   }[] = [];
 
   for (const row of candidates) {
-    const tokensB = new Set([...tokenize(row.headline), ...tokenize(row.bio)]);
+    const tokensB = new Set([
+      ...tokenize(row.headline),
+      ...tokenize(row.bio),
+      ...tokenize(row.profession),
+      ...tokenize(parseTagsFromJson(row.tags).join(" ")),
+    ]);
     const j = jaccard(userText, tokensB);
     const typeMatch = favoriteTypes.size > 0 && favoriteTypes.has(row.type);
     const sim = typeMatch ? 0.55 + 0.45 * j : 0.2 + 0.8 * j;

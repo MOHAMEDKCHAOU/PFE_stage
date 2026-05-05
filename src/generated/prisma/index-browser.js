@@ -214,6 +214,8 @@ exports.Prisma.IdentityProfileScalarFieldEnum = {
   cover: 'cover',
   theme: 'theme',
   socialLinks: 'socialLinks',
+  profession: 'profession',
+  tags: 'tags',
   hideBranding: 'hideBranding',
   ctaWebhookUrl: 'ctaWebhookUrl',
   ctaWebhookSecret: 'ctaWebhookSecret',

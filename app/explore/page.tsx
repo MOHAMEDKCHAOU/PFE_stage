@@ -3,12 +3,15 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 
 type Identity = {
   id: string;
   name: string;
   slug: string;
   type: string;
+  profession?: string | null;
+  tags?: unknown;
   headline: string | null;
   bio: string | null;
   avatar: string | null;
@@ -94,6 +97,25 @@ function ExploreProfileCard({ id, recoHint }: { id: Identity; recoHint?: string 
         {id.headline && (
           <p className="mt-1 line-clamp-1 text-xs text-stone-500">{id.headline}</p>
         )}
+        {id.profession?.trim() && (
+          <p className="mt-1 text-[11px] font-semibold text-bordeaux-800/90">{id.profession.trim()}</p>
+        )}
+        {(() => {
+          const tagList = parseTagsFromJson(id.tags);
+          if (tagList.length === 0) return null;
+          return (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {tagList.slice(0, 6).map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-md border border-stone-200/80 bg-stone-50 px-1.5 py-0.5 text-[10px] font-medium text-stone-500"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          );
+        })()}
 
         <div className="mt-4 flex flex-wrap gap-1.5">
           {id.capsules.map((c) => (

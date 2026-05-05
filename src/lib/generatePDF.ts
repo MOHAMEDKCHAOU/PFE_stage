@@ -5,6 +5,8 @@ type PDFIdentity = {
   headline: string | null;
   bio: string | null;
   type: string;
+  profession?: string | null;
+  tags?: string[];
 };
 
 type PDFBranch = {
@@ -101,6 +103,19 @@ export function generatePortfolioPDF({ identity, capsules, projects, testimonial
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...COLORS.accent);
   doc.text(typeLabels[identity.type] || identity.type, PAGE_W / 2, y, { align: "center" });
+
+  if (identity.profession?.trim()) {
+    y += 10;
+    doc.setFontSize(10);
+    doc.setTextColor(161, 161, 170);
+    doc.text(identity.profession.trim(), PAGE_W / 2, y, { align: "center" });
+  }
+  if (identity.tags && identity.tags.length > 0) {
+    y += 8;
+    doc.setFontSize(9);
+    doc.setTextColor(...COLORS.muted);
+    doc.text(identity.tags.slice(0, 12).join(" · "), PAGE_W / 2, y, { align: "center" });
+  }
 
   // Headline
   if (identity.headline) {

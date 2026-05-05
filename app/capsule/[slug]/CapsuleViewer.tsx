@@ -81,6 +81,8 @@ type CapsuleViewerProps = {
     type: string;
     theme: string | null;
     socialLinks: Record<string, string> | null;
+    profession?: string | null;
+    tags?: string[];
   };
   capsules: Capsule[];
   projects: Project[];
@@ -299,14 +301,31 @@ export function CapsuleViewer({
 
             {/* Name + meta */}
             <div className="flex-1 text-center sm:text-left pb-1">
-              <div className="flex flex-col sm:flex-row items-center sm:items-baseline gap-2 sm:gap-3">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-center sm:items-start gap-2 sm:gap-3">
                 <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                   {identity.name}
                 </h1>
                 <span className={`inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${tc.accent}`}>
                   {tc.label}
                 </span>
+                {identity.profession?.trim() ? (
+                  <span className="inline-flex items-center rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[11px] font-medium text-zinc-300">
+                    {identity.profession.trim()}
+                  </span>
+                ) : null}
               </div>
+              {identity.tags && identity.tags.length > 0 ? (
+                <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
+                  {identity.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-zinc-800/80 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-zinc-400 ring-1 ring-white/10"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
               {identity.headline && (
                 <p className="mt-1.5 text-sm text-zinc-400 max-w-md">{identity.headline}</p>
               )}

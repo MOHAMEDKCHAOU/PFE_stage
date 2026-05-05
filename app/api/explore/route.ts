@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
                   { name: { contains: search, mode: "insensitive" } },
                   { headline: { contains: search, mode: "insensitive" } },
                   { bio: { contains: search, mode: "insensitive" } },
+                  { profession: { contains: search, mode: "insensitive" } },
                 ],
               }
             : {},
@@ -40,6 +41,8 @@ export async function GET(req: NextRequest) {
         name: true,
         slug: true,
         type: true,
+        profession: true,
+        tags: true,
         headline: true,
         bio: true,
         avatar: true,

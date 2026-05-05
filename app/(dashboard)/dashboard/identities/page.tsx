@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EditProfileModal } from "@/components/EditProfileModal";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 import QRCode from "qrcode";
 
 type PortfolioProject = {
@@ -34,7 +35,8 @@ type IdentityProfile = {
   theme: string | null;
   socialLinks: Record<string, string> | null;
   hideBranding?: boolean;
-  /** Pro / Studio / Studio+ du propriétaire (GET /api/identity). */
+  profession?: string | null;
+  tags?: unknown;
   ownerCanHideBranding?: boolean;
   ctaWebhookUrl?: string | null;
   ctaWebhookSecret?: string | null;
@@ -70,6 +72,8 @@ function CreateIdentityModal({
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [type, setType] = useState("");
+  const [profession, setProfession] = useState("");
+  const [tagsLine, setTagsLine] = useState("");
   const [headline, setHeadline] = useState("");
   const [bio, setBio] = useState("");
   const [saving, setSaving] = useState(false);
@@ -100,6 +104,8 @@ function CreateIdentityModal({
         body: JSON.stringify({
           name: name.trim(),
           type,
+          profession: profession.trim() || undefined,
+          tags: tagsLine.trim() || undefined,
           headline: headline.trim() || null,
           bio: bio.trim() || null,
         }),
@@ -133,7 +139,7 @@ function CreateIdentityModal({
             </div>
             <div>
               <h3 className="text-lg font-semibold text-slate-800">Nouvelle identité</h3>
-              <p className="text-xs text-slate-400">Étape {step} sur 2</p>
+              <p className="text-xs text-slate-400">Étape {step} sur 2 — profil & métier</p>
             </div>
           </div>
           <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-violet-50 hover:text-slate-800 transition-all">
@@ -201,27 +207,62 @@ function CreateIdentityModal({
           )}
 
           {step === 2 && (
-            <div className="space-y-3">
-              <label className="text-xs font-medium text-slate-500">Type de profil *</label>
-              <div className="grid grid-cols-2 gap-3">
-                {profileTypeOptions.map((t) => (
-                  <button
-                    key={t.value}
-                    type="button"
-                    onClick={() => { setType(t.value); setError(""); }}
-                    className={`flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-all duration-200 active:scale-[0.97] ${
-                      type === t.value
-                        ? "border-violet-400 bg-violet-50 ring-2 ring-violet-300 shadow-lg shadow-violet-200"
-                        : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
-                    }`}
-                  >
-                    <span className="text-3xl">{t.icon}</span>
-                    <span className={`text-sm font-semibold ${type === t.value ? "text-violet-700" : "text-slate-600"}`}>
-                      {t.label}
-                    </span>
-                    <span className="text-[11px] text-slate-400">{t.desc}</span>
-                  </button>
-                ))}
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-500">Type principal *</label>
+                <select
+                  value={type}
+                  onChange={(e) => {
+                    setType(e.target.value);
+                    setError("");
+                  }}
+                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                >
+                  <option value="">Choisir…</option>
+                  {profileTypeOptions.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.icon} {t.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-500">Métier / domaine</label>
+                <input
+                  type="text"
+                  list="create-identity-profession-hints"
+                  value={profession}
+                  onChange={(e) => {
+                    setProfession(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Ex: Photographer, Marketing Agency, SaaS Founder…"
+                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                />
+                <datalist id="create-identity-profession-hints">
+                  <option value="Photographer" />
+                  <option value="Musician" />
+                  <option value="Marketing Agency" />
+                  <option value="SaaS Founder" />
+                  <option value="UX Designer" />
+                  <option value="Consultant" />
+                </datalist>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-slate-500">Tags (optionnel)</label>
+                <input
+                  type="text"
+                  value={tagsLine}
+                  onChange={(e) => {
+                    setTagsLine(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="portfolio, booking, case studies…"
+                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                />
+                <p className="text-[11px] text-slate-500">Séparés par des virgules · utile pour la découverte future</p>
               </div>
             </div>
           )}
@@ -784,6 +825,16 @@ export default function IdentitiesPage() {
                   {profile.headline && (
                     <p className="mt-0.5 text-sm text-slate-400 line-clamp-1">{profile.headline}</p>
                   )}
+                  {profile.profession?.trim() && (
+                    <p className="mt-1 text-xs font-medium text-violet-600">{profile.profession.trim()}</p>
+                  )}
+                  {(() => {
+                    const tl = parseTagsFromJson(profile.tags);
+                    if (tl.length === 0) return null;
+                    return (
+                      <p className="mt-1 text-[11px] text-slate-400 line-clamp-1">{tl.slice(0, 8).join(" · ")}</p>
+                    );
+                  })()}
 
                   <div className="mt-2.5 flex items-center gap-2">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${typeInfo.bg} ${typeInfo.color}`}>
@@ -1020,6 +1071,9 @@ export default function IdentitiesPage() {
                           <p className="text-sm font-medium text-slate-800 truncate">{profile.name}</p>
                           {profile.headline && (
                             <p className="text-xs text-slate-400 truncate">{profile.headline}</p>
+                          )}
+                          {profile.profession?.trim() && (
+                            <p className="text-xs text-violet-600 truncate">{profile.profession.trim()}</p>
                           )}
                         </div>
                       </div>

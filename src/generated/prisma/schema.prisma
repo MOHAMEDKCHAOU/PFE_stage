@@ -179,6 +179,10 @@ model IdentityProfile {
   cover       String?
   theme       String?
   socialLinks Json?
+  /// Métier / domaine (texte libre : ex. Photographe, SaaS Founder)
+  profession  String?
+  /// Tags optionnels — tableau JSON de chaînes (reco / filtres futurs)
+  tags        Json?
 
   /// Premium / Zapier : masquer le branding Faymoos sur la capsule publique
   hideBranding     Boolean @default(false)

@@ -1,4 +1,5 @@
 import openai from "@/lib/openai";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -81,6 +82,8 @@ Tu dois UNIQUEMENT répondre en te basant sur les informations ci-dessous. Si tu
 PROFIL:
 - Nom: ${identity.name}
 - Type: ${identity.type}
+${identity.profession?.trim() ? `- Métier / domaine: ${identity.profession.trim()}` : ""}
+${parseTagsFromJson(identity.tags).length ? `- Tags: ${parseTagsFromJson(identity.tags).join(", ")}` : ""}
 ${identity.headline ? `- Headline: ${identity.headline}` : ""}
 ${identity.bio ? `- Bio: ${identity.bio}` : ""}
 

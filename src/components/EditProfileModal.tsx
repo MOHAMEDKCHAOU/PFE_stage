@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 
 type Profile = {
   id: string;
@@ -13,6 +14,8 @@ type Profile = {
   cover: string | null;
   theme: string | null;
   socialLinks: Record<string, string> | null;
+  profession?: string | null;
+  tags?: unknown;
   hideBranding?: boolean;
   ctaWebhookUrl?: string | null;
   ctaWebhookSecret?: string | null;
@@ -234,6 +237,8 @@ export function EditProfileModal({
     type: profile.type,
     headline: profile.headline || "",
     bio: profile.bio || "",
+    profession: profile.profession ?? "",
+    tagsLine: parseTagsFromJson(profile.tags).join(", "),
     avatar: profile.avatar || "",
     cover: profile.cover || "",
     theme: profile.theme || "",
@@ -274,6 +279,8 @@ export function EditProfileModal({
         avatar: form.avatar || null,
         cover: form.cover || null,
         theme: form.theme || null,
+        profession: form.profession.trim() || null,
+        tags: form.tagsLine.trim(),
         socialLinks: Object.fromEntries(
           Object.entries(socialLinks).filter(([, v]) => v.trim())
         ),
@@ -419,6 +426,40 @@ export function EditProfileModal({
                   </span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Profession & tags */}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-1.5 sm:col-span-1">
+              <label className="text-xs font-medium text-slate-500">Métier / domaine</label>
+              <input
+                type="text"
+                list="faymoos-profession-suggestions"
+                value={form.profession}
+                onChange={(e) => handleChange("profession", e.target.value)}
+                placeholder="Ex: Photographe, SaaS Founder…"
+                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              />
+              <datalist id="faymoos-profession-suggestions">
+                <option value="Photographer" />
+                <option value="Musician" />
+                <option value="Marketing Agency" />
+                <option value="SaaS Founder" />
+                <option value="Consultant" />
+                <option value="UX Designer" />
+              </datalist>
+            </div>
+            <div className="space-y-1.5 sm:col-span-1">
+              <label className="text-xs font-medium text-slate-500">Tags (optionnel)</label>
+              <input
+                type="text"
+                value={form.tagsLine}
+                onChange={(e) => handleChange("tagsLine", e.target.value)}
+                placeholder="photo, booking, portfolio…"
+                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              />
+              <p className="text-[11px] text-slate-500">Séparés par des virgules · max 20 tags</p>
             </div>
           </div>
 

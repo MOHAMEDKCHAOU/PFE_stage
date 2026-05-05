@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { EditProfileModal } from "@/components/EditProfileModal";
 import { StudioInviteInbox } from "@/components/StudioInviteInbox";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 
 type IdentityProfile = {
   id: string;
@@ -17,6 +18,8 @@ type IdentityProfile = {
   theme: string | null;
   socialLinks: Record<string, string> | null;
   hideBranding?: boolean;
+  profession?: string | null;
+  tags?: unknown;
   ctaWebhookUrl?: string | null;
   ctaWebhookSecret?: string | null;
   hasCtaWebhookSecret?: boolean;
@@ -252,6 +255,16 @@ export default function DashboardPage() {
                   {profile.headline && (
                     <p className="mt-0.5 text-sm text-slate-400 line-clamp-1">{profile.headline}</p>
                   )}
+                  {profile.profession?.trim() && (
+                    <p className="mt-1 text-xs font-medium text-violet-600">{profile.profession.trim()}</p>
+                  )}
+                  {(() => {
+                    const tl = parseTagsFromJson(profile.tags);
+                    if (tl.length === 0) return null;
+                    return (
+                      <p className="mt-1 text-[11px] text-slate-400 line-clamp-1">{tl.slice(0, 6).join(" · ")}</p>
+                    );
+                  })()}
 
                   <div className="mt-3 flex items-center gap-2">
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${typeInfo.color}`}>

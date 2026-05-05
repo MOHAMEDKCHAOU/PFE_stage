@@ -1,4 +1,5 @@
 import { getUserId } from "@/lib/auth";
+import { normalizeProfession, normalizeTagsInput } from "@/lib/identity-profession";
 import { prisma } from "@/lib/prisma";
 import { canHidePlatformBranding } from "@/lib/subscription-entitlements";
 import { assertCanCreateIdentity, loadBillingUser } from "@/lib/subscription-guards";
@@ -64,7 +65,22 @@ export async function POST(req: Request) {
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
     const body = await req.json();
-    const { name, type, bio, headline, avatar, cover, theme, socialLinks, clientUserId } = body;
+    const {
+      name,
+      type,
+      bio,
+      headline,
+      avatar,
+      cover,
+      theme,
+      socialLinks,
+      profession: professionRaw,
+      tags: tagsRaw,
+      clientUserId,
+    } = body;
+
+    const professionNorm = normalizeProfession(professionRaw);
+    const tagsNorm = normalizeTagsInput(tagsRaw);
 
     if (!name || !type) {
       return NextResponse.json({ error: "Le nom et le type sont requis" }, { status: 400 });
@@ -103,6 +119,8 @@ export async function POST(req: Request) {
         cover,
         theme,
         socialLinks: socialLinks || undefined,
+        ...(professionNorm !== undefined ? { profession: professionNorm } : {}),
+        ...(tagsNorm !== undefined ? { tags: tagsNorm } : {}),
       },
     });
     return NextResponse.json(identity, { status: 201 });
@@ -131,7 +149,12 @@ export async function PUT(req: Request) {
       hideBranding,
       ctaWebhookUrl,
       ctaWebhookSecret,
+      profession: professionRaw,
+      tags: tagsRaw,
     } = body;
+
+    const professionNorm = normalizeProfession(professionRaw);
+    const tagsNorm = normalizeTagsInput(tagsRaw);
 
     if (!id) return NextResponse.json({ error: "L'ID de l'identité est requis" }, { status: 400 });
 
@@ -168,6 +191,8 @@ export async function PUT(req: Request) {
         theme,
         socialLinks: socialLinks !== undefined ? socialLinks : undefined,
         ...(typeof hideBranding === "boolean" ? { hideBranding } : {}),
+        ...(professionNorm !== undefined ? { profession: professionNorm } : {}),
+        ...(tagsNorm !== undefined ? { tags: tagsNorm } : {}),
         ...(ctaWebhookUrl !== undefined
           ? {
               ctaWebhookUrl:

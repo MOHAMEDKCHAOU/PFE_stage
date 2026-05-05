@@ -41,8 +41,8 @@ export function WelcomeToFaymoos() {
     document.body.style.overflow = "hidden";
 
     const t1 = window.setTimeout(() => setPhase("tagline"), 1500);
-    const t2 = window.setTimeout(() => setPhase("exit"), 4200);
-    const t3 = window.setTimeout(finish, 4900);
+    const t2 = window.setTimeout(() => setPhase("exit"), 5800);
+    const t3 = window.setTimeout(finish, 6500);
 
     return () => {
       window.clearTimeout(t1);
@@ -111,14 +111,13 @@ export function WelcomeToFaymoos() {
         </h1>
 
         <p
-          className={`mt-8 max-w-2xl mx-auto text-balance text-lg font-medium text-stone-300 transition-all duration-700 ease-out sm:text-2xl md:text-3xl ${
+          className={`mt-8 max-w-3xl mx-auto text-balance text-base font-medium leading-relaxed text-stone-300 transition-all duration-700 ease-out sm:text-lg md:text-xl ${
             phase === "tagline" || phase === "exit"
               ? "translate-y-0 opacity-100"
               : "pointer-events-none -translate-y-2 opacity-0"
           }`}
         >
-          Best application for{" "}
-          <span className="text-white">interactive capsules</span>
+          Turn your ideas into dynamic interactive capsules, connect with your audience, and showcase your content in a more engaging and professional way.
         </p>
       </div>
 

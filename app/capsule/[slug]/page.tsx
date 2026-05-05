@@ -1,4 +1,5 @@
 import { getPublicBadgePayloadForUser } from "@/lib/faymoos-badges";
+import { parseTagsFromJson } from "@/lib/identity-profession";
 import { prisma } from "@/lib/prisma";
 import { resolvePublicHideBranding } from "@/lib/subscription-entitlements";
 import { loadBillingUser } from "@/lib/subscription-guards";
@@ -63,6 +64,8 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
           type: identity.type,
           theme: identity.theme,
           socialLinks: identity.socialLinks as Record<string, string> | null,
+          profession: identity.profession,
+          tags: parseTagsFromJson(identity.tags),
         }}
         capsules={identity.capsules.map((capsule) => ({
           id: capsule.id,

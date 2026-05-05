@@ -10937,6 +10937,7 @@ export namespace Prisma {
     avatar: string | null
     cover: string | null
     theme: string | null
+    profession: string | null
     hideBranding: boolean | null
     ctaWebhookUrl: string | null
     ctaWebhookSecret: string | null
@@ -10955,6 +10956,7 @@ export namespace Prisma {
     avatar: string | null
     cover: string | null
     theme: string | null
+    profession: string | null
     hideBranding: boolean | null
     ctaWebhookUrl: string | null
     ctaWebhookSecret: string | null
@@ -10974,6 +10976,8 @@ export namespace Prisma {
     cover: number
     theme: number
     socialLinks: number
+    profession: number
+    tags: number
     hideBranding: number
     ctaWebhookUrl: number
     ctaWebhookSecret: number
@@ -10994,6 +10998,7 @@ export namespace Prisma {
     avatar?: true
     cover?: true
     theme?: true
+    profession?: true
     hideBranding?: true
     ctaWebhookUrl?: true
     ctaWebhookSecret?: true
@@ -11012,6 +11017,7 @@ export namespace Prisma {
     avatar?: true
     cover?: true
     theme?: true
+    profession?: true
     hideBranding?: true
     ctaWebhookUrl?: true
     ctaWebhookSecret?: true
@@ -11031,6 +11037,8 @@ export namespace Prisma {
     cover?: true
     theme?: true
     socialLinks?: true
+    profession?: true
+    tags?: true
     hideBranding?: true
     ctaWebhookUrl?: true
     ctaWebhookSecret?: true
@@ -11123,6 +11131,8 @@ export namespace Prisma {
     cover: string | null
     theme: string | null
     socialLinks: JsonValue | null
+    profession: string | null
+    tags: JsonValue | null
     hideBranding: boolean
     ctaWebhookUrl: string | null
     ctaWebhookSecret: string | null
@@ -11159,6 +11169,8 @@ export namespace Prisma {
     cover?: boolean
     theme?: boolean
     socialLinks?: boolean
+    profession?: boolean
+    tags?: boolean
     hideBranding?: boolean
     ctaWebhookUrl?: boolean
     ctaWebhookSecret?: boolean
@@ -11184,6 +11196,8 @@ export namespace Prisma {
     cover?: boolean
     theme?: boolean
     socialLinks?: boolean
+    profession?: boolean
+    tags?: boolean
     hideBranding?: boolean
     ctaWebhookUrl?: boolean
     ctaWebhookSecret?: boolean
@@ -11204,6 +11218,8 @@ export namespace Prisma {
     cover?: boolean
     theme?: boolean
     socialLinks?: boolean
+    profession?: boolean
+    tags?: boolean
     hideBranding?: boolean
     ctaWebhookUrl?: boolean
     ctaWebhookSecret?: boolean
@@ -11244,6 +11260,14 @@ export namespace Prisma {
       cover: string | null
       theme: string | null
       socialLinks: Prisma.JsonValue | null
+      /**
+       * Métier / domaine (texte libre : ex. Photographe, SaaS Founder)
+       */
+      profession: string | null
+      /**
+       * Tags optionnels — tableau JSON de chaînes (reco / filtres futurs)
+       */
+      tags: Prisma.JsonValue | null
       /**
        * Premium / Zapier : masquer le branding Faymoos sur la capsule publique
        */
@@ -11664,6 +11688,8 @@ export namespace Prisma {
     readonly cover: FieldRef<"IdentityProfile", 'String'>
     readonly theme: FieldRef<"IdentityProfile", 'String'>
     readonly socialLinks: FieldRef<"IdentityProfile", 'Json'>
+    readonly profession: FieldRef<"IdentityProfile", 'String'>
+    readonly tags: FieldRef<"IdentityProfile", 'Json'>
     readonly hideBranding: FieldRef<"IdentityProfile", 'Boolean'>
     readonly ctaWebhookUrl: FieldRef<"IdentityProfile", 'String'>
     readonly ctaWebhookSecret: FieldRef<"IdentityProfile", 'String'>
@@ -23050,6 +23076,8 @@ export namespace Prisma {
     cover: 'cover',
     theme: 'theme',
     socialLinks: 'socialLinks',
+    profession: 'profession',
+    tags: 'tags',
     hideBranding: 'hideBranding',
     ctaWebhookUrl: 'ctaWebhookUrl',
     ctaWebhookSecret: 'ctaWebhookSecret',
@@ -23965,6 +23993,8 @@ export namespace Prisma {
     cover?: StringNullableFilter<"IdentityProfile"> | string | null
     theme?: StringNullableFilter<"IdentityProfile"> | string | null
     socialLinks?: JsonNullableFilter<"IdentityProfile">
+    profession?: StringNullableFilter<"IdentityProfile"> | string | null
+    tags?: JsonNullableFilter<"IdentityProfile">
     hideBranding?: BoolFilter<"IdentityProfile"> | boolean
     ctaWebhookUrl?: StringNullableFilter<"IdentityProfile"> | string | null
     ctaWebhookSecret?: StringNullableFilter<"IdentityProfile"> | string | null
@@ -23989,6 +24019,8 @@ export namespace Prisma {
     cover?: SortOrderInput | SortOrder
     theme?: SortOrderInput | SortOrder
     socialLinks?: SortOrderInput | SortOrder
+    profession?: SortOrderInput | SortOrder
+    tags?: SortOrderInput | SortOrder
     hideBranding?: SortOrder
     ctaWebhookUrl?: SortOrderInput | SortOrder
     ctaWebhookSecret?: SortOrderInput | SortOrder
@@ -24016,6 +24048,8 @@ export namespace Prisma {
     cover?: StringNullableFilter<"IdentityProfile"> | string | null
     theme?: StringNullableFilter<"IdentityProfile"> | string | null
     socialLinks?: JsonNullableFilter<"IdentityProfile">
+    profession?: StringNullableFilter<"IdentityProfile"> | string | null
+    tags?: JsonNullableFilter<"IdentityProfile">
     hideBranding?: BoolFilter<"IdentityProfile"> | boolean
     ctaWebhookUrl?: StringNullableFilter<"IdentityProfile"> | string | null
     ctaWebhookSecret?: StringNullableFilter<"IdentityProfile"> | string | null
@@ -24040,6 +24074,8 @@ export namespace Prisma {
     cover?: SortOrderInput | SortOrder
     theme?: SortOrderInput | SortOrder
     socialLinks?: SortOrderInput | SortOrder
+    profession?: SortOrderInput | SortOrder
+    tags?: SortOrderInput | SortOrder
     hideBranding?: SortOrder
     ctaWebhookUrl?: SortOrderInput | SortOrder
     ctaWebhookSecret?: SortOrderInput | SortOrder
@@ -24065,6 +24101,8 @@ export namespace Prisma {
     cover?: StringNullableWithAggregatesFilter<"IdentityProfile"> | string | null
     theme?: StringNullableWithAggregatesFilter<"IdentityProfile"> | string | null
     socialLinks?: JsonNullableWithAggregatesFilter<"IdentityProfile">
+    profession?: StringNullableWithAggregatesFilter<"IdentityProfile"> | string | null
+    tags?: JsonNullableWithAggregatesFilter<"IdentityProfile">
     hideBranding?: BoolWithAggregatesFilter<"IdentityProfile"> | boolean
     ctaWebhookUrl?: StringNullableWithAggregatesFilter<"IdentityProfile"> | string | null
     ctaWebhookSecret?: StringNullableWithAggregatesFilter<"IdentityProfile"> | string | null
@@ -25449,6 +25487,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -25472,6 +25512,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -25495,6 +25537,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25518,6 +25562,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25541,6 +25587,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -25560,6 +25608,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25578,6 +25628,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27077,6 +27129,8 @@ export namespace Prisma {
     cover?: SortOrder
     theme?: SortOrder
     socialLinks?: SortOrder
+    profession?: SortOrder
+    tags?: SortOrder
     hideBranding?: SortOrder
     ctaWebhookUrl?: SortOrder
     ctaWebhookSecret?: SortOrder
@@ -27095,6 +27149,7 @@ export namespace Prisma {
     avatar?: SortOrder
     cover?: SortOrder
     theme?: SortOrder
+    profession?: SortOrder
     hideBranding?: SortOrder
     ctaWebhookUrl?: SortOrder
     ctaWebhookSecret?: SortOrder
@@ -27113,6 +27168,7 @@ export namespace Prisma {
     avatar?: SortOrder
     cover?: SortOrder
     theme?: SortOrder
+    profession?: SortOrder
     hideBranding?: SortOrder
     ctaWebhookUrl?: SortOrder
     ctaWebhookSecret?: SortOrder
@@ -29189,6 +29245,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -29211,6 +29269,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -29502,6 +29562,8 @@ export namespace Prisma {
     cover?: StringNullableFilter<"IdentityProfile"> | string | null
     theme?: StringNullableFilter<"IdentityProfile"> | string | null
     socialLinks?: JsonNullableFilter<"IdentityProfile">
+    profession?: StringNullableFilter<"IdentityProfile"> | string | null
+    tags?: JsonNullableFilter<"IdentityProfile">
     hideBranding?: BoolFilter<"IdentityProfile"> | boolean
     ctaWebhookUrl?: StringNullableFilter<"IdentityProfile"> | string | null
     ctaWebhookSecret?: StringNullableFilter<"IdentityProfile"> | string | null
@@ -30965,6 +31027,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -30987,6 +31051,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -31025,6 +31091,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31047,6 +31115,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31069,6 +31139,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -31091,6 +31163,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -31129,6 +31203,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31151,6 +31227,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31173,6 +31251,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -31195,6 +31275,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -31345,6 +31427,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31367,6 +31451,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32249,6 +32335,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -32271,6 +32359,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -32309,6 +32399,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32331,6 +32423,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32461,6 +32555,8 @@ export namespace Prisma {
     cover?: string | null
     theme?: string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: boolean
     ctaWebhookUrl?: string | null
     ctaWebhookSecret?: string | null
@@ -32554,6 +32650,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32576,6 +32674,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32598,6 +32698,8 @@ export namespace Prisma {
     cover?: NullableStringFieldUpdateOperationsInput | string | null
     theme?: NullableStringFieldUpdateOperationsInput | string | null
     socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    profession?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NullableJsonNullValueInput | InputJsonValue
     hideBranding?: BoolFieldUpdateOperationsInput | boolean
     ctaWebhookUrl?: NullableStringFieldUpdateOperationsInput | string | null
     ctaWebhookSecret?: NullableStringFieldUpdateOperationsInput | string | null
