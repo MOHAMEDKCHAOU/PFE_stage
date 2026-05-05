@@ -10,6 +10,7 @@ type BillingSnapshot = {
   subscriptionStatus: string | null;
   currentPeriodEnd: string | null;
   hasStripeCustomer: boolean;
+  canHideBranding?: boolean;
   limits: (typeof PLAN_LIMITS)[SubscriptionPlanKey];
   usage: {
     periodKey: string;

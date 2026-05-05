@@ -3,8 +3,15 @@ import { prisma } from "@/lib/prisma";
 import * as auth from "@/lib/auth";
 import { GET, POST, PUT, DELETE } from "@/route-handlers/api/identity/route";
 
+vi.mock("@/lib/faymoos-badges", () => ({
+  syncAutoBadgesForUser: vi.fn().mockResolvedValue(undefined),
+}));
+
+const mockLoadBillingUser = vi.fn();
+
 vi.mock("@/lib/subscription-guards", () => ({
   assertCanCreateIdentity: vi.fn().mockResolvedValue(null),
+  loadBillingUser: (...args: unknown[]) => mockLoadBillingUser(...args),
 }));
 
 vi.mock("@/lib/prisma", () => ({
@@ -12,6 +19,9 @@ vi.mock("@/lib/prisma", () => ({
     affiliateClient: {
       findMany: vi.fn().mockResolvedValue([]),
       findUnique: vi.fn().mockResolvedValue(null),
+    },
+    user: {
+      findMany: vi.fn(),
     },
     identityProfile: {
       findMany: vi.fn(),
@@ -28,6 +38,7 @@ vi.mock("@/lib/auth", () => ({
 }));
 
 const mockIdentity = vi.mocked(prisma.identityProfile);
+const mockUserFindMany = vi.mocked(prisma.user.findMany);
 const mockGetUserId = vi.mocked(auth.getUserId);
 
 const CURRENT_USER_ID = "user-1";
@@ -56,7 +67,20 @@ function makeRequest(method: string, url: string, body?: object) {
 }
 
 describe("GET /api/identity", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockUserFindMany.mockResolvedValue([
+      {
+        id: CURRENT_USER_ID,
+        role: "USER",
+        stripeCustomerId: null,
+        stripeSubscriptionId: "sub_x",
+        subscriptionStatus: "active",
+        subscriptionPlan: "PRO",
+        currentPeriodEnd: new Date(),
+      },
+    ] as never);
+  });
 
   it("retourne 200 avec les identités de l'utilisateur", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
@@ -68,6 +92,8 @@ describe("GET /api/identity", () => {
     expect(res.status).toBe(200);
     expect(json).toHaveLength(1);
     expect(json[0].id).toBe("id-1");
+    expect(json[0].ownerCanHideBranding).toBe(true);
+    expect(mockUserFindMany).toHaveBeenCalled();
   });
 
   it("retourne 401 si non authentifié", async () => {
@@ -108,7 +134,18 @@ describe("POST /api/identity", () => {
 });
 
 describe("PUT /api/identity", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockLoadBillingUser.mockResolvedValue({
+      id: CURRENT_USER_ID,
+      role: "USER",
+      stripeCustomerId: null,
+      stripeSubscriptionId: "sub_x",
+      subscriptionStatus: "active",
+      subscriptionPlan: "PRO",
+      currentPeriodEnd: new Date(),
+    });
+  });
 
   it("met à jour l'identité et retourne 200", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
@@ -135,6 +172,32 @@ describe("PUT /api/identity", () => {
 
     const res = await PUT(makeRequest("PUT", "/api/identity", { id: "id-1", name: "Alice", type: "PERSONAL" }));
     expect(res.status).toBe(403);
+  });
+
+  it("retourne 403 si hideBranding sans plan payant", async () => {
+    mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
+    mockIdentity.findUnique.mockResolvedValue(fakeIdentity as never);
+    mockLoadBillingUser.mockResolvedValueOnce({
+      id: CURRENT_USER_ID,
+      role: "USER",
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      subscriptionStatus: null,
+      subscriptionPlan: "FREE",
+      currentPeriodEnd: null,
+    });
+
+    const res = await PUT(
+      makeRequest("PUT", "/api/identity", {
+        id: "id-1",
+        name: "Alice",
+        type: "PERSONAL",
+        hideBranding: true,
+      }),
+    );
+
+    expect(res.status).toBe(403);
+    expect(mockIdentity.update).not.toHaveBeenCalled();
   });
 
   it("retourne 401 si non authentifié", async () => {

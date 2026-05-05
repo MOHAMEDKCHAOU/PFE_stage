@@ -1,5 +1,7 @@
 import { getPublicBadgePayloadForUser } from "@/lib/faymoos-badges";
 import { prisma } from "@/lib/prisma";
+import { resolvePublicHideBranding } from "@/lib/subscription-entitlements";
+import { loadBillingUser } from "@/lib/subscription-guards";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
@@ -39,6 +41,10 @@ export default async function SpacePreviewPage({ params }: PageProps) {
 
   const identity = cap.identity;
 
+  const ownerBilling = await loadBillingUser(identity.userId);
+  const hideBrandingEffective =
+    ownerBilling != null && resolvePublicHideBranding(identity.hideBranding, ownerBilling);
+
   return (
     <main className="theme-capsule min-h-screen bg-zinc-950 text-white">
       <div className="border-b border-white/10 bg-black/30 px-4 py-2 text-center text-xs text-amber-200/90">
@@ -46,7 +52,7 @@ export default async function SpacePreviewPage({ params }: PageProps) {
         capsules publiées.
       </div>
       <CapsuleViewer
-        hideBranding={identity.hideBranding}
+        hideBranding={hideBrandingEffective}
         identitySlug={identity.slug}
         badges={badges}
         identity={{

@@ -33,6 +33,7 @@ type UserData = {
   email: string;
   createdAt: string;
   identityProfiles: IdentityProfile[];
+  billing?: { canHideBranding?: boolean } | null;
 };
 
 const typeLabels: Record<string, { label: string; icon: string; color: string }> = {
@@ -314,6 +315,7 @@ export default function DashboardPage() {
       {editingProfile && (
         <EditProfileModal
           profile={editingProfile}
+          ownerCanHideBranding={user?.billing?.canHideBranding ?? false}
           onClose={() => setEditingProfile(null)}
           onSaved={handleProfileUpdated}
         />

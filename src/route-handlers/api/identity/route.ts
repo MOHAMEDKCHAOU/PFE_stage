@@ -1,6 +1,7 @@
 import { getUserId } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { assertCanCreateIdentity } from "@/lib/subscription-guards";
+import { canHidePlatformBranding } from "@/lib/subscription-entitlements";
+import { assertCanCreateIdentity, loadBillingUser } from "@/lib/subscription-guards";
 import { syncAutoBadgesForUser } from "@/lib/faymoos-badges";
 import { canManageIdentityAsOwner, getManagedUserIdsForViewer, isAffiliateForClient } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
@@ -23,7 +24,34 @@ export async function GET(req: Request) {
         },
       },
     });
-    return NextResponse.json(identities);
+
+    const uniqueOwners = [...new Set(identities.map((i) => i.userId))];
+    const owners =
+      uniqueOwners.length === 0
+        ? []
+        : await prisma.user.findMany({
+            where: { id: { in: uniqueOwners } },
+            select: {
+              id: true,
+              role: true,
+              stripeCustomerId: true,
+              stripeSubscriptionId: true,
+              subscriptionStatus: true,
+              subscriptionPlan: true,
+              currentPeriodEnd: true,
+            },
+          });
+    const billingByOwner = new Map(owners.map((u) => [u.id, u]));
+
+    const payload = identities.map((row) => {
+      const b = billingByOwner.get(row.userId);
+      return {
+        ...row,
+        ownerCanHideBranding: b ? canHidePlatformBranding(b) : false,
+      };
+    });
+
+    return NextResponse.json(payload);
   } catch (error) {
     console.error("GET IDENTITY ERROR:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
@@ -110,6 +138,22 @@ export async function PUT(req: Request) {
     const existing = await prisma.identityProfile.findUnique({ where: { id } });
     if (!existing || !(await canManageIdentityAsOwner(userId, existing.userId))) {
       return NextResponse.json({ error: "Action non autorisée" }, { status: 403 });
+    }
+
+    if (typeof hideBranding === "boolean") {
+      const ownerBilling = await loadBillingUser(existing.userId);
+      if (!ownerBilling) {
+        return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
+      }
+      if (hideBranding && !canHidePlatformBranding(ownerBilling)) {
+        return NextResponse.json(
+          {
+            error:
+              "Abonnement Pro, Studio ou Studio+ actif requis pour masquer le branding Faymoos sur les capsules publiques.",
+          },
+          { status: 403 },
+        );
+      }
     }
 
     const identity = await prisma.identityProfile.update({

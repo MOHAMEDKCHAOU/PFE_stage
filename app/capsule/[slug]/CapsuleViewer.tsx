@@ -864,8 +864,8 @@ export function CapsuleViewer({
       <footer className="max-w-3xl mx-auto px-6 mt-20 mb-10 text-center">
         <div className="h-px w-16 mx-auto bg-gradient-to-r from-transparent via-zinc-700 to-transparent mb-6" />
         <p className="text-xs text-zinc-700">
-          Propulsé par{" "}
-          <span className={`font-semibold ${tc.accent}`}>Faymoos</span>
+          Powered by{" "}
+          <span className={`font-semibold ${tc.accent}`}>Faymoos Platform</span>
         </p>
       </footer>
       )}

@@ -220,7 +220,7 @@ export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
 
       {/* Footer */}
       <p className="mt-8 text-center text-xs text-zinc-700">
-        Powered by <span className="text-zinc-500 font-medium">Faymoos</span>
+        Powered by <span className="text-zinc-500 font-medium">Faymoos Platform</span>
       </p>
     </div>
   );

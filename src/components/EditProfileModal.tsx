@@ -219,10 +219,13 @@ function ImageUploadFrame({
 
 export function EditProfileModal({
   profile,
+  ownerCanHideBranding = false,
   onClose,
   onSaved,
 }: {
   profile: Profile;
+  /** Pro / Studio / Studio+ (plan effectif) du propriétaire de l’identité — pas du viewer Studio. */
+  ownerCanHideBranding?: boolean;
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -234,7 +237,7 @@ export function EditProfileModal({
     avatar: profile.avatar || "",
     cover: profile.cover || "",
     theme: profile.theme || "",
-    hideBranding: profile.hideBranding ?? false,
+    hideBranding: ownerCanHideBranding ? (profile.hideBranding ?? false) : false,
     ctaWebhookUrl: profile.ctaWebhookUrl ?? "",
     ctaWebhookSecret: profile.ctaWebhookSecret ?? "",
   });
@@ -274,7 +277,7 @@ export function EditProfileModal({
         socialLinks: Object.fromEntries(
           Object.entries(socialLinks).filter(([, v]) => v.trim())
         ),
-        hideBranding: form.hideBranding,
+        hideBranding: ownerCanHideBranding ? form.hideBranding : false,
         ctaWebhookUrl: form.ctaWebhookUrl.trim() || null,
       };
       if (ctaSecretDirty) {
@@ -462,19 +465,35 @@ export function EditProfileModal({
           {/* Premium / intégrations */}
           <div className="space-y-3 rounded-xl border border-violet-200/80 bg-violet-950/20 px-4 py-4">
             <p className="text-xs font-semibold text-violet-200">Premium & intégrations</p>
-            <label className="flex items-start gap-3 cursor-pointer">
+            <label
+              className={`flex items-start gap-3 ${ownerCanHideBranding ? "cursor-pointer" : "cursor-not-allowed opacity-80"}`}
+            >
               <input
                 type="checkbox"
                 checked={form.hideBranding}
+                disabled={!ownerCanHideBranding}
                 onChange={(e) => {
+                  if (!ownerCanHideBranding) return;
                   setForm((prev) => ({ ...prev, hideBranding: e.target.checked }));
                   setError("");
                   setSuccess(false);
                 }}
-                className="mt-1 rounded border-slate-500 text-violet-600 focus:ring-violet-500"
+                className="mt-1 rounded border-slate-500 text-violet-600 focus:ring-violet-500 disabled:opacity-50"
               />
               <span className="text-sm text-slate-300">
-                White-label : masquer le pied de page « Propulsé par Faymoos » sur la capsule publique
+                White-label : masquer le pied de page « Powered by Faymoos Platform » sur la capsule publique
+                {!ownerCanHideBranding && (
+                  <>
+                    {" "}
+                    <span className="block mt-1 text-[11px] text-slate-500">
+                      Disponible avec un abonnement{" "}
+                      <a href="/dashboard/billing" className="text-violet-400 underline hover:text-violet-300">
+                        Pro, Studio ou Studio+
+                      </a>
+                      .
+                    </span>
+                  </>
+                )}
               </span>
             </label>
             <div className="space-y-1.5">

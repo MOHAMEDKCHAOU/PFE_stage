@@ -1,6 +1,11 @@
 import type { SubscriptionPlanKey } from "@/lib/subscription-plans";
 import { prisma } from "@/lib/prisma";
-import { getLimitsForUser, utcPeriodKey, type BillingUserFields } from "@/lib/subscription-entitlements";
+import {
+  canHidePlatformBranding,
+  getLimitsForUser,
+  utcPeriodKey,
+  type BillingUserFields,
+} from "@/lib/subscription-entitlements";
 
 export async function loadBillingUser(userId: string): Promise<BillingUserFields | null> {
   return prisma.user.findUnique({
@@ -194,6 +199,8 @@ export async function getBillingSnapshotForUser(userId: string) {
     subscriptionStatus: billing.subscriptionStatus,
     currentPeriodEnd: billing.currentPeriodEnd?.toISOString() ?? null,
     hasStripeCustomer: !!billing.stripeCustomerId,
+    /** Masquer le branding Faymoos sur les capsules publiques (Pro / Studio / Studio+ ou admin). */
+    canHideBranding: canHidePlatformBranding(billing),
     limits,
     usage: {
       periodKey,

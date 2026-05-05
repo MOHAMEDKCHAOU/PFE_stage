@@ -61,3 +61,17 @@ export function isPaidSubscriptionActive(user: BillingUserFields): boolean {
     user.subscriptionStatus != null && ACTIVE_SUBSCRIPTION_STATUSES.has(user.subscriptionStatus.toLowerCase())
   );
 }
+
+/**
+ * White-label capsule publique : réservé aux plans payants (plan effectif ≠ FREE),
+ * ou administrateurs. Aligné sur {@link getEffectivePlan} (abonnement actif, grandfather Studio, etc.).
+ */
+export function canHidePlatformBranding(user: BillingUserFields): boolean {
+  if (user.role === "ADMIN") return true;
+  return getEffectivePlan(user) !== "FREE";
+}
+
+/** Valeur réelle pour les visiteurs : préférence stockée × éligibilité actuelle du propriétaire. */
+export function resolvePublicHideBranding(storedPreference: boolean, owner: BillingUserFields): boolean {
+  return storedPreference && canHidePlatformBranding(owner);
+}

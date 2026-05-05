@@ -1,5 +1,7 @@
 import { getPublicBadgePayloadForUser } from "@/lib/faymoos-badges";
 import { prisma } from "@/lib/prisma";
+import { resolvePublicHideBranding } from "@/lib/subscription-entitlements";
+import { loadBillingUser } from "@/lib/subscription-guards";
 import { notFound } from "next/navigation";
 import { CapsuleViewer } from "./CapsuleViewer";
 
@@ -41,10 +43,14 @@ export default async function CapsulePage({ params }: CapsulePageProps) {
     badges = null;
   }
 
+  const ownerBilling = await loadBillingUser(identity.userId);
+  const hideBrandingEffective =
+    ownerBilling != null && resolvePublicHideBranding(identity.hideBranding, ownerBilling);
+
   return (
     <main className="theme-capsule min-h-screen bg-zinc-950 text-white">
       <CapsuleViewer
-        hideBranding={identity.hideBranding}
+        hideBranding={hideBrandingEffective}
         identitySlug={slug}
         badges={badges}
         identity={{

@@ -352,9 +352,9 @@ export default function ExplorePage() {
       {/* Footer */}
       <footer className="border-t border-stone-200/80 py-8 text-center">
         <p className="text-xs text-stone-500">
-          Propulsé par{" "}
+          Powered by{" "}
           <span className="font-semibold bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">
-            Faymoos
+            Faymoos Platform
           </span>
         </p>
       </footer>

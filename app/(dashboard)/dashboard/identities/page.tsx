@@ -34,6 +34,8 @@ type IdentityProfile = {
   theme: string | null;
   socialLinks: Record<string, string> | null;
   hideBranding?: boolean;
+  /** Pro / Studio / Studio+ du propriétaire (GET /api/identity). */
+  ownerCanHideBranding?: boolean;
   ctaWebhookUrl?: string | null;
   ctaWebhookSecret?: string | null;
   hasCtaWebhookSecret?: boolean;
@@ -1085,6 +1087,7 @@ export default function IdentitiesPage() {
       {editingProfile && (
         <EditProfileModal
           profile={editingProfile}
+          ownerCanHideBranding={editingProfile.ownerCanHideBranding ?? false}
           onClose={() => setEditingProfile(null)}
           onSaved={() => {
             setEditingProfile(null);
