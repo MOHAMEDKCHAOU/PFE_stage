@@ -50,7 +50,8 @@ export async function POST(req: Request) {
     });
 
     // On renvoie l'utilisateur (sans le mot de passe)
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: passwordHash, ...userWithoutPassword } = user;
+    void passwordHash;
 
     return NextResponse.json({
       message: "Connexion réussie",

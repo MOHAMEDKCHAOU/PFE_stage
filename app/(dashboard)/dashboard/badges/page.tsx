@@ -36,7 +36,7 @@ export default function DashboardBadgesPage() {
           const j = await r.json().catch(() => ({}));
           throw new Error(typeof j.error === "string" ? j.error : `Erreur ${r.status}`);
         }
-        return r.json() as PublicBadgeBundle;
+        return (await r.json()) as PublicBadgeBundle;
       })
       .then(setBundle)
       .catch((e: Error) => {

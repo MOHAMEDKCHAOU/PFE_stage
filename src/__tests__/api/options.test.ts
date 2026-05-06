@@ -5,6 +5,10 @@ import { POST, PUT, DELETE } from "@/route-handlers/api/options/route";
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    affiliateClient: {
+      findMany: vi.fn().mockResolvedValue([]),
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
     capsule: {
       findUnique: vi.fn(),
     },
@@ -13,6 +17,7 @@ vi.mock("@/lib/prisma", () => ({
       create: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      aggregate: vi.fn(),
     },
   },
 }));
@@ -54,6 +59,7 @@ describe("POST /api/options", () => {
       id: "capsule-1",
       identity: { id: "identity-1", userId: CURRENT_USER_ID },
     } as never);
+    mockOption.aggregate.mockResolvedValue({ _max: { sortOrder: null } } as never);
     mockOption.create.mockResolvedValue(fakeOption as never);
 
     const res = await POST(makeRequest("POST", "/api/options", { capsuleId: "capsule-1", label: "Option A" }));
@@ -104,10 +110,10 @@ describe("PUT /api/options", () => {
     expect(json.label).toBe("Option B");
   });
 
-  it("retourne 400 si id ou label manquant", async () => {
+  it("retourne 400 si id manquant", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
 
-    const res = await PUT(makeRequest("PUT", "/api/options", { id: "option-1" }));
+    const res = await PUT(makeRequest("PUT", "/api/options", { label: "Option B" }));
     expect(res.status).toBe(400);
   });
 

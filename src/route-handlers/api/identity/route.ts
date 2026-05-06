@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const userId = await getUserId();
     if (!userId) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });

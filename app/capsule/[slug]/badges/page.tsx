@@ -4,6 +4,8 @@ import { getPublicBadgePayloadForUser } from "@/lib/faymoos-badges";
 import { notFound } from "next/navigation";
 import type { PublicBadgeDTO } from "@/lib/faymoos-badges";
 
+export const dynamic = "force-dynamic";
+
 const CAT: Record<string, string> = {
   EXPERTISE: "Expertise",
   CREDIBILITY: "Crédibilité",

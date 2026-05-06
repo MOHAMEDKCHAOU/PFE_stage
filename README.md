@@ -398,9 +398,28 @@ Ne jamais commiter **`.env`** ni de secrets.
 | `npm run dev` | Développement Next.js |
 | `npm run build` | Build production |
 | `npm run start` | Serveur production |
-| `npm run lint` | ESLint |
+| `npm run lint` | ESLint (tout le dépôt ; volumineux) |
+| `npm run lint:ci` | ESLint **ciblé** API + handlers + tests (utilisé par GitLab CI) |
 | `npm test` / `npm run test:watch` | Vitest |
 | `npm run admin:ensure` | Création / mise à jour utilisateur ADMIN |
+
+---
+
+## Docker (app + PostgreSQL)
+
+Pour le **mémoire / démo DevOps** : **`Dockerfile`** (build multi-étapes, sortie Next.js *standalone*) et **`docker-compose.yml`** (`db`, `migrate`, `app`).
+
+```bash
+docker compose up --build
+```
+
+- Application : [http://localhost:3000](http://localhost:3000) — `BILLING_DEMO_MODE=true` et `NEXT_PUBLIC_APP_URL=http://localhost:3000` sont définis dans le compose pour un démarrage rapide.
+- PostgreSQL : port **5432**, identifiants par défaut du compose : utilisateur `faymoos`, mot de passe `faymoos_dev`, base `faymoos`.
+- Le service **`migrate`** exécute **`prisma migrate deploy`** une fois le conteneur Postgres sain ; l’**app** démarre après un migrate réussi (Docker Compose **v2.20+** avec `service_completed_successfully`).
+
+OpenAI, Stripe, e-mail, etc. : les ajouter dans `docker-compose.yml` sous `app.environment` ou via un override local non versionné.
+
+**CI GitLab** : pipeline dans **`.gitlab-ci.yml`** — étapes **lint** (`npm run lint:ci` sur `src/route-handlers`, `src/__tests__`, `app/api`) → **test** (Vitest) → **build** (`next build`), sans base de données (les pages qui interrogeaient Prisma au prérendu sont en rendu dynamique).
 
 ---
 

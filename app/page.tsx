@@ -3,6 +3,8 @@ import { Navbar } from "@/components/Navbar";
 import { WelcomeToFaymoos } from "@/components/WelcomeToFaymoos";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 const features = [
   {
     icon: (

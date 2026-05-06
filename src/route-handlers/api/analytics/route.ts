@@ -3,6 +3,26 @@ import { getUserId } from "@/lib/auth";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
+type AnalyticsEventRow = {
+  type: string;
+  value: string | null;
+  createdAt: Date;
+};
+
+type SessionAnalyticsRow = {
+  endedAt: Date | null;
+  startedAt: Date;
+  events: AnalyticsEventRow[];
+};
+
+type CapsuleAnalyticsPayload = {
+  id: string;
+  title: string;
+  objective: string | null;
+  options: unknown[];
+  sessions: SessionAnalyticsRow[];
+};
+
 // GET /api/analytics?identityId=xxx OR ?capsuleId=xxx (Protected)
 // Returns full analytics stats for capsules
 export async function GET(req: Request) {
@@ -77,14 +97,11 @@ export async function GET(req: Request) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildCapsuleAnalytics(capsule: any) {
+function buildCapsuleAnalytics(capsule: CapsuleAnalyticsPayload) {
   const sessions = capsule.sessions;
   const totalSessions = sessions.length;
 
-  const completedSessions = sessions.filter(
-    (s: any) => s.endedAt !== null
-  );
+  const completedSessions = sessions.filter((s) => s.endedAt !== null);
   const completionRate =
     totalSessions > 0
       ? Math.round((completedSessions.length / totalSessions) * 100)
@@ -92,7 +109,7 @@ function buildCapsuleAnalytics(capsule: any) {
 
   const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000);
   const abandonedSessions = sessions.filter(
-    (s: any) => !s.endedAt && s.startedAt < fiveMinAgo
+    (s) => !s.endedAt && s.startedAt < fiveMinAgo
   );
   const abandonRate =
     totalSessions > 0
@@ -101,12 +118,8 @@ function buildCapsuleAnalytics(capsule: any) {
 
   const decisionTimes: number[] = [];
   for (const session of sessions) {
-    const startEvent = (session as any).events.find(
-      (e: any) => e.type === "START"
-    );
-    const firstClick = (session as any).events.find(
-      (e: any) => e.type === "OPTION_CLICK"
-    );
+    const startEvent = session.events.find((e) => e.type === "START");
+    const firstClick = session.events.find((e) => e.type === "OPTION_CLICK");
     if (startEvent && firstClick) {
       const diff =
         new Date(firstClick.createdAt).getTime() -
@@ -128,7 +141,7 @@ function buildCapsuleAnalytics(capsule: any) {
   const optionClicks: Record<string, number> = {};
   const ctaClicks: Record<string, number> = {};
   for (const session of sessions) {
-    for (const event of (session as any).events) {
+    for (const event of session.events) {
       if (event.type === "OPTION_CLICK" && event.value) {
         optionClicks[event.value] = (optionClicks[event.value] || 0) + 1;
       }
@@ -138,22 +151,16 @@ function buildCapsuleAnalytics(capsule: any) {
     }
   }
 
-  const allEvents = sessions.flatMap((s: any) => s.events);
-  const totalOptionClicks = allEvents.filter(
-    (e: any) => e.type === "OPTION_CLICK"
-  ).length;
-  const totalCtaClicks = allEvents.filter(
-    (e: any) => e.type === "CTA_CLICK"
-  ).length;
+  const allEvents = sessions.flatMap((s) => s.events);
+  const totalOptionClicks = allEvents.filter((e) => e.type === "OPTION_CLICK").length;
+  const totalCtaClicks = allEvents.filter((e) => e.type === "CTA_CLICK").length;
 
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const recentSessions = sessions.filter(
-    (s: any) => s.startedAt >= thirtyDaysAgo
-  );
+  const recentSessions = sessions.filter((s) => s.startedAt >= thirtyDaysAgo);
   const sessionsByDay: Record<string, number> = {};
   for (const s of recentSessions) {
-    const day = new Date((s as any).startedAt).toISOString().split("T")[0];
+    const day = new Date(s.startedAt).toISOString().split("T")[0];
     sessionsByDay[day] = (sessionsByDay[day] || 0) + 1;
   }
 

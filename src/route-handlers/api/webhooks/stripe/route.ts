@@ -4,7 +4,6 @@ import {
   findUserIdByStripeCustomer,
   findUserIdByStripeSubscription,
   syncUserFromStripeSubscription,
-  updateUserStripeCustomer,
 } from "@/lib/stripe-sync-user";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";

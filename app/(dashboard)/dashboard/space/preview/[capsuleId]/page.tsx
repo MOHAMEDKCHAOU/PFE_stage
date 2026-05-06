@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { CapsuleViewer } from "../../../../../capsule/[slug]/CapsuleViewer";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = { params: Promise<{ capsuleId: string }> };
 
 export default async function SpacePreviewPage({ params }: PageProps) {

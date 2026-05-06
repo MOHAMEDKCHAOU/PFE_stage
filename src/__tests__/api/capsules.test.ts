@@ -3,13 +3,25 @@ import { prisma } from "@/lib/prisma";
 import * as auth from "@/lib/auth";
 import { GET, POST, DELETE } from "@/route-handlers/api/capsules/route";
 
+vi.mock("@/lib/faymoos-badges", () => ({
+  syncAutoBadgesForUser: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    user: {
+      findUnique: vi.fn(),
+    },
+    affiliateClient: {
+      findMany: vi.fn().mockResolvedValue([]),
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
     capsule: {
       findMany: vi.fn(),
       findUnique: vi.fn(),
       create: vi.fn(),
       delete: vi.fn(),
+      count: vi.fn(),
     },
     identityProfile: {
       findUnique: vi.fn(),
@@ -23,6 +35,7 @@ vi.mock("@/lib/auth", () => ({
 
 const mockCapsule = vi.mocked(prisma.capsule);
 const mockIdentity = vi.mocked(prisma.identityProfile);
+const mockUser = vi.mocked(prisma.user);
 const mockGetUserId = vi.mocked(auth.getUserId);
 
 const CURRENT_USER_ID = "user-1";
@@ -73,6 +86,16 @@ describe("POST /api/capsules", () => {
   it("crée une capsule et retourne 201", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockIdentity.findUnique.mockResolvedValue(fakeIdentity as never);
+    mockUser.findUnique.mockResolvedValue({
+      id: CURRENT_USER_ID,
+      role: "USER",
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      subscriptionStatus: null,
+      subscriptionPlan: "FREE",
+      currentPeriodEnd: null,
+    } as never);
+    mockCapsule.count.mockResolvedValue(0);
     mockCapsule.create.mockResolvedValue(fakeCapsule as never);
 
     const res = await POST(makeRequest("POST", "/api/capsules", {

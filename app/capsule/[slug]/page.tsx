@@ -6,6 +6,8 @@ import { loadBillingUser } from "@/lib/subscription-guards";
 import { notFound } from "next/navigation";
 import { CapsuleViewer } from "./CapsuleViewer";
 
+export const dynamic = "force-dynamic";
+
 type CapsulePageProps = {
   params: Promise<{ slug: string }>;
 };

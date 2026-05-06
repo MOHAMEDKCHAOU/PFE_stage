@@ -49,7 +49,8 @@ export async function POST(req: Request) {
     });
 
     // Ne jamais retourner le mot de passe hashé
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: storedHash, ...userWithoutPassword } = user;
+    void storedHash;
     return NextResponse.json(userWithoutPassword, { status: 201 });
   } catch (error) {
     console.error("REGISTER ERROR:", error);

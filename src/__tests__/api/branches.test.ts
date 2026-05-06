@@ -5,6 +5,13 @@ import { POST, PUT, DELETE } from "@/route-handlers/api/branches/route";
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    affiliateClient: {
+      findMany: vi.fn().mockResolvedValue([]),
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
+    capsuleOption: {
+      findUnique: vi.fn(),
+    },
     capsuleBranch: {
       findUnique: vi.fn(),
       create: vi.fn(),
@@ -18,6 +25,7 @@ vi.mock("@/lib/auth", () => ({
   getUserId: vi.fn(),
 }));
 
+const mockCapsuleOption = vi.mocked(prisma.capsuleOption);
 const mockBranch = vi.mocked(prisma.capsuleBranch);
 const mockGetUserId = vi.mocked(auth.getUserId);
 
@@ -55,6 +63,13 @@ describe("POST /api/branches", () => {
 
   it("crée une branch et retourne 201", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
+    mockCapsuleOption.findUnique.mockResolvedValue({
+      id: "option-1",
+      capsule: {
+        id: "capsule-1",
+        identity: { id: "identity-1", userId: CURRENT_USER_ID },
+      },
+    } as never);
     mockBranch.create.mockResolvedValue(fakeBranch as never);
 
     const res = await POST(makeRequest("POST", "/api/branches", {

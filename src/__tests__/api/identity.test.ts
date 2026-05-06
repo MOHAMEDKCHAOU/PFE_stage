@@ -86,7 +86,7 @@ describe("GET /api/identity", () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockIdentity.findMany.mockResolvedValue([fakeIdentity] as never);
 
-    const res = await GET(makeRequest("GET", "/api/identity"));
+    const res = await GET();
     const json = await res.json();
 
     expect(res.status).toBe(200);
@@ -99,7 +99,7 @@ describe("GET /api/identity", () => {
   it("retourne 401 si non authentifié", async () => {
     mockGetUserId.mockResolvedValue(null);
 
-    const res = await GET(makeRequest("GET", "/api/identity"));
+    const res = await GET();
     expect(res.status).toBe(401);
   });
 });
