@@ -66,19 +66,19 @@ export function StudioInviteAcceptClient({ token }: { token: string }) {
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-lg flex-col justify-center px-4 py-12">
-      <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-lg shadow-stone-200/60">
+      <div className="rounded-2xl border border-white/10 bg-zinc-900/45 p-8 shadow-lg shadow-black/50">
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-bordeaux-100 font-bold text-bordeaux-800">
             F
           </div>
           <div>
-            <h1 className="text-lg font-bold text-stone-900">Invitation Studio</h1>
-            <p className="text-xs text-stone-500">Faymoos — mandat partenaire</p>
+            <h1 className="text-lg font-bold text-foreground">Invitation Studio</h1>
+            <p className="text-xs text-zinc-500">Faymoos — mandat partenaire</p>
           </div>
         </div>
 
         {phase === "loading" && (
-          <p className="text-sm text-stone-600">Vérification du lien…</p>
+          <p className="text-sm text-zinc-400">Vérification du lien…</p>
         )}
 
         {phase === "error" && (
@@ -92,21 +92,21 @@ export function StudioInviteAcceptClient({ token }: { token: string }) {
 
         {phase === "ready" && meta && (
           <div className="space-y-5">
-            <p className="text-sm leading-relaxed text-stone-700">
-              Un organisme partenaire vous invite à <strong className="text-stone-900">lier votre compte</strong> à son
-              espace Studio. Vous gardez votre compte ; vous autorisez ce partenaire à gérer vos identités et capsules
+            <p className="text-sm leading-relaxed text-zinc-300">
+              Un organisme partenaire vous invite à <strong className="text-foreground">lier votre compte</strong> à son
+              espace commercial. Vous gardez votre compte ; vous autorisez ce partenaire à gérer vos identités et capsules
               comme convenu avec lui (contrat, mandat).
             </p>
-            <ul className="space-y-2 text-xs text-stone-600">
+            <ul className="space-y-2 text-xs text-zinc-400">
               <li>
                 · Expiration du lien :{" "}
-                <span className="font-medium text-stone-800">
+                <span className="font-medium text-foreground">
                   {new Date(meta.expiresAt).toLocaleString("fr-FR")}
                 </span>
               </li>
               {meta.lockedToEmail && meta.maskedInviteeEmail && (
                 <li>
-                  · Réservé au compte : <span className="font-medium text-stone-800">{meta.maskedInviteeEmail}</span>
+                  · Réservé au compte : <span className="font-medium text-foreground">{meta.maskedInviteeEmail}</span>
                 </li>
               )}
             </ul>
@@ -121,13 +121,13 @@ export function StudioInviteAcceptClient({ token }: { token: string }) {
               </button>
               <Link
                 href={nextLogin}
-                className="inline-flex items-center justify-center rounded-xl border border-stone-200 px-4 py-3 text-center text-sm font-semibold text-stone-800 hover:bg-stone-50"
+                className="inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-center text-sm font-semibold text-foreground hover:bg-white/5"
               >
                 Me connecter
               </Link>
               <Link
                 href={nextRegister}
-                className="inline-flex items-center justify-center rounded-xl border border-stone-200 px-4 py-3 text-center text-sm font-semibold text-stone-800 hover:bg-stone-50"
+                className="inline-flex items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-center text-sm font-semibold text-foreground hover:bg-white/5"
               >
                 Créer un compte
               </Link>

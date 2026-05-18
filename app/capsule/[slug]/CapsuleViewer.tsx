@@ -305,11 +305,11 @@ export function CapsuleViewer({
                 <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                   {identity.name}
                 </h1>
-                <span className={`inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${tc.accent}`}>
+                <span className={`inline-flex items-center gap-1.5 rounded-full bg-zinc-900/5 border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${tc.accent}`}>
                   {tc.label}
                 </span>
                 {identity.profession?.trim() ? (
-                  <span className="inline-flex items-center rounded-full bg-white/5 border border-white/10 px-3 py-1 text-[11px] font-medium text-zinc-300">
+                  <span className="inline-flex items-center rounded-full bg-zinc-900/5 border border-white/10 px-3 py-1 text-[11px] font-medium text-zinc-300">
                     {identity.profession.trim()}
                   </span>
                 ) : null}
@@ -343,7 +343,7 @@ export function CapsuleViewer({
               className={`group flex-shrink-0 rounded-xl p-3 transition-all duration-200 ${
                 isFavorited
                   ? "bg-pink-500/15 text-pink-400 ring-1 ring-pink-500/30 hover:bg-pink-500/25"
-                  : "bg-white/5 text-zinc-500 ring-1 ring-white/10 hover:text-pink-400 hover:ring-pink-500/30 hover:bg-pink-500/5"
+                  : "bg-zinc-900/5 text-zinc-500 ring-1 ring-white/10 hover:text-pink-400 hover:ring-pink-500/30 hover:bg-pink-500/5"
               } disabled:opacity-50`}
               title={isFavorited ? "Retirer des favoris" : "Ajouter aux favoris"}
             >
@@ -355,7 +355,7 @@ export function CapsuleViewer({
             {/* QR Code button */}
             <button
               onClick={() => setShowQR(true)}
-              className="group flex-shrink-0 rounded-xl p-3 bg-white/5 text-zinc-500 ring-1 ring-white/10 hover:text-white hover:ring-white/30 hover:bg-white/10 transition-all duration-200"
+              className="group flex-shrink-0 rounded-xl p-3 bg-zinc-900/5 text-zinc-500 ring-1 ring-white/10 hover:text-white hover:ring-white/30 hover:bg-zinc-900/10 transition-all duration-200"
               title="QR Code"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -374,7 +374,7 @@ export function CapsuleViewer({
                 }, 100);
               }}
               disabled={pdfLoading}
-              className="group flex-shrink-0 rounded-xl p-3 bg-white/5 text-zinc-500 ring-1 ring-white/10 hover:text-white hover:ring-white/30 hover:bg-white/10 transition-all duration-200 disabled:opacity-50"
+              className="group flex-shrink-0 rounded-xl p-3 bg-zinc-900/5 text-zinc-500 ring-1 ring-white/10 hover:text-white hover:ring-white/30 hover:bg-zinc-900/10 transition-all duration-200 disabled:opacity-50"
               title="Télécharger le portfolio en PDF"
             >
               {pdfLoading ? (
@@ -409,7 +409,7 @@ export function CapsuleViewer({
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group h-9 w-9 rounded-xl bg-white/5 ring-1 ring-white/10 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-white/10 hover:ring-white/20 transition-all"
+                  className="group h-9 w-9 rounded-xl bg-zinc-900/5 ring-1 ring-white/10 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-zinc-900/10 hover:ring-white/20 transition-all"
                   title={icon.label}
                 >
                   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" dangerouslySetInnerHTML={{ __html: icon.svg }} />
@@ -426,7 +426,7 @@ export function CapsuleViewer({
             <div className="relative">
               <button
                 onClick={() => setShowShare(!showShare)}
-                className="h-9 px-3.5 rounded-xl bg-white/5 ring-1 ring-white/10 flex items-center gap-1.5 text-zinc-500 hover:text-white hover:bg-white/10 hover:ring-white/20 transition-all text-xs font-medium"
+                className="h-9 px-3.5 rounded-xl bg-zinc-900/5 ring-1 ring-white/10 flex items-center gap-1.5 text-zinc-500 hover:text-white hover:bg-zinc-900/10 hover:ring-white/20 transition-all text-xs font-medium"
               >
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
@@ -443,7 +443,7 @@ export function CapsuleViewer({
                       window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, "_blank", "width=600,height=400");
                       setShowShare(false);
                     }}
-                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-all"
+                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-900/5 hover:text-white transition-all"
                   >
                     <svg className="h-4 w-4 text-blue-400" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
                     LinkedIn
@@ -455,7 +455,7 @@ export function CapsuleViewer({
                       window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, "_blank", "width=600,height=400");
                       setShowShare(false);
                     }}
-                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-all"
+                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-900/5 hover:text-white transition-all"
                   >
                     <svg className="h-4 w-4 text-zinc-300" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     X / Twitter
@@ -467,12 +467,12 @@ export function CapsuleViewer({
                       window.open(`https://wa.me/?text=${text}%20${url}`, "_blank");
                       setShowShare(false);
                     }}
-                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-all"
+                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-900/5 hover:text-white transition-all"
                   >
                     <svg className="h-4 w-4 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                     WhatsApp
                   </button>
-                  <div className="h-px bg-white/5 my-1" />
+                  <div className="h-px bg-zinc-900/5 my-1" />
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(window.location.href);
@@ -480,7 +480,7 @@ export function CapsuleViewer({
                       setTimeout(() => setLinkCopied(false), 2000);
                       setShowShare(false);
                     }}
-                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-all"
+                    className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-zinc-300 hover:bg-zinc-900/5 hover:text-white transition-all"
                   >
                     <svg className="h-4 w-4 text-violet-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-9.86a4.5 4.5 0 00-6.364 6.364l4.5 4.5a4.5 4.5 0 006.364-6.364l-1.757-1.757" />
@@ -505,7 +505,7 @@ export function CapsuleViewer({
                 className={`flex-shrink-0 rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                   c.id === activeCapsule.id
                     ? `bg-gradient-to-r ${tc.gradient} text-white shadow-lg shadow-indigo-500/20`
-                    : "bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white ring-1 ring-white/5"
+                    : "bg-zinc-900/5 text-zinc-400 hover:bg-zinc-900/10 hover:text-white ring-1 ring-white/5"
                 }`}
               >
                 {c.title}
@@ -518,7 +518,7 @@ export function CapsuleViewer({
       {/* ──── Introduction (avant l’expérience interactive) — sans graphe visuel ──── */}
       {showJourneyMap && (
         <section className="max-w-3xl mx-auto px-6 mt-10">
-          <div className="relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-gradient-to-b from-white/[0.07] via-white/[0.02] to-transparent p-[1px] shadow-[0_28px_80px_-20px_rgba(0,0,0,0.75)]">
+          <div className="relative overflow-hidden rounded-[28px] border border-white/[0.08] bg-gradient-to-b from-zinc-900/[0.07] via-white/[0.02] to-transparent p-[1px] shadow-[0_28px_80px_-20px_rgba(0,0,0,0.75)]">
             <div className="relative overflow-hidden rounded-[27px] bg-zinc-950/80 px-6 py-9 backdrop-blur-2xl sm:px-10 sm:py-10">
               <div
                 className={`pointer-events-none absolute -top-32 right-0 h-64 w-64 rounded-full bg-gradient-to-br ${tc.gradient} opacity-[0.12] blur-3xl`}
@@ -526,7 +526,7 @@ export function CapsuleViewer({
               <div className="pointer-events-none absolute bottom-0 left-0 h-40 w-40 rounded-full bg-cyan-500/10 blur-3xl" />
 
               <div className="relative text-center">
-                <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-1.5 shadow-lg shadow-black/20">
+                <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-zinc-900/[0.05] px-4 py-1.5 shadow-lg shadow-black/20">
                   <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${tc.gradient} animate-pulse shadow-[0_0_12px_rgba(236,72,153,0.6)]`} />
                   <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-300">
                     Avant de commencer
@@ -582,7 +582,7 @@ export function CapsuleViewer({
           journeyImmersed ? "opacity-100 translate-y-0 scale-100" : ""
         }`}
       >
-        <div className="relative rounded-3xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden">
+        <div className="relative rounded-3xl border border-white/[0.06] bg-zinc-900/[0.02] backdrop-blur-xl shadow-2xl shadow-black/40 overflow-hidden">
           {/* Glow line */}
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
@@ -597,7 +597,7 @@ export function CapsuleViewer({
                 ← Retour à l’introduction
               </button>
             )}
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-1.5 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full bg-zinc-900/5 border border-white/10 px-4 py-1.5 mb-5">
               <div className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${tc.gradient} animate-pulse`} />
               <span className={`text-xs font-semibold uppercase tracking-widest ${tc.accent}`}>
                 {activeCapsule.title}
@@ -616,7 +616,7 @@ export function CapsuleViewer({
                   <button
                     key={option.id}
                     onClick={() => handleSelect(option)}
-                    className="group relative w-full rounded-2xl border border-white/[0.06] bg-white/[0.02] px-6 py-5 text-left transition-all duration-200 hover:border-white/20 hover:bg-white/[0.05] hover:shadow-xl hover:shadow-black/20 active:scale-[0.98]"
+                    className="group relative w-full rounded-2xl border border-white/[0.06] bg-zinc-900/[0.02] px-6 py-5 text-left transition-all duration-200 hover:border-white/20 hover:bg-zinc-900/[0.05] hover:shadow-xl hover:shadow-black/20 active:scale-[0.98]"
                   >
                     <div className="flex items-center gap-4">
                       <span className={`flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-xl bg-gradient-to-br ${tc.gradient} text-white text-sm font-bold shadow-lg`}>
@@ -638,7 +638,7 @@ export function CapsuleViewer({
                   <div className="space-y-6">
                     {/* Selected pill */}
                     <div className="flex items-center gap-2">
-                      <span className={`inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-1.5 text-xs font-medium ${tc.accent}`}>
+                      <span className={`inline-flex items-center gap-2 rounded-full bg-zinc-900/5 border border-white/10 px-4 py-1.5 text-xs font-medium ${tc.accent}`}>
                         <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${tc.gradient}`} />
                         {selectedOption.label}
                       </span>
@@ -654,7 +654,7 @@ export function CapsuleViewer({
 
                     {/* Proof */}
                     {selectedOption.branch.proof && (
-                      <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.03] to-transparent p-5">
+                      <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-br from-zinc-900/[0.03] to-transparent p-5">
                         <div className="flex items-center gap-2 mb-2.5">
                           <svg className={`h-4 w-4 ${tc.accent}`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -734,7 +734,7 @@ export function CapsuleViewer({
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {projects.map((p) => (
-              <div key={p.id} className="group rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden hover:border-white/15 transition-all">
+              <div key={p.id} className="group rounded-2xl border border-white/[0.06] bg-zinc-900/[0.02] overflow-hidden hover:border-white/15 transition-all">
                 {p.image ? (
                   <div className="aspect-[4/3] overflow-hidden">
                     <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -764,7 +764,7 @@ export function CapsuleViewer({
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
             {testimonials.map((t) => (
-              <div key={t.id} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 hover:border-white/15 transition-all">
+              <div key={t.id} className="rounded-2xl border border-white/[0.06] bg-zinc-900/[0.02] p-5 hover:border-white/15 transition-all">
                 <svg className={`h-5 w-5 ${tc.accent} mb-3 opacity-50`} fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z" />
                 </svg>
@@ -803,7 +803,7 @@ export function CapsuleViewer({
           <div className={`h-8 w-1 rounded-full bg-gradient-to-b ${tc.gradient}`} />
           <h2 className="text-lg font-bold text-white">Contactez-moi</h2>
         </div>
-        <div className="rounded-3xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl p-8">
+        <div className="rounded-3xl border border-white/[0.06] bg-zinc-900/[0.02] backdrop-blur-xl p-8">
           {contactStatus === "success" ? (
             <div className="text-center py-8">
               <div className={`mx-auto h-14 w-14 rounded-2xl bg-gradient-to-br ${tc.gradient} flex items-center justify-center mb-4`}>
@@ -862,7 +862,7 @@ export function CapsuleViewer({
                     value={contactForm.name}
                     onChange={(e) => setContactForm((p) => ({ ...p, name: e.target.value }))}
                     placeholder="Votre nom"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                    className="w-full rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -873,7 +873,7 @@ export function CapsuleViewer({
                     value={contactForm.email}
                     onChange={(e) => setContactForm((p) => ({ ...p, email: e.target.value }))}
                     placeholder="votre@email.com"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                    className="w-full rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                   />
                 </div>
               </div>
@@ -886,7 +886,7 @@ export function CapsuleViewer({
                   onChange={(e) => setContactForm((p) => ({ ...p, content: e.target.value }))}
                   placeholder="Votre message..."
                   maxLength={2000}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                  className="w-full rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                 />
                 <p className="text-[11px] text-zinc-600 text-right">{contactForm.content.length}/2000</p>
               </div>
@@ -946,7 +946,7 @@ export function CapsuleViewer({
           <div className="relative rounded-3xl border border-white/10 bg-zinc-900 shadow-2xl p-8 text-center max-w-sm w-full">
             <button
               onClick={() => setShowQR(false)}
-              className="absolute top-4 right-4 rounded-lg p-1.5 text-zinc-500 hover:text-white hover:bg-white/10 transition-all"
+              className="absolute top-4 right-4 rounded-lg p-1.5 text-zinc-500 hover:text-white hover:bg-zinc-900/10 transition-all"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -983,7 +983,7 @@ export function CapsuleViewer({
               </button>
               <button
                 onClick={() => { navigator.clipboard.writeText(window.location.href); }}
-                className="rounded-xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-[0.98]"
+                className="rounded-xl bg-zinc-900/5 ring-1 ring-white/10 px-4 py-3 text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-900/10 transition-all active:scale-[0.98]"
                 title="Copier le lien"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

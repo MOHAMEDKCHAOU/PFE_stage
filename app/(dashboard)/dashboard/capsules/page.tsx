@@ -60,7 +60,7 @@ function AiImproveButton({
       </button>
 
       {showDropdown && suggestions && (
-        <div className="absolute right-0 top-full mt-1 z-50 w-72 rounded-xl border border-slate-200 bg-white shadow-xl shadow-violet-500/10 p-3 space-y-2 animate-in">
+        <div className="absolute right-0 top-full mt-1 z-50 w-72 rounded-xl border border-slate-200 bg-zinc-900/45 shadow-xl shadow-violet-500/10 p-3 space-y-2 animate-in">
           <p className="text-[10px] uppercase tracking-wider text-violet-500 font-semibold">Suggestions IA</p>
           <button
             type="button"
@@ -185,7 +185,7 @@ function BranchModal({
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-violet-500/10 animate-in">
+      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-zinc-900/45 shadow-2xl shadow-violet-500/10 animate-in">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
@@ -252,7 +252,7 @@ function BranchModal({
                 setError("");
               }}
               placeholder="Ex: Projet Maison — On construit votre rêve"
-              className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
             />
           </div>
 
@@ -266,7 +266,7 @@ function BranchModal({
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="Détaillez ce que le visiteur verra quand il clique cette option..."
-              className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
             />
           </div>
 
@@ -280,7 +280,7 @@ function BranchModal({
               value={cta}
               onChange={(e) => setCta(e.target.value)}
               placeholder="Ex: https://calendly.com/monrdv ou Contactez-moi"
-              className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
             />
           </div>
 
@@ -293,7 +293,7 @@ function BranchModal({
               onChange={(e) => setProof(e.target.value)}
               rows={2}
               placeholder="Ex: +50 projets livrés, 98% satisfaction client..."
-              className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
             />
           </div>
         </div>
@@ -301,7 +301,7 @@ function BranchModal({
         <div className="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all"
+            className="rounded-xl border border-slate-200 bg-zinc-900/45 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all"
           >
             Annuler
           </button>
@@ -471,7 +471,7 @@ function CapsuleCard({
 
   return (
     <>
-      <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden transition-all duration-200 hover:border-violet-200">
+      <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 overflow-hidden transition-all duration-200 hover:border-violet-200">
         {/* Header */}
         <div className="px-6 py-5 border-b border-slate-100">
           <div className="flex items-start justify-between gap-4">
@@ -482,14 +482,14 @@ function CapsuleCard({
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm font-semibold text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     placeholder="Titre de la capsule"
                   />
                   <textarea
                     value={objective}
                     onChange={(e) => setObjective(e.target.value)}
                     rows={2}
-                    className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     placeholder="Question / Objectif"
                   />
                   <div className="flex gap-2">
@@ -704,7 +704,7 @@ function CapsuleCard({
               className={`shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
                 copied
                   ? "bg-emerald-100 text-emerald-700"
-                  : "bg-white text-slate-500 hover:text-violet-600 border border-slate-200"
+                  : "bg-zinc-900/45 text-slate-500 hover:text-violet-600 border border-slate-200"
               }`}
             >
               {copied ? "Copié ✓" : "Copier"}
@@ -731,7 +731,7 @@ function CapsuleCard({
                   {capsule.options.map((option, idx) => (
                     <div
                       key={option.id}
-                      className="rounded-xl border border-slate-200 bg-white overflow-hidden"
+                      className="rounded-xl border border-slate-200 bg-zinc-900/45 overflow-hidden"
                     >
                       {/* Option header */}
                       <div className="flex items-center gap-3 px-4 py-3">
@@ -967,7 +967,7 @@ function CapsuleCard({
                     if (e.key === "Enter") handleAddOption();
                   }}
                   placeholder="Nouvelle option (ex: Maison, Bureau...)"
-                  className="flex-1 rounded-xl border border-dashed border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="flex-1 rounded-xl border border-dashed border-slate-300 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
                 <button
                   onClick={handleAddOption}
@@ -1028,7 +1028,7 @@ function CapsuleCard({
             className="absolute inset-0 bg-black/20 backdrop-blur-sm"
             onClick={() => setShowDeleteConfirm(false)}
           />
-          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in">
+          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-zinc-900/45 p-6 shadow-2xl animate-in">
             <div className="flex flex-col items-center text-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-50 ring-1 ring-red-200">
                 <svg
@@ -1060,7 +1060,7 @@ function CapsuleCard({
               <div className="flex w-full gap-3 mt-2">
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all"
+                  className="flex-1 rounded-xl border border-slate-200 bg-zinc-900/45 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all"
                 >
                   Annuler
                 </button>
@@ -1206,7 +1206,7 @@ function CreateCapsuleModal({
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-violet-500/10 animate-in">
+      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-zinc-900/45 shadow-2xl shadow-violet-500/10 animate-in">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
           <div className="flex items-center gap-3">
@@ -1307,7 +1307,7 @@ function CreateCapsuleModal({
                     className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all duration-200 active:scale-[0.97] ${
                       identityId === id.id
                         ? "border-violet-400 bg-violet-50 ring-2 ring-violet-300 shadow-lg shadow-violet-200"
-                        : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                        : "border-slate-200 bg-zinc-900/45 hover:border-violet-200 hover:bg-violet-50/50"
                     }`}
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-sm font-bold text-white overflow-hidden">
@@ -1354,7 +1354,7 @@ function CreateCapsuleModal({
                   className={`flex-1 flex items-center gap-2.5 rounded-xl border p-3.5 text-left transition-all ${
                     aiMode
                       ? "border-violet-300 bg-gradient-to-r from-violet-50 to-fuchsia-50 ring-2 ring-violet-200"
-                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                      : "border-slate-200 bg-zinc-900/45 hover:border-violet-200 hover:bg-violet-50/50"
                   }`}
                 >
                   <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${aiMode ? "bg-violet-100" : "bg-slate-100"}`}>
@@ -1379,7 +1379,7 @@ function CreateCapsuleModal({
                   className={`flex-1 flex items-center gap-2.5 rounded-xl border p-3.5 text-left transition-all ${
                     !aiMode
                       ? "border-violet-300 bg-gradient-to-r from-violet-50 to-fuchsia-50 ring-2 ring-violet-200"
-                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                      : "border-slate-200 bg-zinc-900/45 hover:border-violet-200 hover:bg-violet-50/50"
                   }`}
                 >
                   <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${!aiMode ? "bg-violet-100" : "bg-slate-100"}`}>
@@ -1411,7 +1411,7 @@ function CreateCapsuleModal({
                       }}
                       rows={3}
                       placeholder='Ex: "Je suis architecte, je veux qualifier mes clients selon leur type de projet" ou "Coach sportif, je veux orienter les visiteurs vers le bon programme"'
-                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                      className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     />
                   </div>
                   <button
@@ -1475,7 +1475,7 @@ function CreateCapsuleModal({
                       </p>
                       <div className="space-y-2">
                         {aiGenerated.options.map((opt, i) => (
-                          <div key={i} className="rounded-lg border border-emerald-100 bg-white p-3">
+                          <div key={i} className="rounded-lg border border-emerald-100 bg-zinc-900/45 p-3">
                             <p className="text-xs font-semibold text-slate-700">{opt.label}</p>
                             <p className="text-[11px] text-slate-400 mt-1 line-clamp-1">{opt.branch.headline}</p>
                           </div>
@@ -1492,7 +1492,7 @@ function CreateCapsuleModal({
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                      className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -1503,7 +1503,7 @@ function CreateCapsuleModal({
                       value={objective}
                       onChange={(e) => setObjective(e.target.value)}
                       rows={2}
-                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                      className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     />
                   </div>
                 </div>
@@ -1524,7 +1524,7 @@ function CreateCapsuleModal({
                         setError("");
                       }}
                       placeholder='Ex: "Demande de projet", "Besoin d&#39;accompagnement"'
-                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                      className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     />
                   </div>
 
@@ -1537,7 +1537,7 @@ function CreateCapsuleModal({
                       onChange={(e) => setObjective(e.target.value)}
                       rows={3}
                       placeholder='Ex: "Quel type de projet avez-vous en tête ?", "Que recherchez-vous ?"'
-                      className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                      className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                     />
                   </div>
                 </>
@@ -1565,7 +1565,7 @@ function CreateCapsuleModal({
                 setStep(1);
               }
             }}
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50"
+            className="rounded-xl border border-slate-200 bg-zinc-900/45 px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50"
           >
             {step === 1 || identities.length <= 1 ? "Annuler" : "Retour"}
           </button>
@@ -1746,7 +1746,7 @@ export default function CapsulesPage() {
           </button>
           <Link
             href="/dashboard/space/wizard/templates"
-            className={`inline-flex items-center gap-2 rounded-xl border border-bordeaux-200 bg-white px-4 py-2.5 text-sm font-semibold text-bordeaux-900 shadow-sm transition hover:bg-bordeaux-50 ${
+            className={`inline-flex items-center gap-2 rounded-xl border border-bordeaux-200 bg-zinc-900/45 px-4 py-2.5 text-sm font-semibold text-bordeaux-900 shadow-sm transition hover:bg-bordeaux-50 ${
               identities.length === 0 ? "pointer-events-none opacity-40" : ""
             }`}
             onClick={(e) => {
@@ -1760,7 +1760,7 @@ export default function CapsulesPage() {
 
       {/* Identity filter */}
       {identities.length > 1 && (
-        <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white p-1 w-fit">
+        <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-zinc-900/45 p-1 w-fit">
           <button
             onClick={() => setFilterIdentity("ALL")}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${

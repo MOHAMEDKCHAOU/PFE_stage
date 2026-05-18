@@ -194,10 +194,10 @@ export function NotificationBell() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-2xl border border-stone-200/90 bg-white/98 shadow-lg shadow-stone-200/50 backdrop-blur-xl">
+        <div className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/70 shadow-lg shadow-black/40 backdrop-blur-xl">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
-            <h3 className="text-sm font-bold text-stone-900">Notifications</h3>
+          <div className="flex items-center justify-between border-b border-white/5 px-4 py-3">
+            <h3 className="text-sm font-bold text-foreground">Notifications</h3>
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
                 <button
@@ -211,14 +211,14 @@ export function NotificationBell() {
           </div>
 
           {/* Settings row */}
-          <div className="flex items-center gap-3 border-b border-stone-100 bg-bordeaux-50/30 px-4 py-2">
+          <div className="flex items-center gap-3 border-b border-white/5 bg-bordeaux-50/30 px-4 py-2">
             {/* Sound toggle */}
             <button
               onClick={toggleSound}
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
                 soundEnabled
                   ? "bg-bordeaux-100 text-bordeaux-900"
-                  : "border border-stone-200/90 bg-white text-stone-500 hover:text-stone-800"
+                  : "border border-white/10 bg-zinc-900/45 text-zinc-500 hover:text-foreground"
               }`}
               title={soundEnabled ? "Son activé" : "Son désactivé"}
             >
@@ -240,7 +240,7 @@ export function NotificationBell() {
               className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all ${
                 browserNotifEnabled
                   ? "bg-bordeaux-100 text-bordeaux-900"
-                  : "border border-stone-200/90 bg-white text-stone-500 hover:text-stone-800"
+                  : "border border-white/10 bg-zinc-900/45 text-zinc-500 hover:text-foreground"
               }`}
               title={browserNotifEnabled ? "Notifications desktop activées" : "Notifications desktop désactivées"}
             >
@@ -256,10 +256,10 @@ export function NotificationBell() {
           <div className="max-h-[340px] overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="py-10 text-center">
-                <svg className="mx-auto h-10 w-10 text-stone-200" fill="none" viewBox="0 0 24 24" strokeWidth={0.5} stroke="currentColor">
+                <svg className="mx-auto h-10 w-10 text-zinc-300" fill="none" viewBox="0 0 24 24" strokeWidth={0.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                 </svg>
-                <p className="mt-2 text-sm text-stone-500">Aucune notification</p>
+                <p className="mt-2 text-sm text-zinc-500">Aucune notification</p>
               </div>
             ) : (
               notifications.map((notif) => {
@@ -268,7 +268,7 @@ export function NotificationBell() {
                   <button
                     key={notif.id}
                     onClick={() => handleClick(notif)}
-                    className={`flex w-full items-start gap-3 border-b border-stone-100 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bordeaux-50/50 ${
+                    className={`flex w-full items-start gap-3 border-b border-white/5 px-4 py-3 text-left transition-colors last:border-0 hover:bg-bordeaux-50/50 ${
                       !notif.isRead ? "bg-bordeaux-50/40" : ""
                     }`}
                   >
@@ -288,13 +288,13 @@ export function NotificationBell() {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <p className={`text-xs leading-snug ${!notif.isRead ? "font-semibold text-stone-900" : "text-stone-600"}`}>
+                    <p className={`text-xs leading-snug ${!notif.isRead ? "font-semibold text-foreground" : "text-zinc-400"}`}>
                       {notif.title}
                     </p>
-                    <p className="mt-0.5 line-clamp-2 text-[11px] text-stone-500">
+                    <p className="mt-0.5 line-clamp-2 text-[11px] text-zinc-500">
                       {notif.body}
                     </p>
-                    <p className="mt-1 text-[10px] text-stone-400">
+                    <p className="mt-1 text-[10px] text-zinc-500">
                       {timeAgo(notif.createdAt)}
                     </p>
                   </div>

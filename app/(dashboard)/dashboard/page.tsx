@@ -218,7 +218,7 @@ export default function DashboardPage() {
             return (
               <div
                 key={profile.id}
-                className="group relative rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-violet-200 hover:bg-violet-50/50"
+                className="group relative rounded-2xl border border-slate-200 bg-zinc-900/45 p-5 transition-all duration-200 hover:border-violet-200 hover:bg-violet-50/50"
               >
                 {/* Cover image or gradient */}
                 {profile.cover ? (

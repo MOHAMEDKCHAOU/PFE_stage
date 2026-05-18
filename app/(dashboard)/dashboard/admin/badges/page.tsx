@@ -186,7 +186,7 @@ export default function AdminBadgesPage() {
             action sur le profil ou via « Recalculer les règles ».
           </p>
         </div>
-        <div className="rounded-xl bg-white px-4 py-3 shadow-sm ring-1 ring-slate-100 text-center sm:text-right">
+        <div className="rounded-xl bg-zinc-900/45 px-4 py-3 shadow-sm ring-1 ring-slate-100 text-center sm:text-right">
           <p className="text-2xl font-bold text-slate-900">{totalAssignments}</p>
           <p className="text-xs text-slate-500 font-medium">attributions totales</p>
         </div>
@@ -205,7 +205,7 @@ export default function AdminBadgesPage() {
       )}
 
       {/* Catalogue */}
-      <section className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 overflow-hidden">
+      <section className="rounded-2xl bg-zinc-900/45 shadow-sm ring-1 ring-slate-100 overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100">
           <h2 className="font-semibold text-slate-900">Catalogue des badges</h2>
           <p className="text-xs text-slate-500 mt-0.5">Slug technique pour l’API et les scripts.</p>
@@ -242,7 +242,7 @@ export default function AdminBadgesPage() {
       </section>
 
       {/* Utilisateur */}
-      <section className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 p-5 space-y-5">
+      <section className="rounded-2xl bg-zinc-900/45 shadow-sm ring-1 ring-slate-100 p-5 space-y-5">
         <h2 className="font-semibold text-slate-900">Utilisateur cible</h2>
         <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
           <div className="flex-1">
@@ -269,7 +269,7 @@ export default function AdminBadgesPage() {
             type="button"
             disabled={userLoading || !email.trim()}
             onClick={() => void loadUser({ refreshAuto: true })}
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            className="rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
             Recalculer les règles AUTO
           </button>
@@ -365,7 +365,7 @@ export default function AdminBadgesPage() {
                   <select
                     value={grantSlug}
                     onChange={(e) => setGrantSlug(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-slate-200 bg-zinc-900/45 px-3 py-2 text-sm"
                   >
                     {definitions.map((d) => (
                       <option key={d.id} value={d.slug}>
@@ -379,7 +379,7 @@ export default function AdminBadgesPage() {
                   <select
                     value={grantTier}
                     onChange={(e) => setGrantTier(e.target.value as "VERIFIED" | "EXPERT")}
-                    className="w-full sm:w-40 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+                    className="w-full sm:w-40 rounded-lg border border-slate-200 bg-zinc-900/45 px-3 py-2 text-sm"
                   >
                     <option value="VERIFIED">Vérifié</option>
                     <option value="EXPERT">Expert</option>

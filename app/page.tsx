@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { Navbar } from "@/components/Navbar";
 import { WelcomeToFaymoos } from "@/components/WelcomeToFaymoos";
 import { prisma } from "@/lib/prisma";
@@ -14,7 +16,7 @@ const features = [
     ),
     title: "Multi-Identités",
     desc: "Freelancer, agence, créateur, startup — gérez plusieurs profils professionnels depuis un seul compte.",
-    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-bordeaux-200/60",
+    color: "border-white/10 bg-zinc-900/55 shadow-sm hover:shadow-md hover:border-bordeaux-200/60",
     iconBg: "bg-bordeaux-100 text-bordeaux-800",
   },
   {
@@ -25,7 +27,7 @@ const features = [
     ),
     title: "Capsules Interactives",
     desc: "Créez des expériences conversationnelles où vos visiteurs choisissent leur propre parcours.",
-    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-rose-200/80",
+    color: "border-white/10 bg-zinc-900/55 shadow-sm hover:shadow-md hover:border-rose-200/80",
     iconBg: "bg-rose-100 text-rose-800",
   },
   {
@@ -36,7 +38,7 @@ const features = [
     ),
     title: "Analytics en Temps Réel",
     desc: "Suivez chaque interaction — clics, parcours choisis, taux de conversion — pour optimiser vos capsules.",
-    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-emerald-200/80",
+    color: "border-white/10 bg-zinc-900/55 shadow-sm hover:shadow-md hover:border-emerald-200/80",
     iconBg: "bg-emerald-100 text-emerald-800",
   },
   {
@@ -47,29 +49,8 @@ const features = [
     ),
     title: "Portfolio Intégré",
     desc: "Présentez vos projets, témoignages clients et réalisations directement dans votre capsule.",
-    color: "border-stone-200/90 bg-white/95 shadow-sm hover:shadow-md hover:border-amber-200/80",
+    color: "border-white/10 bg-zinc-900/55 shadow-sm hover:shadow-md hover:border-amber-200/80",
     iconBg: "bg-amber-100 text-amber-800",
-  },
-];
-
-const steps = [
-  {
-    num: "01",
-    title: "Créez votre identité",
-    desc: "Choisissez votre type de profil, ajoutez votre photo, votre bio et votre headline.",
-    icon: "👤",
-  },
-  {
-    num: "02",
-    title: "Construisez votre capsule",
-    desc: "Définissez des options interactives et des branches avec des CTAs personnalisés.",
-    icon: "💊",
-  },
-  {
-    num: "03",
-    title: "Partagez votre lien",
-    desc: "Un lien unique faymoos.com/capsule/votre-nom — partagez-le partout.",
-    icon: "🔗",
   },
 ];
 
@@ -98,41 +79,61 @@ export default async function Home() {
   return (
     <>
       <WelcomeToFaymoos />
-      <div className="relative z-10 min-h-screen overflow-hidden bg-[#f4efe6] text-stone-900">
+      <div className="relative z-10 min-h-screen overflow-hidden bg-background text-foreground">
       {/* ═══════════ NAVBAR ═══════════ */}
       <Navbar />
 
       {/* ═══════════ HERO ═══════════ */}
-      <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-32">
-        {/* Background effects */}
+      <section className="relative overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-28">
+        {/* Photo de fond (public/background1.jpg) — cover + overlays pour lisibilité */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute top-20 left-1/4 h-[500px] w-[500px] rounded-full bg-bordeaux-500/8 blur-[120px] animate-pulse-glow" />
-          <div className="absolute top-40 right-1/4 h-[400px] w-[400px] rounded-full bg-amber-200/30 blur-[100px] animate-mesh delay-200" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[300px] w-[600px] rounded-full bg-stone-300/20 blur-[80px] animate-pulse-glow" />
-          <div className="absolute top-1/2 left-1/2 h-[min(100vw,900px)] w-[min(100vw,900px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-bordeaux-200/20 opacity-40 animate-blob" />
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(28,25,23,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(28,25,23,0.04)_1px,transparent_1px)] bg-[size:64px_64px]" />
+          <Image
+            src="/background1.jpg"
+            alt=""
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover object-[center_22%] sm:object-center"
+          />
+          {/* Assombrit les bords + base pour le texte */}
+          <div
+            className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_20%,transparent_0%,rgba(3,2,10,0.55)_55%,rgba(5,3,10,0.92)_100%)]"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-[#030208]/80 via-[#05030a]/50 to-[#05030a]"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-[#05030a] via-transparent to-[#0a0614]/90"
+            aria-hidden
+          />
+          {/* Reflets violets légers (lisibilité + cohérence marque) */}
+          <div className="absolute -left-32 top-1/4 h-[min(80vw,520px)] w-[min(80vw,520px)] rounded-full bg-violet-600/10 blur-[100px]" />
+          <div className="absolute -right-24 bottom-1/3 h-[400px] w-[400px] rounded-full bg-fuchsia-600/8 blur-[90px]" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6">
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center text-center">
             {/* Badge */}
-            <div className="animate-slide-up inline-flex items-center gap-2 rounded-full border border-bordeaux-200/60 bg-white/80 px-4 py-1.5 text-sm shadow-sm">
-              <span className="h-1.5 w-1.5 rounded-full bg-bordeaux-500 animate-pulse" />
-              <span className="text-bordeaux-800 font-medium">Nouvelle plateforme</span>
+            <div className="animate-slide-up inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/35 px-4 py-1.5 text-sm shadow-lg shadow-black/20 backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-violet-400 shadow-[0_0_12px_rgba(167,139,250,0.9)] animate-pulse" />
+              <span className="font-medium text-violet-100/95">Nouvelle plateforme</span>
             </div>
 
             {/* Headline */}
-            <h1 className="mt-8 max-w-4xl text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] animate-slide-up delay-100 text-stone-900">
+            <h1 className="mt-8 max-w-4xl text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] animate-slide-up delay-100 text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.45)] [text-shadow:0_2px_40px_rgba(0,0,0,0.35)]">
               Créez votre{" "}
-              <span className="bg-gradient-to-r from-bordeaux-800 via-bordeaux-600 to-rose-600 bg-clip-text text-transparent animate-gradient-x">
+              <span className="bg-gradient-to-r from-violet-200 via-fuchsia-200 to-violet-300 bg-clip-text text-transparent animate-gradient-x">
                 identité unique
               </span>
               <br />
-              en une capsule
+              <span className="text-white">en une capsule</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 max-w-2xl text-lg sm:text-xl text-stone-600 leading-relaxed animate-slide-up delay-200">
+            <p className="mt-6 max-w-2xl text-lg sm:text-xl text-zinc-200/95 leading-relaxed animate-slide-up delay-200 [text-shadow:0_1px_16px_rgba(0,0,0,0.5)]">
               Faymoos transforme votre présence professionnelle en une expérience interactive.
               Vos visiteurs choisissent leur parcours, vous convertissez plus.
             </p>
@@ -141,7 +142,7 @@ export default async function Home() {
             <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 animate-slide-up delay-300">
               <Link
                 href="/register"
-                className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-bordeaux-500/25 transition-all hover:from-bordeaux-600 hover:to-bordeaux-400 hover:shadow-[0_20px_60px_-15px_rgba(158,27,50,0.45)] active:scale-[0.98]"
+                className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-700 to-fuchsia-600 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-violet-900/40 ring-1 ring-white/15 transition-all hover:from-violet-600 hover:to-fuchsia-500 hover:shadow-[0_20px_50px_-12px_rgba(139,92,246,0.55)] active:scale-[0.98]"
               >
                 Commencer gratuitement
                 <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -150,9 +151,9 @@ export default async function Home() {
               </Link>
               <a
                 href="#how-it-works"
-                className="inline-flex items-center gap-2 rounded-2xl border border-stone-300 bg-white/90 px-8 py-4 text-base font-medium text-stone-800 transition-all hover:border-bordeaux-300 hover:bg-bordeaux-50/50 hover:text-bordeaux-900 shadow-sm"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-base font-medium text-white backdrop-blur-md transition-all hover:border-white/35 hover:bg-white/15 shadow-lg shadow-black/20"
               >
-                <svg className="h-5 w-5 text-bordeaux-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-5 w-5 text-violet-200" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" />
                 </svg>
@@ -222,9 +223,9 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ TRUSTED BY (scrolling logos) ═══════════ */}
-      <section className="border-y border-stone-200/80 py-12 bg-stone-200/30">
+      <section className="border-y border-white/10 bg-zinc-950/80 py-12 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-stone-500 mb-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 mb-8">
             Conçu pour tous les professionnels
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
@@ -233,7 +234,7 @@ export default async function Home() {
                 <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${pt.color} text-lg text-white shadow-sm`}>
                   {pt.icon}
                 </div>
-                <span className="text-sm font-medium text-stone-700">{pt.label}</span>
+                <span className="text-sm font-medium text-zinc-300">{pt.label}</span>
               </div>
             ))}
           </div>
@@ -246,14 +247,14 @@ export default async function Home() {
         <div className="relative mx-auto max-w-7xl px-6">
           {/* Section header */}
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full border border-bordeaux-200/80 bg-white/90 px-4 py-1.5 text-sm mb-6 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-bordeaux-200/80 bg-zinc-900/45 px-4 py-1.5 text-sm mb-6 shadow-sm">
               <span className="text-bordeaux-800 font-medium">Fonctionnalités</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
               Tout ce qu&apos;il vous faut pour{" "}
               <span className="bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">briller</span>
             </h2>
-            <p className="mt-4 text-lg text-stone-600">
+            <p className="mt-4 text-lg text-zinc-400">
               Une suite complète d&apos;outils pour créer, gérer et analyser votre présence professionnelle.
             </p>
           </div>
@@ -269,61 +270,19 @@ export default async function Home() {
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${f.iconBg} mb-4 transition-transform group-hover:scale-110`}>
                   {f.icon}
                 </div>
-                <h3 className="text-base font-semibold text-stone-900 mb-2">{f.title}</h3>
-                <p className="text-sm text-stone-600 leading-relaxed">{f.desc}</p>
+                <h3 className="text-base font-semibold text-foreground mb-2">{f.title}</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ═══════════ HOW IT WORKS ═══════════ */}
-      <section id="how-it-works" className="relative py-24 sm:py-32 border-t border-stone-200/80">
-        <div className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-amber-100/40 blur-[150px]" />
-        <div className="relative mx-auto max-w-7xl px-6">
-          <div className="text-center max-w-2xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-amber-50/80 px-4 py-1.5 text-sm mb-6 shadow-sm">
-              <span className="text-amber-800 font-medium">3 étapes simples</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-stone-900">
-              Comment{" "}
-              <span className="bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">ça marche</span>
-              {" "}?
-            </h2>
-            <p className="mt-4 text-lg text-stone-600">
-              De la création à la conversion, en seulement trois étapes.
-            </p>
-          </div>
-
-          {/* Steps */}
-          <div className="grid gap-8 md:grid-cols-3">
-            {steps.map((step, i) => (
-              <div key={step.num} className="relative group">
-                {/* Connector line */}
-                {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-14 left-[calc(50%+40px)] right-[calc(-50%+40px)] h-px bg-gradient-to-r from-bordeaux-200 to-transparent" />
-                )}
-                <div className="relative flex flex-col items-center text-center">
-                  {/* Number + icon */}
-                  <div className="relative mb-6">
-                    <div className="flex h-28 w-28 items-center justify-center rounded-3xl border border-stone-200/90 bg-white shadow-sm transition-all duration-300 group-hover:border-bordeaux-200 group-hover:shadow-md">
-                      <span className="text-5xl">{step.icon}</span>
-                    </div>
-                    <div className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-xs font-bold text-white ring-4 ring-[#f4efe6] shadow-md">
-                      {step.num}
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-semibold text-stone-900 mb-2">{step.title}</h3>
-                  <p className="text-sm text-stone-600 leading-relaxed max-w-xs">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ═══════════ HOW IT WORKS (interactive) ═══════════ */}
+      <HowItWorksSection />
 
       {/* ═══════════ PROFILES SHOWCASE ═══════════ */}
-      <section id="profiles" className="relative py-24 sm:py-32 border-t border-stone-200/80">
+      <section id="profiles" className="relative py-24 sm:py-32 border-t border-white/10">
         <div className="pointer-events-none absolute right-0 bottom-0 h-[400px] w-[400px] rounded-full bg-rose-100/30 blur-[120px]" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -332,11 +291,11 @@ export default async function Home() {
               <div className="inline-flex items-center gap-2 rounded-full border border-rose-200/80 bg-rose-50/90 px-4 py-1.5 text-sm mb-6 shadow-sm">
                 <span className="text-rose-800 font-medium">Pour chaque profil</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight text-stone-900">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight text-foreground">
                 Un espace adapté à{" "}
                 <span className="bg-gradient-to-r from-rose-600 to-bordeaux-700 bg-clip-text text-transparent">chaque métier</span>
               </h2>
-              <p className="mt-4 text-lg text-stone-600 leading-relaxed">
+              <p className="mt-4 text-lg text-zinc-400 leading-relaxed">
                 Que vous soyez freelancer, dirigeant d&apos;agence, créateur de contenu ou fondateur de startup,
                 Faymoos s&apos;adapte à votre façon de travailler.
               </p>
@@ -350,7 +309,7 @@ export default async function Home() {
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-3">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-bordeaux-100 text-sm border border-bordeaux-200">{item.emoji}</span>
-                    <span className="text-sm text-stone-700">{item.text}</span>
+                    <span className="text-sm text-zinc-300">{item.text}</span>
                   </div>
                 ))}
               </div>
@@ -371,21 +330,21 @@ export default async function Home() {
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-bordeaux-100/30 to-rose-100/20 blur-2xl" />
               <div className="relative space-y-4">
                 {[
-                  { name: "Sarah Dupont", headline: "Développeuse Full-Stack", type: "💼 Freelancer", color: "border-stone-200 hover:shadow-bordeaux-200/30", avatar: "S" },
-                  { name: "Studio Pixel", headline: "Agence Digitale Créative", type: "🏢 Agence", color: "border-stone-200 hover:shadow-bordeaux-200/30", avatar: "P" },
-                  { name: "Yassine K.", headline: "YouTuber & Entrepreneur", type: "🎨 Créateur", color: "border-stone-200 hover:shadow-rose-200/40", avatar: "Y" },
+                  { name: "Sarah Dupont", headline: "Développeuse Full-Stack", type: "💼 Freelancer", color: "border-white/10 hover:shadow-bordeaux-200/30", avatar: "S" },
+                  { name: "Studio Pixel", headline: "Agence Digitale Créative", type: "🏢 Agence", color: "border-white/10 hover:shadow-bordeaux-200/30", avatar: "P" },
+                  { name: "Yassine K.", headline: "YouTuber & Entrepreneur", type: "🎨 Créateur", color: "border-white/10 hover:shadow-rose-200/40", avatar: "Y" },
                 ].map((card, i) => (
                   <div
                     key={card.name}
-                    className={`relative flex items-center gap-4 rounded-2xl border border-stone-200/90 bg-white/95 p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] ${card.color}`}
+                    className={`relative flex items-center gap-4 rounded-2xl border border-white/10 bg-zinc-900/55 p-5 shadow-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] ${card.color}`}
                     style={{ transform: `translateX(${i * 20}px)` }}
                   >
                     <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-xl font-bold text-white">
                       {card.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-stone-900">{card.name}</p>
-                      <p className="text-sm text-stone-500 truncate">{card.headline}</p>
+                      <p className="font-semibold text-foreground">{card.name}</p>
+                      <p className="text-sm text-zinc-500 truncate">{card.headline}</p>
                     </div>
                     <span className="shrink-0 rounded-full bg-bordeaux-50 px-3 py-1 text-xs text-bordeaux-800 ring-1 ring-bordeaux-200 font-medium">
                       {card.type}
@@ -399,7 +358,7 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ STATS ═══════════ */}
-      <section className="border-y border-stone-200/80 py-16 bg-stone-100/60">
+      <section className="border-y border-white/10 py-16 bg-zinc-900/10/60">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -412,7 +371,7 @@ export default async function Home() {
                 <p className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-bordeaux-800 to-bordeaux-500 bg-clip-text text-transparent">
                   {stat.value}
                 </p>
-                <p className="mt-2 text-sm text-stone-600">{stat.label}</p>
+                <p className="mt-2 text-sm text-zinc-400">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -507,14 +466,14 @@ export default async function Home() {
           <div className="absolute top-1/2 left-1/2 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bordeaux-200/15 blur-[150px] animate-pulse-glow" />
         </div>
         <div className="relative mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-stone-900">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-foreground">
             Prêt à créer votre{" "}
             <span className="bg-gradient-to-r from-bordeaux-800 via-bordeaux-600 to-rose-600 bg-clip-text text-transparent animate-gradient-x">
               capsule unique
             </span>
             {" "}?
           </h2>
-          <p className="mt-6 text-lg text-stone-600 max-w-2xl mx-auto">
+          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto">
             Rejoignez Faymoos et transformez votre identité professionnelle en une expérience
             interactive qui convertit vos visiteurs en opportunités.
           </p>
@@ -530,7 +489,7 @@ export default async function Home() {
             </Link>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-bordeaux-800 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-bordeaux-800 transition-colors"
             >
               Déjà un compte ? Se connecter
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -542,24 +501,24 @@ export default async function Home() {
       </section>
 
       {/* ═══════════ FOOTER ═══════════ */}
-      <footer className="border-t border-stone-200/80 py-12 bg-stone-100/80">
+      <footer className="border-t border-white/10 py-12 bg-zinc-900/10/80">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 text-xs font-black text-white shadow-sm">
                 F
               </div>
-              <span className="text-sm font-semibold text-stone-600">
-                Fay<span className="text-stone-900">moos</span>
+              <span className="text-sm font-semibold text-zinc-400">
+                Fay<span className="text-foreground">moos</span>
               </span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-stone-600">
+            <div className="flex items-center gap-6 text-sm text-zinc-400">
               <a href="#features" className="hover:text-bordeaux-800 transition-colors">Fonctionnalités</a>
               <a href="#how-it-works" className="hover:text-bordeaux-800 transition-colors">Comment ça marche</a>
               <Link href="/login" className="hover:text-bordeaux-800 transition-colors">Connexion</Link>
               <Link href="/register" className="hover:text-bordeaux-800 transition-colors">Inscription</Link>
             </div>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-zinc-500">
               &copy; {new Date().getFullYear()} Faymoos. Tous droits réservés.
             </p>
           </div>

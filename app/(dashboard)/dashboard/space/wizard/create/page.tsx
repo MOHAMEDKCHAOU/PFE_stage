@@ -162,8 +162,8 @@ function SpaceCreatePageContent() {
           ← Thèmes
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-stone-900">Create Space</h1>
-      <p className="mt-2 text-stone-600">
+      <h1 className="text-2xl font-bold text-foreground">Create Space</h1>
+      <p className="mt-2 text-zinc-400">
         Alimenter la capsule : scan, fichiers, ou génération IA. Puis enregistrement en brouillon et
         ouverture de l’éditeur.
       </p>
@@ -178,7 +178,7 @@ function SpaceCreatePageContent() {
         </p>
       )}
 
-      <div className="mt-6 flex gap-1 rounded-xl border border-stone-200 bg-stone-100/80 p-1">
+      <div className="mt-6 flex gap-1 rounded-xl border border-white/10 bg-zinc-900/10/80 p-1">
         {(
           [
             ["scan", "Scan (caméra)"],
@@ -191,7 +191,7 @@ function SpaceCreatePageContent() {
             type="button"
             onClick={() => setTab(k)}
             className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium ${
-              tab === k ? "bg-white text-bordeaux-900 shadow-sm" : "text-stone-600"
+              tab === k ? "bg-zinc-900/45 text-bordeaux-900 shadow-sm" : "text-zinc-400"
             }`}
           >
             {label}
@@ -202,8 +202,8 @@ function SpaceCreatePageContent() {
       {err && <p className="mt-4 text-sm text-red-600">{err}</p>}
 
       {tab === "scan" && (
-        <div className="mt-6 space-y-4 rounded-xl border border-dashed border-stone-300 bg-white p-6 text-center">
-          <p className="text-sm text-stone-600">
+        <div className="mt-6 space-y-4 rounded-xl border border-dashed border-white/15 bg-zinc-900/45 p-6 text-center">
+          <p className="text-sm text-zinc-400">
             Scan plein écran (caméra + aperçu + validation) ou fichier local.
           </p>
           <button
@@ -240,8 +240,8 @@ function SpaceCreatePageContent() {
       )}
 
       {tab === "upload" && (
-        <div className="mt-6 rounded-xl border border-dashed border-stone-300 bg-white p-6">
-          <p className="text-sm text-stone-600">Images (portfolio) — serviront de cover / visuels.</p>
+        <div className="mt-6 rounded-xl border border-dashed border-white/15 bg-zinc-900/45 p-6">
+          <p className="text-sm text-zinc-400">Images (portfolio) — serviront de cover / visuels.</p>
           <input
             type="file"
             accept="image/*,video/*"
@@ -253,10 +253,10 @@ function SpaceCreatePageContent() {
       )}
 
       {tab === "ia" && (
-        <div className="mt-6 space-y-3 rounded-xl border border-stone-200 bg-white p-4">
-          <label className="text-sm font-medium text-stone-800">Décrivez votre offre</label>
+        <div className="mt-6 space-y-3 rounded-xl border border-white/10 bg-zinc-900/45 p-4">
+          <label className="text-sm font-medium text-foreground">Décrivez votre offre</label>
           <textarea
-            className="min-h-[100px] w-full rounded-lg border border-stone-200 px-3 py-2 text-stone-900"
+            className="min-h-[100px] w-full rounded-lg border border-white/10 px-3 py-2 text-foreground"
             placeholder="Ex. Designer UX freelance spécialisé apps mobiles B2B…"
             value={iaPrompt}
             onChange={(e) => setIaPrompt(e.target.value)}
@@ -270,7 +270,7 @@ function SpaceCreatePageContent() {
             {loading ? "Génération…" : "Générer la structure (GPT-4o-mini)"}
           </button>
           {aiData && (
-            <pre className="max-h-48 overflow-auto rounded bg-stone-100 p-3 text-xs text-stone-800">
+            <pre className="max-h-48 overflow-auto rounded bg-zinc-900/10 p-3 text-xs text-foreground">
               {JSON.stringify({ title: aiData.title, objective: aiData.objective, n: aiData.options.length }, null, 2)}
             </pre>
           )}
@@ -279,12 +279,12 @@ function SpaceCreatePageContent() {
 
       {assets.length > 0 && (
         <div className="mt-6">
-          <p className="text-sm font-medium text-stone-700">Sélection courante</p>
+          <p className="text-sm font-medium text-zinc-300">Sélection courante</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {assets.map((u) => (
               <li
                 key={u}
-                className="h-16 w-16 overflow-hidden rounded border border-stone-200 bg-stone-100"
+                className="h-16 w-16 overflow-hidden rounded border border-white/10 bg-zinc-900/10"
               >
                 {/\.(mp4|webm|mov)(\?|$)/i.test(u) ? (
                   <video src={u} className="h-full w-full object-cover" muted playsInline />
@@ -315,7 +315,7 @@ export default function SpaceCreatePage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-4xl px-4 py-16 text-center text-sm text-stone-500">
+        <div className="mx-auto max-w-4xl px-4 py-16 text-center text-sm text-zinc-500">
           Chargement…
         </div>
       }

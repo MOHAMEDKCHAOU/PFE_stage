@@ -90,11 +90,11 @@ export async function POST(req: Request) {
     if (clientUserId && clientUserId !== userId) {
       const actor = await prisma.user.findUnique({ where: { id: userId }, select: { role: true } });
       if (actor?.role !== "AFFILIATE") {
-        return NextResponse.json({ error: "Seul un compte Studio peut créer pour un client" }, { status: 403 });
+        return NextResponse.json({ error: "Seul un partenaire affilié peut créer une identité pour un client lié." }, { status: 403 });
       }
       const ok = await isAffiliateForClient(userId, clientUserId);
       if (!ok) {
-        return NextResponse.json({ error: "Client non lié à votre Studio" }, { status: 403 });
+        return NextResponse.json({ error: "Client non lié à votre espace commercial." }, { status: 403 });
       }
       ownerUserId = clientUserId;
     }
@@ -172,7 +172,7 @@ export async function PUT(req: Request) {
         return NextResponse.json(
           {
             error:
-              "Abonnement Pro, Studio ou Studio+ actif requis pour masquer le branding Faymoos sur les capsules publiques.",
+              "Abonnement Pro, Commercial ou Commercial+ actif requis pour masquer le branding Faymoos sur les capsules publiques.",
           },
           { status: 403 },
         );

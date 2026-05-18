@@ -79,17 +79,17 @@ function LoginForm() {
         <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 flex items-center justify-center shadow-lg shadow-bordeaux-500/20">
           <span className="text-white font-bold text-base">F</span>
         </div>
-        <span className="text-xl font-bold text-stone-900 tracking-tight">
+        <span className="text-xl font-bold text-foreground tracking-tight">
           Faymoos
         </span>
       </div>
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
           Bon retour 👋
         </h2>
-        <p className="mt-2 text-sm text-stone-600">
+        <p className="mt-2 text-sm text-zinc-400">
           Connectez-vous pour accéder à votre espace
         </p>
       </div>
@@ -120,14 +120,14 @@ function LoginForm() {
         <div className="space-y-2">
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-stone-800"
+            className="block text-sm font-medium text-foreground"
           >
             Adresse email
           </label>
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
               <svg
-                className="h-[18px] w-[18px] text-stone-400"
+                className="h-[18px] w-[18px] text-zinc-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
@@ -146,7 +146,7 @@ function LoginForm() {
               autoComplete="email"
               placeholder="vous@exemple.com"
               {...register("email")}
-              className={`block w-full rounded-xl border border-stone-200/90 bg-white py-3 pl-11 pr-4 text-sm text-stone-900 placeholder:text-stone-400 shadow-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+              className={`block w-full rounded-xl border border-white/10 bg-zinc-900/45 py-3 pl-11 pr-4 text-sm text-foreground placeholder:text-zinc-500 shadow-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                 errors.email
                     ? "border-red-500/50 focus:ring-red-500/20"
                     : "focus:border-bordeaux-400 focus:ring-bordeaux-200/50"
@@ -163,7 +163,7 @@ function LoginForm() {
           <div className="flex items-center justify-between">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-stone-800"
+              className="block text-sm font-medium text-foreground"
             >
               Mot de passe
             </label>
@@ -177,7 +177,7 @@ function LoginForm() {
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
               <svg
-                className="h-[18px] w-[18px] text-stone-400"
+                className="h-[18px] w-[18px] text-zinc-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
@@ -196,7 +196,7 @@ function LoginForm() {
               autoComplete="current-password"
               placeholder="••••••••"
               {...register("password")}
-              className={`block w-full rounded-xl border border-stone-200/90 bg-white py-3 pl-11 pr-11 text-sm text-stone-900 placeholder:text-stone-400 shadow-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+              className={`block w-full rounded-xl border border-white/10 bg-zinc-900/45 py-3 pl-11 pr-11 text-sm text-foreground placeholder:text-zinc-500 shadow-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                 errors.password
                     ? "border-red-500/50 focus:ring-red-500/20"
                     : "focus:border-bordeaux-400 focus:ring-bordeaux-200/50"
@@ -205,7 +205,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-stone-400 transition-colors hover:text-stone-700"
+              className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 transition-colors hover:text-zinc-300"
             >
               {showPassword ? (
                 <svg
@@ -287,18 +287,18 @@ function LoginForm() {
 
       {/* Divider */}
       <div className="my-8 flex items-center gap-4">
-        <div className="h-px flex-1 bg-stone-200" />
-        <span className="text-xs text-stone-500 uppercase tracking-wider">
+        <div className="h-px flex-1 bg-zinc-900/10" />
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">
           ou
         </span>
-        <div className="h-px flex-1 bg-stone-200" />
+        <div className="h-px flex-1 bg-zinc-900/10" />
       </div>
 
       {/* Social login placeholder */}
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          className="flex items-center justify-center gap-2.5 rounded-xl border border-stone-200/90 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition-all duration-200 hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
+          className="flex items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-3 text-sm font-medium text-zinc-300 shadow-sm transition-all duration-200 hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24">
             <path
@@ -322,7 +322,7 @@ function LoginForm() {
         </button>
         <button
           type="button"
-          className="flex items-center justify-center gap-2.5 rounded-xl border border-stone-200/90 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition-all duration-200 hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
+          className="flex items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-3 text-sm font-medium text-zinc-300 shadow-sm transition-all duration-200 hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
@@ -332,7 +332,7 @@ function LoginForm() {
       </div>
 
       {/* Footer link */}
-      <p className="mt-8 text-center text-sm text-stone-600">
+      <p className="mt-8 text-center text-sm text-zinc-400">
         Pas encore de compte ?{" "}
         <Link
           href={registerHref}
@@ -349,7 +349,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Chargement…</div>
+        <div className="flex min-h-[40vh] items-center justify-center text-sm text-zinc-500">Chargement…</div>
       }
     >
       <LoginForm />

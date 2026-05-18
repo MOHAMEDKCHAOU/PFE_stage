@@ -114,7 +114,7 @@ export function ChatBot({ identityId, identityName, accentGradient, accentColor 
         <div className="fixed bottom-24 right-6 z-50 w-[360px] max-h-[500px] rounded-2xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden animate-in">
           {/* Header */}
           <div className={`bg-gradient-to-r ${accentGradient} px-5 py-4 flex items-center gap-3`}>
-            <div className="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center">
+            <div className="h-9 w-9 rounded-full bg-zinc-900/20 flex items-center justify-center">
               <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
               </svg>
@@ -125,7 +125,7 @@ export function ChatBot({ identityId, identityName, accentGradient, accentColor 
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="ml-auto rounded-lg p-1.5 text-white/60 hover:text-white hover:bg-white/10 transition-all"
+              className="ml-auto rounded-lg p-1.5 text-white/60 hover:text-white hover:bg-zinc-900/10 transition-all"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -144,7 +144,7 @@ export function ChatBot({ identityId, identityName, accentGradient, accentColor 
                   className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     msg.role === "user"
                       ? `bg-gradient-to-r ${accentGradient} text-white rounded-br-md`
-                      : "bg-white/5 text-zinc-200 border border-white/5 rounded-bl-md"
+                      : "bg-zinc-900/5 text-zinc-200 border border-white/5 rounded-bl-md"
                   }`}
                 >
                   {msg.content}
@@ -155,7 +155,7 @@ export function ChatBot({ identityId, identityName, accentGradient, accentColor 
             {/* Typing indicator */}
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-white/5 border border-white/5 rounded-2xl rounded-bl-md px-4 py-3 flex gap-1.5">
+                <div className="bg-zinc-900/5 border border-white/5 rounded-2xl rounded-bl-md px-4 py-3 flex gap-1.5">
                   <span className="h-2 w-2 rounded-full bg-zinc-500 animate-bounce [animation-delay:0ms]" />
                   <span className="h-2 w-2 rounded-full bg-zinc-500 animate-bounce [animation-delay:150ms]" />
                   <span className="h-2 w-2 rounded-full bg-zinc-500 animate-bounce [animation-delay:300ms]" />
@@ -182,7 +182,7 @@ export function ChatBot({ identityId, identityName, accentGradient, accentColor 
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Écrivez votre question..."
                 maxLength={500}
-                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all"
+                className="flex-1 rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all"
               />
               <button
                 type="submit"

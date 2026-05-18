@@ -77,7 +77,7 @@ function drawKpiCard(
   doc.text(value, x + 4, y + h - 4);
 }
 
-/** Génère un PDF « rapport Studio » (buffer binaire pour réponse HTTP). */
+/** Génère un PDF « rapport espace commercial » (buffer binaire pour réponse HTTP). */
 export function buildStudioClientsPdfBuffer(params: StudioClientsPdfParams): ArrayBuffer {
   const { studioEmail, generatedAt, clients, summary } = params;
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
@@ -93,12 +93,12 @@ export function buildStudioClientsPdfBuffer(params: StudioClientsPdfParams): Arr
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
   doc.setTextColor(...NEU.white);
-  doc.text("Rapport clients Studio", M, 22);
+  doc.text("Rapport clients — espace commercial", M, 22);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9.5);
   doc.setTextColor(220, 200, 208);
-  const sub = `Espace Faymoos · Studio : ${studioEmail}`;
+  const sub = `Espace Faymoos · Partenaire : ${studioEmail}`;
   const subLines = doc.splitTextToSize(sub, CW);
   doc.text(subLines, M, 31);
 
@@ -183,7 +183,7 @@ export function buildStudioClientsPdfBuffer(params: StudioClientsPdfParams): Arr
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7);
     doc.setTextColor(...NEU.sub);
-    doc.text("Faymoos · Export confidentiel · Usage interne Studio", M, PAGE_H - 12);
+    doc.text("Faymoos · Export confidentiel · Usage interne (espace commercial)", M, PAGE_H - 12);
     doc.text("Les dates d’export sont en heure locale du serveur d’export.", M, PAGE_H - 8);
   }
 

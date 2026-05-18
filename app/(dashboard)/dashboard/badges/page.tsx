@@ -48,22 +48,22 @@ export default function DashboardBadgesPage() {
   return (
     <div className="max-w-3xl space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-stone-900">Score & badges</h1>
-        <p className="mt-1 text-sm text-stone-600">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Score & badges</h1>
+        <p className="mt-1 text-sm text-zinc-400">
           Les badges se mettent à jour automatiquement (profil, liens, capsules). L’équipe peut attribuer{" "}
-          <strong className="font-medium text-stone-800">Identité vérifiée</strong> depuis l’admin.
+          <strong className="font-medium text-foreground">Identité vérifiée</strong> depuis l’admin.
         </p>
       </div>
 
       {identities.length > 1 && (
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wide text-stone-500">
+          <label className="block text-xs font-semibold uppercase tracking-wide text-zinc-500">
             Profil public
           </label>
           <select
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="mt-2 w-full max-w-md rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm"
+            className="mt-2 w-full max-w-md rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-2.5 text-sm"
           >
             {identities.map((i) => (
               <option key={i.id} value={i.slug}>
@@ -84,7 +84,7 @@ export default function DashboardBadgesPage() {
       )}
 
       {bundle && slug && (
-        <div className="rounded-2xl border border-stone-200 bg-zinc-950 p-1 shadow-sm">
+        <div className="rounded-2xl border border-white/10 bg-zinc-950 p-1 shadow-sm">
           <PublicProfileBadges identitySlug={slug} bundle={bundle} />
         </div>
       )}
@@ -100,9 +100,9 @@ export default function DashboardBadgesPage() {
         </Link>
       )}
 
-      <div className="rounded-2xl border border-dashed border-stone-200 bg-stone-50/80 p-5 text-sm text-stone-700">
-        <p className="font-semibold text-stone-900">Conseils</p>
-        <ul className="mt-2 list-disc list-inside space-y-1 text-stone-600">
+      <div className="rounded-2xl border border-dashed border-white/10 bg-zinc-900/35 p-5 text-sm text-zinc-300">
+        <p className="font-semibold text-foreground">Conseils</p>
+        <ul className="mt-2 list-disc list-inside space-y-1 text-zinc-400">
           <li>Renseignez headline, bio et photo pour « Profil soigné » (Expert avec couverture + portfolio).</li>
           <li>Ajoutez LinkedIn ou GitHub dans les liens sociaux pour « Présence en ligne ».</li>
           <li>Publiez au moins une capsule pour « Créateur actif » (Expert : 3+ capsules ou 50+ sessions).</li>

@@ -95,7 +95,7 @@ export default function FavoritesPage() {
           {favorites.map((fav) => (
             <div
               key={fav.id}
-              className="group relative rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 hover:ring-pink-200 transition-all"
+              className="group relative rounded-2xl bg-zinc-900/45 p-5 shadow-sm ring-1 ring-slate-100 hover:ring-pink-200 transition-all"
             >
               {/* Remove button */}
               <button

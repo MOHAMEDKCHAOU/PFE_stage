@@ -118,7 +118,7 @@ export async function assertStudioSubscription(affiliateId: string): Promise<Quo
     return {
       status: 403,
       error:
-        "Abonnement Studio ou Studio+ requis. Ouvrez Facturation pour souscrire ou mettre à niveau votre offre.",
+        "Abonnement Commercial ou Commercial+ requis. Ouvrez Facturation pour souscrire ou mettre à niveau votre offre.",
     };
   }
   return null;
@@ -133,7 +133,7 @@ export async function assertCanAddStudioClient(affiliateId: string): Promise<Quo
   if (n >= limits.maxStudioClients) {
     return {
       status: 403,
-      error: `Limite de clients Studio atteinte (${limits.maxStudioClients}, plan ${plan}).`,
+      error: `Limite de clients liés atteinte (${limits.maxStudioClients}, plan ${plan}).`,
     };
   }
   return null;
@@ -165,7 +165,7 @@ export async function assertCanStudioExport(affiliateId: string): Promise<QuotaE
   if (usage.exportsCount >= limits.maxStudioExportsPerMonth) {
     return {
       status: 403,
-      error: `Quota mensuel d’exports Studio atteint (${limits.maxStudioExportsPerMonth}, plan ${plan}).`,
+      error: `Quota mensuel d’exports (espace commercial) atteint (${limits.maxStudioExportsPerMonth}, plan ${plan}).`,
     };
   }
   return null;
@@ -199,7 +199,7 @@ export async function getBillingSnapshotForUser(userId: string) {
     subscriptionStatus: billing.subscriptionStatus,
     currentPeriodEnd: billing.currentPeriodEnd?.toISOString() ?? null,
     hasStripeCustomer: !!billing.stripeCustomerId,
-    /** Masquer le branding Faymoos sur les capsules publiques (Pro / Studio / Studio+ ou admin). */
+    /** Masquer le branding Faymoos sur les capsules publiques (Pro / Commercial / Commercial+ ou admin). */
     canHideBranding: canHidePlatformBranding(billing),
     limits,
     usage: {

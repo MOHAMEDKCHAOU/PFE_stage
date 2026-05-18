@@ -134,7 +134,7 @@ export function CapsuleCommentsSection({ capsuleId, enabled, accentGradient, acc
           ) : (
             <ul className="space-y-5">
               {items.map((item) => (
-                <li key={item.id} className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+                <li key={item.id} className="rounded-2xl border border-white/[0.06] bg-zinc-900/[0.02] p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
@@ -152,7 +152,7 @@ export function CapsuleCommentsSection({ capsuleId, enabled, accentGradient, acc
                   </div>
                   <p className="mt-3 text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{item.body}</p>
                   {item.reply && (
-                    <div className="mt-4 ml-2 pl-4 border-l-2 border-white/15 rounded-r-lg bg-white/[0.03] py-3 pr-3">
+                    <div className="mt-4 ml-2 pl-4 border-l-2 border-white/15 rounded-r-lg bg-zinc-900/[0.03] py-3 pr-3">
                       <p className="text-xs font-semibold text-emerald-400/90 mb-1">{item.reply.authorName}</p>
                       <p className="text-sm text-zinc-400 leading-relaxed whitespace-pre-wrap">{item.reply.body}</p>
                       <time className="text-[10px] text-zinc-600 mt-2 block" dateTime={item.reply.createdAt}>
@@ -192,7 +192,7 @@ export function CapsuleCommentsSection({ capsuleId, enabled, accentGradient, acc
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   maxLength={120}
-                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
                   placeholder="Comment vous appeler"
                 />
               </div>
@@ -204,7 +204,7 @@ export function CapsuleCommentsSection({ capsuleId, enabled, accentGradient, acc
                   type="email"
                   value={authorEmail}
                   onChange={(e) => setAuthorEmail(e.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                  className="mt-1.5 w-full rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-violet-500/40"
                   placeholder="pour vous recontacter si besoin"
                 />
               </div>
@@ -218,7 +218,7 @@ export function CapsuleCommentsSection({ capsuleId, enabled, accentGradient, acc
                 rows={4}
                 minLength={3}
                 maxLength={2000}
-                className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/40"
+                className="mt-1.5 w-full rounded-xl border border-white/10 bg-zinc-900/5 px-4 py-3 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/40"
                 placeholder="Votre retour, question ou encouragement…"
               />
               <p className="text-[10px] text-zinc-600 text-right mt-1">{body.length} / 2000</p>

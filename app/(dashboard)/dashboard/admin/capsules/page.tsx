@@ -106,7 +106,7 @@ export default function AdminCapsulesPage() {
           placeholder="Rechercher par titre..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-300 focus:border-fuchsia-400 bg-white"
+          className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-300 focus:border-fuchsia-400 bg-zinc-900/45"
         />
         <button
           type="submit"
@@ -117,7 +117,7 @@ export default function AdminCapsulesPage() {
       </form>
 
       {/* Capsules Table */}
-      <div className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 overflow-hidden">
+      <div className="rounded-2xl bg-zinc-900/45 shadow-sm ring-1 ring-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -217,7 +217,7 @@ export default function AdminCapsulesPage() {
                   {expandedCapsule === capsule.id && (
                     <tr>
                       <td colSpan={7} className="px-5 py-4 bg-fuchsia-50/30">
-                        <div className="rounded-xl bg-white p-4 ring-1 ring-slate-100">
+                        <div className="rounded-xl bg-zinc-900/45 p-4 ring-1 ring-slate-100">
                           <p className="text-sm font-medium text-slate-600 mb-1">Objectif :</p>
                           <p className="text-sm text-slate-700">{capsule.objective}</p>
                           <div className="mt-3 flex items-center gap-4 text-xs text-slate-400">

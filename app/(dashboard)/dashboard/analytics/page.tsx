@@ -74,7 +74,7 @@ function StatCard({
             <p className="mt-1 text-xs text-slate-400">{subtext}</p>
           )}
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 text-slate-600">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900/60 text-slate-600">
           {icon}
         </div>
       </div>
@@ -185,7 +185,7 @@ function CapsuleAnalyticsCard({
   else if (stats.completionRate >= 30) completionColor = "text-amber-600";
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+    <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 overflow-hidden">
       {/* Header */}
       <div className="px-6 py-5 border-b border-slate-100">
         <div className="flex items-start justify-between gap-4">
@@ -360,7 +360,7 @@ function CapsuleAnalyticsCard({
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-4">
               Activité — 30 derniers jours
             </h4>
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <div className="rounded-xl border border-slate-200 bg-zinc-900/45 p-4">
               <ActivityChart sessionsByDay={data.sessionsByDay} />
               <div className="flex justify-between mt-2">
                 <span className="text-[10px] text-slate-400">Il y a 30j</span>
@@ -382,7 +382,7 @@ function CapsuleAnalyticsCard({
                 visiteurs interagiront avec la capsule.
               </p>
             ) : (
-              <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-5">
+              <div className="rounded-xl border border-slate-200 bg-zinc-900/45 p-5 space-y-5">
                 {/* Option clicks chart */}
                 <div>
                   <p className="text-xs font-medium text-slate-500 mb-3">
@@ -668,7 +668,7 @@ export default function AnalyticsPage() {
 
       {/* Identity filter */}
       {identities.length > 1 && (
-        <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white p-1 w-fit">
+        <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-zinc-900/45 p-1 w-fit">
           <button
             onClick={() => setSelectedIdentity("ALL")}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${

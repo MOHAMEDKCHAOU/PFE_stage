@@ -20,7 +20,7 @@ export async function GET() {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   const links = await prisma.affiliateClient.findMany({
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   let body: { email?: unknown; confirmConsent?: unknown };
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
   } catch (e: unknown) {
     const code = e && typeof e === "object" && "code" in e ? (e as { code: string }).code : "";
     if (code === "P2002") {
-      return NextResponse.json({ error: "Ce client est déjà lié à votre Studio" }, { status: 409 });
+      return NextResponse.json({ error: "Ce client est déjà lié à votre espace commercial." }, { status: 409 });
     }
     console.error("POST STUDIO CLIENTS", e);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
@@ -141,7 +141,7 @@ export async function DELETE(req: Request) {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   const clientUserId = new URL(req.url).searchParams.get("clientUserId");

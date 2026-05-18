@@ -105,7 +105,7 @@ function StatCard({
           </p>
           {subtext && <p className="mt-1 text-xs text-slate-400">{subtext}</p>}
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/60 text-slate-600">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900/60 text-slate-600">
           {icon}
         </div>
       </div>
@@ -477,7 +477,7 @@ export default function CapsuleAnalyticsDetailPage() {
       {/* Row: Donut Charts */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Completion donut */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col items-center">
+        <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6 flex flex-col items-center">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6 self-start">
             Taux de complétion
           </h3>
@@ -490,7 +490,7 @@ export default function CapsuleAnalyticsDetailPage() {
         </div>
 
         {/* Conversion donut */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col items-center">
+        <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6 flex flex-col items-center">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6 self-start">
             Taux de conversion
           </h3>
@@ -503,7 +503,7 @@ export default function CapsuleAnalyticsDetailPage() {
         </div>
 
         {/* Decision time card */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 flex flex-col">
+        <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6 flex flex-col">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6">
             Temps de décision
           </h3>
@@ -518,7 +518,7 @@ export default function CapsuleAnalyticsDetailPage() {
       </div>
 
       {/* Activity Chart (large) */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6">
+      <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6">
           Activité — 30 derniers jours
         </h3>
@@ -528,7 +528,7 @@ export default function CapsuleAnalyticsDetailPage() {
       {/* Row: Funnel + Pie */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Funnel */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6">
             Entonnoir de conversion
           </h3>
@@ -544,7 +544,7 @@ export default function CapsuleAnalyticsDetailPage() {
         </div>
 
         {/* Pie chart: branch distribution */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6">
             Répartition par branche
           </h3>
@@ -565,7 +565,7 @@ export default function CapsuleAnalyticsDetailPage() {
       </div>
 
       {/* Branch Performance Details */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6">
+      <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 p-6">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-6">
           Performance détaillée par branche
         </h3>
@@ -694,7 +694,7 @@ export default function CapsuleAnalyticsDetailPage() {
         {aiInsights && (
           <ul className="space-y-3">
             {aiInsights.map((insight, i) => (
-              <li key={i} className="flex items-start gap-3 rounded-xl border border-indigo-100 bg-white p-4">
+              <li key={i} className="flex items-start gap-3 rounded-xl border border-indigo-100 bg-zinc-900/45 p-4">
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold mt-0.5">
                   {i + 1}
                 </div>

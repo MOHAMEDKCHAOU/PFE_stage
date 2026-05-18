@@ -182,7 +182,7 @@ function ImageUploadFrame({
         {preview ? (
           <img src={preview} alt="Cover" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-white">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-zinc-900/45">
             <svg className="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
@@ -227,7 +227,7 @@ export function EditProfileModal({
   onSaved,
 }: {
   profile: Profile;
-  /** Pro / Studio / Studio+ (plan effectif) du propriétaire de l’identité — pas du viewer Studio. */
+  /** Pro / Commercial / Commercial+ (plan effectif) du propriétaire de l’identité — pas du gestionnaire espace commercial. */
   ownerCanHideBranding?: boolean;
   onClose: () => void;
   onSaved: () => void;
@@ -388,7 +388,7 @@ export function EditProfileModal({
                   type="text"
                   value={form.name}
                   onChange={(e) => handleChange("name", e.target.value)}
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
               </div>
               {/* Headline */}
@@ -399,7 +399,7 @@ export function EditProfileModal({
                   value={form.headline}
                   onChange={(e) => handleChange("headline", e.target.value)}
                   placeholder="Ex: Développeur Full-Stack"
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
               </div>
             </div>
@@ -417,7 +417,7 @@ export function EditProfileModal({
                   className={`flex flex-col items-center gap-1 rounded-xl border px-2 py-3 text-center transition-all duration-200 active:scale-95 ${
                     form.type === t.value
                       ? "border-violet-400 bg-violet-50 ring-1 ring-violet-300"
-                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                      : "border-slate-200 bg-zinc-900/45 hover:border-violet-200 hover:bg-violet-50/50"
                   }`}
                 >
                   <span className="text-lg">{t.icon}</span>
@@ -439,7 +439,7 @@ export function EditProfileModal({
                 value={form.profession}
                 onChange={(e) => handleChange("profession", e.target.value)}
                 placeholder="Ex: Photographe, SaaS Founder…"
-                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
               />
               <datalist id="faymoos-profession-suggestions">
                 <option value="Photographer" />
@@ -457,7 +457,7 @@ export function EditProfileModal({
                 value={form.tagsLine}
                 onChange={(e) => handleChange("tagsLine", e.target.value)}
                 placeholder="photo, booking, portfolio…"
-                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
               />
               <p className="text-[11px] text-slate-500">Séparés par des virgules · max 20 tags</p>
             </div>
@@ -471,7 +471,7 @@ export function EditProfileModal({
               onChange={(e) => handleChange("bio", e.target.value)}
               rows={3}
               placeholder="Décrivez-vous en quelques mots..."
-              className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+              className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
             />
             <p className="text-[11px] text-slate-400">{form.bio.length}/300 caractères</p>
           </div>
@@ -488,7 +488,7 @@ export function EditProfileModal({
                   className={`flex flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-center transition-all duration-200 active:scale-95 ${
                     form.theme === t.value
                       ? "border-violet-400 bg-violet-50 ring-1 ring-violet-300"
-                      : "border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/50"
+                      : "border-slate-200 bg-zinc-900/45 hover:border-violet-200 hover:bg-violet-50/50"
                   }`}
                 >
                   <div
@@ -529,7 +529,7 @@ export function EditProfileModal({
                     <span className="block mt-1 text-[11px] text-slate-500">
                       Disponible avec un abonnement{" "}
                       <a href="/dashboard/billing" className="text-violet-400 underline hover:text-violet-300">
-                        Pro, Studio ou Studio+
+                        Pro, Commercial ou Commercial+
                       </a>
                       .
                     </span>
@@ -548,7 +548,7 @@ export function EditProfileModal({
                   setSuccess(false);
                 }}
                 placeholder="https://hooks.zapier.com/..."
-                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
               />
               <p className="text-[11px] text-slate-500">
                 Envoyé en JSON sur chaque clic CTA (événement <code className="text-violet-300">cta_click</code>), en-tête{" "}
@@ -572,7 +572,7 @@ export function EditProfileModal({
                     ? "Secret enregistré — saisir pour remplacer"
                     : "Optionnel"
                 }
-                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
               />
               <p className="text-[11px] text-slate-500">
                 Laissez vide et enregistrez sans modifier ce champ pour conserver le secret actuel. Saisissez vide après l’avoir touché pour le supprimer.
@@ -594,7 +594,7 @@ export function EditProfileModal({
                     value={socialLinks[p.key] || ""}
                     onChange={(e) => setSocialLinks((prev) => ({ ...prev, [p.key]: e.target.value }))}
                     placeholder={p.placeholder}
-                    className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-300 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                    className="flex-1 rounded-xl border border-slate-200 bg-zinc-900/45 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-300 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                   />
                 </div>
               ))}
@@ -607,7 +607,7 @@ export function EditProfileModal({
         <div className="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50 hover:border-violet-200"
+            className="rounded-xl border border-slate-200 bg-zinc-900/45 px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50 hover:border-violet-200"
           >
             Annuler
           </button>

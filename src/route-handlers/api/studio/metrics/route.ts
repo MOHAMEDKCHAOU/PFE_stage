@@ -13,7 +13,7 @@ export async function GET() {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   const now = new Date();

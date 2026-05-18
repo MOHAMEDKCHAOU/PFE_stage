@@ -19,7 +19,7 @@ function ScoreBar({ score, label }: { score: number; label: string }) {
         <span className="text-2xl font-bold text-white tabular-nums">{score}</span>
         <span className="text-xs font-medium text-zinc-500">/ 100</span>
       </div>
-      <div className="mt-1.5 h-2 rounded-full bg-white/10 overflow-hidden ring-1 ring-white/5">
+      <div className="mt-1.5 h-2 rounded-full bg-zinc-900/10 overflow-hidden ring-1 ring-white/5">
         <div
           className="h-full rounded-full bg-gradient-to-r from-sky-500 to-violet-500 transition-all duration-700 ease-out"
           style={{ width: `${Math.min(100, score)}%` }}
@@ -64,7 +64,7 @@ export function PublicProfileBadges({
   const profilePercent = Math.min(100, Math.round((profileCompleteness / 40) * 100));
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm px-4 py-4 sm:px-5">
+    <div className="rounded-2xl border border-white/[0.08] bg-zinc-900/[0.03] backdrop-blur-sm px-4 py-4 sm:px-5">
       <div className="flex flex-col sm:flex-row sm:items-stretch gap-4">
         <ScoreBar score={score} label={scoreLabel} />
         <div className="flex-1 min-w-0 border-t border-white/5 sm:border-t-0 sm:border-l sm:pl-4 pt-4 sm:pt-0">

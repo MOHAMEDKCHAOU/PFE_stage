@@ -50,7 +50,7 @@ export async function acceptStudioInviteForSessionUser(
     return {
       ok: false,
       status: 403,
-      error: "Les comptes administrateur ne peuvent pas accepter une invitation Studio client.",
+      error: "Les comptes administrateur ne peuvent pas accepter une invitation client (espace commercial).",
     };
   }
 
@@ -78,14 +78,14 @@ export async function acceptStudioInviteForSessionUser(
       }),
     ]);
 
-    return { ok: true, message: "Lien Studio accepté. Votre compte est rattaché." };
+    return { ok: true, message: "Lien accepté. Votre compte est rattaché à l’espace commercial du partenaire." };
   } catch (e: unknown) {
     const code = e && typeof e === "object" && "code" in e ? (e as { code: string }).code : "";
     if (code === "P2002") {
       return {
         ok: false,
         status: 409,
-        error: "Vous êtes déjà lié à ce Studio ou l’invitation est sans effet.",
+        error: "Vous êtes déjà lié à ce partenaire ou l’invitation est sans effet.",
       };
     }
     console.error("STUDIO INVITE ACCEPT TX", e);

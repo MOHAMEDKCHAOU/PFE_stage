@@ -167,14 +167,14 @@ export function ScanCaptureWorkflow({ open, onClose, onUseScan }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full bg-white/15 px-5 py-3 text-sm font-medium text-white backdrop-blur-md"
+              className="rounded-full bg-zinc-900/15 px-5 py-3 text-sm font-medium text-white backdrop-blur-md"
             >
               Fermer
             </button>
             <button
               type="button"
               onClick={doCapture}
-              className="h-16 w-16 rounded-full border-4 border-white bg-white/90 shadow-lg ring-4 ring-bordeaux-500/40"
+              className="h-16 w-16 rounded-full border-4 border-white bg-zinc-900/45 shadow-lg ring-4 ring-bordeaux-500/40"
               aria-label="Capturer"
             />
           </div>

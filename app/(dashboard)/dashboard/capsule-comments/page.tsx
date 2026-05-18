@@ -186,27 +186,27 @@ function CapsuleCommentsModerationContent() {
     <div className="space-y-8 max-w-4xl">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-stone-900">Commentaires capsules</h1>
-          <p className="mt-1 text-sm text-stone-600">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Commentaires capsules</h1>
+          <p className="mt-1 text-sm text-zinc-400">
             Modération, réponses créateur et prévisualisation publique après validation.
           </p>
         </div>
         <a
           href="/api/capsule-comments/export"
-          className="inline-flex items-center justify-center rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-800 shadow-sm transition hover:bg-stone-50"
+          className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-2.5 text-sm font-medium text-foreground shadow-sm transition hover:bg-white/5"
         >
           Exporter CSV
         </a>
       </div>
 
-      <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
-        <label className="block text-xs font-semibold uppercase tracking-wide text-stone-500">
+      <div className="rounded-2xl border border-white/10 bg-zinc-900/45 p-5 shadow-sm">
+        <label className="block text-xs font-semibold uppercase tracking-wide text-zinc-500">
           Capsule
         </label>
         <select
           value={capsuleId}
           onChange={(e) => setCapsuleId(e.target.value)}
-          className="mt-2 w-full rounded-xl border border-stone-200 bg-stone-50/50 px-4 py-3 text-sm font-medium text-stone-900 focus:border-bordeaux-400 focus:outline-none focus:ring-2 focus:ring-bordeaux-200"
+          className="mt-2 w-full rounded-xl border border-white/10 bg-zinc-900/30 px-4 py-3 text-sm font-medium text-foreground focus:border-bordeaux-400 focus:outline-none focus:ring-2 focus:ring-bordeaux-200"
         >
           {capsules.length === 0 ? (
             <option value="">Aucune capsule</option>
@@ -231,7 +231,7 @@ function CapsuleCommentsModerationContent() {
         )}
 
         {!capsulesLoadError && capsules.length === 0 && (
-          <p className="mt-3 text-sm text-stone-600">
+          <p className="mt-3 text-sm text-zinc-400">
             Aucune capsule pour ce compte. Créez-en une depuis{" "}
             <Link href="/dashboard/capsules" className="font-medium text-bordeaux-800 underline underline-offset-2">
               Mes capsules
@@ -242,12 +242,12 @@ function CapsuleCommentsModerationContent() {
 
         {meta && (
           <div className="mt-4 flex flex-wrap items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-stone-700 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={meta.commentsEnabled}
                 onChange={(e) => void setCommentsEnabled(e.target.checked)}
-                className="rounded border-stone-300 text-bordeaux-700 focus:ring-bordeaux-500"
+                className="rounded border-white/15 text-bordeaux-700 focus:ring-bordeaux-500"
               />
               Commentaires activés sur cette capsule
             </label>
@@ -265,7 +265,7 @@ function CapsuleCommentsModerationContent() {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2 border-b border-stone-200 pb-1">
+      <div className="flex flex-wrap gap-2 border-b border-white/10 pb-1">
         {(
           [
             ["PENDING", "En attente", counts.pending],
@@ -280,14 +280,14 @@ function CapsuleCommentsModerationContent() {
             onClick={() => setTab(key)}
             className={`rounded-t-lg px-4 py-2.5 text-sm font-medium transition ${
               tab === key
-                ? "bg-white border border-b-0 border-stone-200 text-bordeaux-900 -mb-px"
-                : "text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg"
+                ? "bg-zinc-900/45 border border-b-0 border-white/10 text-bordeaux-900 -mb-px"
+                : "text-zinc-400 hover:text-foreground hover:bg-white/5 rounded-lg"
             }`}
           >
             {label}
             <span
               className={`ml-1.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full px-1 text-[11px] ${
-                tab === key ? "bg-bordeaux-100 text-bordeaux-800" : "bg-stone-200 text-stone-600"
+                tab === key ? "bg-bordeaux-100 text-bordeaux-800" : "bg-zinc-900/10 text-zinc-400"
               }`}
             >
               {n}
@@ -299,11 +299,11 @@ function CapsuleCommentsModerationContent() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 rounded-2xl bg-stone-100 animate-pulse" />
+            <div key={i} className="h-24 rounded-2xl bg-zinc-900/10 animate-pulse" />
           ))}
         </div>
       ) : items.length === 0 ? (
-        <p className="text-center text-sm text-stone-500 py-12 rounded-2xl border border-dashed border-stone-200">
+        <p className="text-center text-sm text-zinc-500 py-12 rounded-2xl border border-dashed border-white/10">
           Aucun commentaire dans cette catégorie.
         </p>
       ) : (
@@ -311,15 +311,15 @@ function CapsuleCommentsModerationContent() {
           {items.map((item) => (
             <li
               key={item.id}
-              className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm"
+              className="rounded-2xl border border-white/10 bg-zinc-900/45 p-5 shadow-sm"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-stone-900">{item.authorName}</p>
+                  <p className="font-semibold text-foreground">{item.authorName}</p>
                   {item.authorEmail && (
-                    <p className="text-xs text-stone-500 mt-0.5">{item.authorEmail}</p>
+                    <p className="text-xs text-zinc-500 mt-0.5">{item.authorEmail}</p>
                   )}
-                  <time className="text-[11px] text-stone-400 mt-1 block">
+                  <time className="text-[11px] text-zinc-500 mt-1 block">
                     {new Date(item.createdAt).toLocaleString("fr-FR")}
                   </time>
                 </div>
@@ -329,7 +329,7 @@ function CapsuleCommentsModerationContent() {
                       ? "bg-amber-100 text-amber-900"
                       : item.status === "APPROVED"
                         ? "bg-emerald-100 text-emerald-900"
-                        : "bg-stone-200 text-stone-700"
+                        : "bg-zinc-900/10 text-zinc-300"
                   }`}
                 >
                   {item.status === "PENDING"
@@ -339,12 +339,12 @@ function CapsuleCommentsModerationContent() {
                       : "Rejeté"}
                 </span>
               </div>
-              <p className="mt-3 text-sm text-stone-700 leading-relaxed whitespace-pre-wrap">{item.body}</p>
+              <p className="mt-3 text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{item.body}</p>
 
               {item.reply && (
                 <div className="mt-4 rounded-xl border border-emerald-200/80 bg-emerald-50/60 p-4">
                   <p className="text-xs font-semibold text-emerald-900">{item.reply.authorName}</p>
-                  <p className="text-sm text-stone-700 mt-1 whitespace-pre-wrap">{item.reply.body}</p>
+                  <p className="text-sm text-zinc-300 mt-1 whitespace-pre-wrap">{item.reply.body}</p>
                 </div>
               )}
 
@@ -363,7 +363,7 @@ function CapsuleCommentsModerationContent() {
                       type="button"
                       disabled={busyId === item.id}
                       onClick={() => void moderate(item.id, "REJECTED")}
-                      className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50 disabled:opacity-50"
+                      className="rounded-xl border border-white/15 bg-zinc-900/45 px-4 py-2 text-xs font-semibold text-zinc-300 hover:bg-white/5 disabled:opacity-50"
                     >
                       Rejeter
                     </button>
@@ -381,14 +381,14 @@ function CapsuleCommentsModerationContent() {
               </div>
 
               {replyOpen === item.id && (
-                <div className="mt-4 space-y-2 border-t border-stone-100 pt-4">
+                <div className="mt-4 space-y-2 border-t border-white/5 pt-4">
                   <textarea
                     value={replyBody}
                     onChange={(e) => setReplyBody(e.target.value)}
                     rows={3}
                     maxLength={2000}
                     placeholder="Réponse visible publiquement sous le commentaire…"
-                    className="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm focus:border-bordeaux-400 focus:outline-none focus:ring-2 focus:ring-bordeaux-100"
+                    className="w-full rounded-xl border border-white/10 px-3 py-2 text-sm focus:border-bordeaux-400 focus:outline-none focus:ring-2 focus:ring-bordeaux-100"
                   />
                   <div className="flex gap-2">
                     <button
@@ -405,7 +405,7 @@ function CapsuleCommentsModerationContent() {
                         setReplyOpen(null);
                         setReplyBody("");
                       }}
-                      className="text-xs text-stone-600 hover:text-stone-900"
+                      className="text-xs text-zinc-400 hover:text-foreground"
                     >
                       Annuler
                     </button>
@@ -424,7 +424,7 @@ export default function CapsuleCommentsDashboardPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center py-24 text-stone-500">Chargement…</div>
+        <div className="flex items-center justify-center py-24 text-zinc-500">Chargement…</div>
       }
     >
       <CapsuleCommentsModerationContent />

@@ -273,7 +273,7 @@ export default function StudioPage() {
           className="h-10 w-10 animate-spin rounded-full border-2 border-bordeaux-200 border-t-bordeaux-600"
           aria-hidden
         />
-        <p className="text-sm font-medium text-stone-500">Chargement de l’espace Studio…</p>
+        <p className="text-sm font-medium text-zinc-500">Chargement de l’espace commercial…</p>
       </div>
     );
   }
@@ -281,15 +281,15 @@ export default function StudioPage() {
   if (roleOk === false) {
     return (
       <div className="mx-auto max-w-xl animate-in">
-        <div className="relative overflow-hidden rounded-2xl border border-stone-200/90 bg-white p-8 shadow-lg shadow-stone-200/50 ring-1 ring-stone-100">
+        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/45 p-8 shadow-lg shadow-black/40 ring-1 ring-white/10">
           <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-bordeaux-100/60 blur-2xl" />
           <div className="relative">
             <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-900">
               Accès restreint
             </span>
-            <h1 className="mt-4 text-2xl font-bold tracking-tight text-stone-900">Espace Studio</h1>
-            <p className="mt-3 text-sm leading-relaxed text-stone-600">
-              Cette zone est réservée aux comptes <strong className="text-stone-800">Studio</strong> (partenaires /
+            <h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground">Espace commercial</h1>
+            <p className="mt-3 text-sm leading-relaxed text-zinc-400">
+              Cette zone est réservée aux comptes <strong className="text-foreground">commerciaux</strong> (partenaires /
               agences). Un administrateur Faymoos peut activer ce mode depuis la gestion des utilisateurs.
             </p>
             <Link
@@ -310,7 +310,7 @@ export default function StudioPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-8 pb-4 animate-in">
       {/* En-tête */}
-      <header className="flex flex-col gap-6 border-b border-stone-200/80 pb-8 lg:flex-row lg:items-end lg:justify-between">
+      <header className="flex flex-col gap-6 border-b border-white/10 pb-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-bordeaux-200/80 bg-bordeaux-50 px-3 py-1 text-xs font-semibold text-bordeaux-900">
@@ -318,19 +318,19 @@ export default function StudioPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-bordeaux-400 opacity-40" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-bordeaux-600" />
               </span>
-              Mode Studio · B2B
+              Espace commercial · B2B
             </span>
             {accountEmail && (
-              <span className="text-xs text-stone-500">
-                Connecté · <span className="font-medium text-stone-700">{accountEmail}</span>
+              <span className="text-xs text-zinc-500">
+                Connecté · <span className="font-medium text-zinc-300">{accountEmail}</span>
               </span>
             )}
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-stone-900 md:text-[1.75rem] leading-tight">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-[1.75rem] leading-tight">
               Vos comptes clients
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-600">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-400">
               Liez des organisations ou clients finaux qui ont déjà un compte Faymoos, puis pilotez leurs identités,
               capsules et contenus depuis votre session — comme un véritable espace agence.
             </p>
@@ -339,7 +339,7 @@ export default function StudioPage() {
         <div className="flex shrink-0 gap-3">
           <Link
             href="/dashboard/identities"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
           >
             <svg className="h-4 w-4 text-bordeaux-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path
@@ -355,11 +355,11 @@ export default function StudioPage() {
 
       {/* KPIs + pilotage */}
       <section className="space-y-4">
-        <div className="rounded-2xl border border-stone-200/90 bg-gradient-to-br from-white via-stone-50/40 to-bordeaux-50/30 p-5 shadow-sm ring-1 ring-stone-100/80">
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white via-stone-50/40 to-bordeaux-50/30 p-5 shadow-sm ring-1 ring-white/10/80">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 space-y-1">
-              <h2 className="text-sm font-semibold text-stone-900">Pilotage & exports</h2>
-              <p className="max-w-xl text-xs leading-relaxed text-stone-600">
+              <h2 className="text-sm font-semibold text-foreground">Pilotage & exports</h2>
+              <p className="max-w-xl text-xs leading-relaxed text-zinc-400">
                 Rapport PDF prêt à partager (synthèse + tableau clients), ou fichier CSV pour Excel / outils
                 métier. Les dates ISO du CSV sont en UTC ; le PDF affiche les dates en format lisible.
               </p>
@@ -393,16 +393,16 @@ export default function StudioPage() {
                 type="button"
                 disabled={exportKind !== null}
                 onClick={() => handleExport("csv")}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-5 py-3 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-bordeaux-200 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900/45 px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-bordeaux-200 hover:bg-zinc-900/45 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {exportKind === "csv" ? (
                   <>
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-stone-200 border-t-bordeaux-600" />
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/10 border-t-bordeaux-600" />
                     CSV…
                   </>
                 ) : (
                   <>
-                    <svg className="h-4 w-4 text-stone-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <svg className="h-4 w-4 text-zinc-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -418,22 +418,22 @@ export default function StudioPage() {
         </div>
         {exportNote ? <p className="text-xs font-medium text-amber-800">{exportNote}</p> : null}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm ring-1 ring-stone-100">
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Clients actifs</p>
-            <p className="mt-2 text-3xl font-bold tabular-nums text-stone-900">
+          <div className="rounded-2xl border border-white/10 bg-zinc-900/45 p-5 shadow-sm ring-1 ring-white/10">
+            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Clients actifs</p>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-foreground">
               {metrics?.activeClients ?? totals.clients}
             </p>
-            <p className="mt-1 text-xs text-stone-500">Comptes liés à votre Studio</p>
+            <p className="mt-1 text-xs text-zinc-500">Comptes liés à votre espace commercial</p>
           </div>
-          <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm ring-1 ring-stone-100">
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">Identités gérées</p>
+          <div className="rounded-2xl border border-white/10 bg-zinc-900/45 p-5 shadow-sm ring-1 ring-white/10">
+            <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Identités gérées</p>
             <p className="mt-2 text-3xl font-bold tabular-nums text-bordeaux-800">{totals.identities}</p>
-            <p className="mt-1 text-xs text-stone-500">Total côté clients (aperçu)</p>
+            <p className="mt-1 text-xs text-zinc-500">Total côté clients (aperçu)</p>
           </div>
           <div className="rounded-2xl border border-amber-100/90 bg-gradient-to-br from-amber-50/80 to-white p-5 shadow-sm ring-1 ring-amber-100/70">
             <p className="text-xs font-semibold uppercase tracking-wide text-amber-900/80">Invitations en attente</p>
-            <p className="mt-2 text-3xl font-bold tabular-nums text-stone-900">{metrics?.pendingInvites ?? "—"}</p>
-            <p className="mt-1 text-xs text-stone-500">Non expirées, non acceptées</p>
+            <p className="mt-2 text-3xl font-bold tabular-nums text-foreground">{metrics?.pendingInvites ?? "—"}</p>
+            <p className="mt-1 text-xs text-zinc-500">Non expirées, non acceptées</p>
           </div>
           <div className="rounded-2xl border border-emerald-100/90 bg-gradient-to-br from-emerald-50/70 to-white p-5 shadow-sm ring-1 ring-emerald-100/60">
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-900/80">Taux d’acceptation</p>
@@ -444,7 +444,7 @@ export default function StudioPage() {
                   ? "N/A"
                   : `${metrics.acceptanceRateLast30Days}%`}
             </p>
-            <p className="mt-1 text-xs text-stone-500">
+            <p className="mt-1 text-xs text-zinc-500">
               {metrics == null
                 ? "Chargement…"
                 : metrics.invitesCreatedLast30Days === 0
@@ -466,10 +466,10 @@ export default function StudioPage() {
       <section className="rounded-2xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/90 via-white to-stone-50/80 p-6 shadow-sm ring-1 ring-emerald-100/60">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-base font-semibold text-stone-900">Invitation sécurisée (recommandé)</h2>
-            <p className="mt-1 max-w-3xl text-xs leading-relaxed text-stone-600">
+            <h2 className="text-base font-semibold text-foreground">Invitation sécurisée (recommandé)</h2>
+            <p className="mt-1 max-w-3xl text-xs leading-relaxed text-zinc-400">
               Générez un lien unique. Le client peut{" "}
-              <strong className="text-stone-800">accepter depuis son tableau de bord Faymoos</strong> dès que son e-mail
+              <strong className="text-foreground">accepter depuis son tableau de bord Faymoos</strong> dès que son e-mail
               est renseigné ci-dessous — ou ouvrir le lien (connexion / inscription puis accepter). Le jeton est stocké
               haché côté serveur ; copiez le lien tout de suite si vous souhaitez aussi le transmettre par message : il
               ne sera plus affiché en clair.
@@ -479,7 +479,7 @@ export default function StudioPage() {
 
         <form onSubmit={handleCreateInvite} className="mt-5 grid gap-4 md:grid-cols-2">
           <div className="space-y-1.5">
-            <label htmlFor="invite-email-opt" className="text-xs font-medium text-stone-600">
+            <label htmlFor="invite-email-opt" className="text-xs font-medium text-zinc-400">
               E-mail du client (optionnel mais recommandé)
             </label>
             <input
@@ -489,22 +489,22 @@ export default function StudioPage() {
               value={inviteEmailOpt}
               onChange={(e) => setInviteEmailOpt(e.target.value)}
               placeholder="contact@entreprise.com — lie l’invitation à ce compte uniquement"
-              className="block w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/60"
+              className="block w-full rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-2.5 text-sm text-foreground placeholder:text-zinc-500 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/60"
             />
-            <p className="text-[11px] text-stone-500">
+            <p className="text-[11px] text-zinc-500">
               Si renseigné : seul ce compte pourra accepter, et l’invitation apparaît sur son tableau de bord après
               connexion (plus besoin d’ouvrir le lien).
             </p>
           </div>
           <div className="space-y-1.5">
-            <label htmlFor="invite-days" className="text-xs font-medium text-stone-600">
+            <label htmlFor="invite-days" className="text-xs font-medium text-zinc-400">
               Validité
             </label>
             <select
               id="invite-days"
               value={inviteDays}
               onChange={(e) => setInviteDays(Number(e.target.value))}
-              className="block w-full rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm text-stone-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/60"
+              className="block w-full rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-2.5 text-sm text-foreground outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/60"
             >
               {[1, 3, 7, 14, 30].map((d) => (
                 <option key={d} value={d}>
@@ -525,7 +525,7 @@ export default function StudioPage() {
               <button
                 type="button"
                 onClick={copyLastLink}
-                className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-800 hover:bg-stone-50"
+                className="rounded-xl border border-white/10 bg-zinc-900/45 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-white/5"
               >
                 {copied ? "Copié !" : "Copier le lien"}
               </button>
@@ -540,11 +540,11 @@ export default function StudioPage() {
         )}
 
         {lastInviteUrl && (
-          <div className="mt-4 rounded-xl border border-emerald-200 bg-white/90 px-3 py-3">
+          <div className="mt-4 rounded-xl border border-emerald-200 bg-zinc-900/45 px-3 py-3">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-900">Lien à transmettre</p>
-            <p className="mt-1 break-all font-mono text-xs text-stone-800">{lastInviteUrl}</p>
+            <p className="mt-1 break-all font-mono text-xs text-foreground">{lastInviteUrl}</p>
             {lastInviteExpires && (
-              <p className="mt-2 text-[11px] text-stone-500">
+              <p className="mt-2 text-[11px] text-zinc-500">
                 Expire le {new Date(lastInviteExpires).toLocaleString("fr-FR")}
               </p>
             )}
@@ -552,17 +552,17 @@ export default function StudioPage() {
         )}
 
         <div className="mt-6 border-t border-emerald-200/60 pt-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-600">Invitations récentes</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-400">Invitations récentes</h3>
           {invites.length === 0 ? (
-            <p className="mt-2 text-xs text-stone-500">Aucune invitation enregistrée.</p>
+            <p className="mt-2 text-xs text-zinc-500">Aucune invitation enregistrée.</p>
           ) : (
-            <ul className="mt-3 divide-y divide-stone-100 rounded-xl border border-stone-200 bg-white">
+            <ul className="mt-3 divide-y divide-white/10 rounded-xl border border-white/10 bg-zinc-900/45">
               {invites.map((inv) => (
                 <li key={inv.id} className="flex flex-col gap-2 px-3 py-3 text-xs sm:flex-row sm:items-center sm:justify-between">
-                  <div className="text-stone-700">
-                    <span className="font-medium capitalize text-stone-900">{inv.state}</span>
-                    {inv.inviteeEmail && <span className="text-stone-500"> · {inv.inviteeEmail}</span>}
-                    <span className="block text-[11px] text-stone-500">
+                  <div className="text-zinc-300">
+                    <span className="font-medium capitalize text-foreground">{inv.state}</span>
+                    {inv.inviteeEmail && <span className="text-zinc-500"> · {inv.inviteeEmail}</span>}
+                    <span className="block text-[11px] text-zinc-500">
                       expire {new Date(inv.expiresAt).toLocaleString("fr-FR")}
                     </span>
                   </div>
@@ -571,7 +571,7 @@ export default function StudioPage() {
                       type="button"
                       disabled={inviteBusy}
                       onClick={() => handleRevokeInvite(inv.id)}
-                      className="self-start rounded-lg border border-stone-200 px-2 py-1 text-[11px] font-medium text-stone-600 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                      className="self-start rounded-lg border border-white/10 px-2 py-1 text-[11px] font-medium text-zinc-400 hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
                     >
                       Révoquer
                     </button>
@@ -584,8 +584,8 @@ export default function StudioPage() {
       </section>
 
       {/* Parcours B2B */}
-      <section className="rounded-2xl border border-stone-200/90 bg-stone-50/80 p-6 ring-1 ring-stone-100">
-        <h2 className="text-sm font-semibold text-stone-900">Comment ça marche</h2>
+      <section className="rounded-2xl border border-white/10 bg-zinc-900/35 p-6 ring-1 ring-white/10">
+        <h2 className="text-sm font-semibold text-foreground">Comment ça marche</h2>
         <ol className="mt-4 grid gap-4 md:grid-cols-3">
           {[
             {
@@ -606,11 +606,11 @@ export default function StudioPage() {
           ].map((item) => (
             <li
               key={item.step}
-              className="relative rounded-xl border border-stone-200/80 bg-white p-4 shadow-sm"
+              className="relative rounded-xl border border-white/10 bg-zinc-900/45 p-4 shadow-sm"
             >
               <span className="font-mono text-xs font-bold text-bordeaux-600">{item.step}</span>
-              <p className="mt-2 text-sm font-semibold text-stone-900">{item.title}</p>
-              <p className="mt-1 text-xs leading-relaxed text-stone-600">{item.desc}</p>
+              <p className="mt-2 text-sm font-semibold text-foreground">{item.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-zinc-400">{item.desc}</p>
             </li>
           ))}
         </ol>
@@ -619,7 +619,7 @@ export default function StudioPage() {
       <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
         {/* Colonne invitation */}
         <section className="lg:col-span-5">
-          <div className="rounded-2xl border border-stone-200/90 bg-white p-6 shadow-md shadow-stone-200/40 ring-1 ring-stone-100">
+          <div className="rounded-2xl border border-white/10 bg-zinc-900/45 p-6 shadow-md shadow-black/35 ring-1 ring-white/10">
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-bordeaux-100 text-bordeaux-800">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -631,8 +631,8 @@ export default function StudioPage() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-base font-semibold text-stone-900">Liaison directe par e-mail</h2>
-                <p className="mt-0.5 text-xs text-stone-500">
+                <h2 className="text-base font-semibold text-foreground">Liaison directe par e-mail</h2>
+                <p className="mt-0.5 text-xs text-zinc-500">
                   Option avancée si le client ne peut pas utiliser le lien. Préférez l’invitation ci-dessus lorsque
                   possible.
                 </p>
@@ -660,20 +660,20 @@ export default function StudioPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="contact@entreprise.com"
-                  className="block w-full rounded-xl border border-stone-200 bg-stone-50/50 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 outline-none transition focus:border-bordeaux-400 focus:bg-white focus:ring-2 focus:ring-bordeaux-200/60"
+                  className="block w-full rounded-xl border border-white/10 bg-zinc-900/30 px-4 py-3 text-sm text-foreground placeholder:text-zinc-500 outline-none transition focus:border-bordeaux-400 focus:bg-zinc-900/45 focus:ring-2 focus:ring-bordeaux-200/60"
                 />
               </div>
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-stone-200 bg-stone-50/40 px-3 py-3 text-left transition hover:bg-stone-50/80">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-zinc-900/25 px-3 py-3 text-left transition hover:bg-zinc-900/45">
                 <input
                   type="checkbox"
                   checked={linkConsent}
                   onChange={(e) => setLinkConsent(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-stone-300 text-bordeaux-700 focus:ring-bordeaux-500"
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/15 text-bordeaux-700 focus:ring-bordeaux-500"
                 />
-                <span className="text-xs leading-relaxed text-stone-700">
-                  Je confirme disposer d’un <strong className="font-semibold text-stone-900">mandat</strong>, d’un
-                  contrat ou d’un <strong className="font-semibold text-stone-900">accord explicite</strong> du client
-                  pour agir sur son espace Faymoos (responsabilité de l’organisme studio).
+                <span className="text-xs leading-relaxed text-zinc-300">
+                  Je confirme disposer d’un <strong className="font-semibold text-foreground">mandat</strong>, d’un
+                  contrat ou d’un <strong className="font-semibold text-foreground">accord explicite</strong> du client
+                  pour agir sur son espace Faymoos (responsabilité de l’organisme commercial).
                 </span>
               </label>
               <button
@@ -721,11 +721,11 @@ export default function StudioPage() {
 
         {/* Annuaire clients */}
         <section className="lg:col-span-7">
-          <div className="rounded-2xl border border-stone-200/90 bg-white shadow-md shadow-stone-200/40 ring-1 ring-stone-100">
-            <div className="flex flex-col gap-1 border-b border-stone-100 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="rounded-2xl border border-white/10 bg-zinc-900/45 shadow-md shadow-black/35 ring-1 ring-white/10">
+            <div className="flex flex-col gap-1 border-b border-white/5 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-base font-semibold text-stone-900">Annuaire</h2>
-                <p className="text-xs text-stone-500">
+                <h2 className="text-base font-semibold text-foreground">Annuaire</h2>
+                <p className="text-xs text-zinc-500">
                   {totals.clients === 0
                     ? "Aucun client pour l’instant — ajoutez un premier compte à gauche."
                     : `${totals.clients} compte${totals.clients > 1 ? "s" : ""} sous mandat`}
@@ -741,7 +741,7 @@ export default function StudioPage() {
 
             {links.length === 0 ? (
               <div className="px-6 py-14 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-stone-100 text-stone-400">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-900/10 text-zinc-500">
                   <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                     <path
                       strokeLinecap="round"
@@ -750,14 +750,14 @@ export default function StudioPage() {
                     />
                   </svg>
                 </div>
-                <p className="mt-4 text-sm font-medium text-stone-800">Aucun client lié</p>
-                <p className="mx-auto mt-1 max-w-sm text-xs text-stone-500">
+                <p className="mt-4 text-sm font-medium text-foreground">Aucun client lié</p>
+                <p className="mx-auto mt-1 max-w-sm text-xs text-zinc-500">
                   Les comptes apparaîtront ici avec l’email, la date de rattachement et le nombre d’identités
                   visibles dans votre espace.
                 </p>
               </div>
             ) : (
-              <ul className="divide-y divide-stone-100">
+              <ul className="divide-y divide-white/10">
                 {links.map((row) => {
                   const idents = row.client._count.identityProfiles;
                   const linked = new Date(row.createdAt).toLocaleDateString("fr-FR", {
@@ -769,14 +769,14 @@ export default function StudioPage() {
                     <li key={row.id} className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex min-w-0 items-center gap-4">
                         <div
-                          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-bordeaux-100 to-stone-100 text-sm font-bold text-bordeaux-900 ring-1 ring-bordeaux-200/40"
+                          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-bordeaux-100 to-white/10 text-sm font-bold text-bordeaux-900 ring-1 ring-bordeaux-200/40"
                           aria-hidden
                         >
                           {initialsFromEmail(row.client.email)}
                         </div>
                         <div className="min-w-0">
-                          <p className="truncate font-medium text-stone-900">{row.client.email}</p>
-                          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-stone-500">
+                          <p className="truncate font-medium text-foreground">{row.client.email}</p>
+                          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
                             <span className="inline-flex items-center gap-1">
                               <span className="h-1 w-1 rounded-full bg-emerald-500" />
                               Mandat actif
@@ -791,7 +791,7 @@ export default function StudioPage() {
                       <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
                         <Link
                           href="/dashboard/identities"
-                          className="inline-flex items-center justify-center rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs font-semibold text-stone-800 transition hover:border-bordeaux-200 hover:bg-bordeaux-50/60"
+                          className="inline-flex items-center justify-center rounded-lg border border-white/10 bg-zinc-900/45 px-3 py-2 text-xs font-semibold text-foreground transition hover:border-bordeaux-200 hover:bg-bordeaux-50/60"
                         >
                           Gérer le contenu
                         </Link>
@@ -799,7 +799,7 @@ export default function StudioPage() {
                           type="button"
                           disabled={busy}
                           onClick={() => handleUnlink(row.clientUserId, row.client.email)}
-                          className="inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold text-stone-500 transition hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
+                          className="inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold text-zinc-500 transition hover:bg-red-50 hover:text-red-700 disabled:opacity-50"
                         >
                           Retirer le lien
                         </button>
@@ -811,9 +811,9 @@ export default function StudioPage() {
             )}
           </div>
 
-          <p className="mt-4 text-center text-[11px] leading-relaxed text-stone-400">
+          <p className="mt-4 text-center text-[11px] leading-relaxed text-zinc-500">
             La suppression du lien ne supprime pas le compte client ni ses données ; elle retire uniquement votre accès
-            de gestionnaire Studio.
+            de gestionnaire commercial.
           </p>
         </section>
       </div>

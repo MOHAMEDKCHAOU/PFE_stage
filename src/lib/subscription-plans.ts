@@ -62,7 +62,7 @@ export const BILLING_PLAN_CATALOG: {
   {
     key: "FREE",
     name: "Free",
-    description: "Découverte : identités et capsules limitées, pas d’espace Studio client.",
+    description: "Découverte : identités et capsules limitées, pas d’espace commercial client.",
   },
   {
     key: "PRO",
@@ -72,12 +72,12 @@ export const BILLING_PLAN_CATALOG: {
   },
   {
     key: "STUDIO",
-    name: "Studio",
-    description: "Agence : clients liés, invitations sécurisées, quotas Studio étendus.",
+    name: "Commercial",
+    description: "Agence : clients liés, invitations sécurisées, quotas espace commercial étendus.",
   },
   {
     key: "STUDIO_PLUS",
-    name: "Studio+",
-    description: "Volume : limites majores pour studios et équipes ambitieuses.",
+    name: "Commercial+",
+    description: "Volume : limites majores pour organisations commerciales et équipes ambitieuses.",
   },
 ];

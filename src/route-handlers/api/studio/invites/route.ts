@@ -29,7 +29,7 @@ export async function GET(req: Request) {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   const { searchParams } = new URL(req.url);
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   let body: { inviteeEmail?: unknown; validityDays?: unknown };
@@ -189,7 +189,7 @@ export async function DELETE(req: Request) {
   const denied = await requireStudioSubscriptionOrResponse(affiliateId);
   if (denied) return denied;
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
 
   const id = new URL(req.url).searchParams.get("id");

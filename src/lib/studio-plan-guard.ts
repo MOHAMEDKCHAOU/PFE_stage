@@ -10,7 +10,7 @@ export async function requireStudioSubscriptionOrResponse(
   affiliateId: string | null,
 ): Promise<NextResponse | null> {
   if (!affiliateId) {
-    return NextResponse.json({ error: "Réservé aux comptes Studio (affilié)" }, { status: 403 });
+    return NextResponse.json({ error: "Accès réservé aux partenaires affiliés (espace commercial)." }, { status: 403 });
   }
   const q = await assertStudioSubscription(affiliateId);
   if (q) return subscriptionErrorResponse(q);

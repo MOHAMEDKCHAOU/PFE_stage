@@ -82,7 +82,7 @@ export default function AdminPage() {
         {statCards.map((stat) => (
           <div
             key={stat.label}
-            className="relative overflow-hidden rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100"
+            className="relative overflow-hidden rounded-2xl bg-zinc-900/45 p-5 shadow-sm ring-1 ring-slate-100"
           >
             <div className={`absolute top-0 right-0 h-20 w-20 rounded-bl-[3rem] bg-gradient-to-br ${stat.color} opacity-10`} />
             <span className="text-2xl">{stat.icon}</span>
@@ -96,7 +96,7 @@ export default function AdminPage() {
       <div className="grid md:grid-cols-3 gap-4">
         <Link
           href="/dashboard/admin/users"
-          className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 hover:ring-violet-200 transition-all"
+          className="group flex items-center gap-4 rounded-2xl bg-zinc-900/45 p-5 shadow-sm ring-1 ring-slate-100 hover:ring-violet-200 transition-all"
         >
           <div className="h-12 w-12 rounded-xl bg-violet-100 flex items-center justify-center group-hover:bg-violet-200 transition-colors">
             <svg className="h-6 w-6 text-violet-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -114,7 +114,7 @@ export default function AdminPage() {
 
         <Link
           href="/dashboard/admin/capsules"
-          className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 hover:ring-fuchsia-200 transition-all"
+          className="group flex items-center gap-4 rounded-2xl bg-zinc-900/45 p-5 shadow-sm ring-1 ring-slate-100 hover:ring-fuchsia-200 transition-all"
         >
           <div className="h-12 w-12 rounded-xl bg-fuchsia-100 flex items-center justify-center group-hover:bg-fuchsia-200 transition-colors">
             <svg className="h-6 w-6 text-fuchsia-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -132,7 +132,7 @@ export default function AdminPage() {
 
         <Link
           href="/dashboard/admin/badges"
-          className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100 hover:ring-amber-200 transition-all"
+          className="group flex items-center gap-4 rounded-2xl bg-zinc-900/45 p-5 shadow-sm ring-1 ring-slate-100 hover:ring-amber-200 transition-all"
         >
           <div className="h-12 w-12 rounded-xl bg-amber-100 flex items-center justify-center group-hover:bg-amber-200 transition-colors">
             <svg className="h-6 w-6 text-amber-700" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -156,7 +156,7 @@ export default function AdminPage() {
       {/* Recent Tables */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent Users */}
-        <div className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 overflow-hidden">
+        <div className="rounded-2xl bg-zinc-900/45 shadow-sm ring-1 ring-slate-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="font-semibold text-slate-800">Derniers utilisateurs</h2>
           </div>
@@ -184,7 +184,7 @@ export default function AdminPage() {
         </div>
 
         {/* Recent Capsules */}
-        <div className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 overflow-hidden">
+        <div className="rounded-2xl bg-zinc-900/45 shadow-sm ring-1 ring-slate-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100">
             <h2 className="font-semibold text-slate-800">Dernières capsules</h2>
           </div>

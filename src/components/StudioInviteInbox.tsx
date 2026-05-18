@@ -84,7 +84,7 @@ export function StudioInviteInbox({
           S
         </div>
         <div>
-          <h2 className="text-sm font-semibold text-slate-800">Invitations Studio</h2>
+          <h2 className="text-sm font-semibold text-slate-800">Invitations — espace commercial</h2>
           <p className="text-xs text-slate-500">
             Un partenaire vous invite à lier votre compte — vous pouvez accepter ici sans ouvrir un lien externe.
           </p>
@@ -94,11 +94,11 @@ export function StudioInviteInbox({
         {items.map((row) => (
           <li
             key={row.id}
-            className="flex flex-col gap-3 rounded-xl border border-white/60 bg-white/90 p-4 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 rounded-xl border border-white/60 bg-zinc-900/45 p-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="min-w-0 text-sm">
               <p className="font-medium text-slate-800">
-                Studio : <span className="text-bordeaux-900">{row.affiliate.email}</span>
+                Partenaire : <span className="text-bordeaux-900">{row.affiliate.email}</span>
               </p>
               <p className="mt-0.5 text-xs text-slate-500">
                 Expire le {new Date(row.expiresAt).toLocaleString("fr-FR")}

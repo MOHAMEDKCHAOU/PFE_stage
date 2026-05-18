@@ -128,7 +128,7 @@ export default function AdminUsersPage() {
           placeholder="Rechercher par email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 bg-white"
+          className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 bg-zinc-900/45"
         />
         <button
           type="submit"
@@ -139,7 +139,7 @@ export default function AdminUsersPage() {
       </form>
 
       {/* Users Table */}
-      <div className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 overflow-hidden">
+      <div className="rounded-2xl bg-zinc-900/45 shadow-sm ring-1 ring-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -201,7 +201,7 @@ export default function AdminUsersPage() {
                           value={user.role}
                           disabled={actionLoading === user.id}
                           onChange={(e) => setUserRole(user.id, e.target.value)}
-                          className="text-xs rounded-lg border border-slate-200 bg-white px-2 py-1.5 font-medium text-slate-700 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-200 disabled:opacity-50"
+                          className="text-xs rounded-lg border border-slate-200 bg-zinc-900/45 px-2 py-1.5 font-medium text-slate-700 outline-none focus:border-violet-400 focus:ring-1 focus:ring-violet-200 disabled:opacity-50"
                           title="Rôle"
                         >
                           <option value="USER">USER</option>
@@ -243,7 +243,7 @@ export default function AdminUsersPage() {
                           {user.identityProfiles.map((profile) => (
                             <div
                               key={profile.id}
-                              className="flex items-center gap-3 rounded-xl bg-white p-3 ring-1 ring-slate-100"
+                              className="flex items-center gap-3 rounded-xl bg-zinc-900/45 p-3 ring-1 ring-slate-100"
                             >
                               {profile.avatar ? (
                                 <img

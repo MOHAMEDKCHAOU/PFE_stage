@@ -391,7 +391,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
   );
 
   if (loadErr || !cap) {
-    return <p className="p-6 text-stone-600">{loadErr || "Chargement…"}</p>;
+    return <p className="p-6 text-zinc-400">{loadErr || "Chargement…"}</p>;
   }
 
   const coverImg = coverPreview || cap.identity.cover;
@@ -417,7 +417,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
               <div className="se-topbar-title">{displayName || cap.identity.name}</div>
               <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
                 {!cap.isPublished && <span className="se-badge-draft">brouillon</span>}
-                <span className="text-[11px] text-stone-500">
+                <span className="text-[11px] text-zinc-500">
                   {cap.isPublished ? "publié" : "non publié"}
                 </span>
               </div>
@@ -604,7 +604,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
                     className="se-option-item"
                     style={{ cursor: "grab" }}
                   >
-                    <span className="text-stone-400">⠿</span>
+                    <span className="text-zinc-500">⠿</span>
                     <span
                       className="se-option-dot"
                       style={{ background: OPTION_COLORS[idx % OPTION_COLORS.length] }}
@@ -613,14 +613,14 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
                     <span className="flex gap-0.5">
                       <button
                         type="button"
-                        className="rounded border border-stone-200 px-1 text-[10px]"
+                        className="rounded border border-white/10 px-1 text-[10px]"
                         onClick={() => move(o, -1)}
                       >
                         ↑
                       </button>
                       <button
                         type="button"
-                        className="rounded border border-stone-200 px-1 text-[10px]"
+                        className="rounded border border-white/10 px-1 text-[10px]"
                         onClick={() => move(o, 1)}
                       >
                         ↓
@@ -651,7 +651,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
                     >
                       <span className="se-option-dot" style={{ background: c }} />
                       <span className="se-option-text">{h.label || h.optionId}</span>
-                      <span className="text-[10px] text-stone-500">
+                      <span className="text-[10px] text-zinc-500">
                         x:{h.x}% y:{h.y}%
                       </span>
                     </div>
@@ -715,7 +715,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
                   </>
                 )}
                 {!selectedOptionId && (
-                  <p className="text-xs text-stone-500">Choisissez une option dans Add ou le canvas.</p>
+                  <p className="text-xs text-zinc-500">Choisissez une option dans Add ou le canvas.</p>
                 )}
               </div>
             )}
@@ -916,7 +916,7 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
             <div className="se-rp-title">Assets</div>
             <div className="se-asset-grid">
               {assets.length === 0 && (
-                <div className="col-span-2 text-center text-[11px] text-stone-500">
+                <div className="col-span-2 text-center text-[11px] text-zinc-500">
                   Aucun visuel
                 </div>
               )}
@@ -960,14 +960,14 @@ export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
               ))}
             </div>
             <div className="se-rp-title">Aperçu rapide</div>
-            <p className="text-[11px] leading-relaxed text-stone-500">
+            <p className="text-[11px] leading-relaxed text-zinc-500">
               {sortedOpt.length} options
               <br />
               <span className={cap.isPublished ? "text-emerald-700" : "text-amber-800"}>
                 {cap.isPublished ? "Publié" : "Brouillon"}
               </span>
               <br />
-              <span className="text-stone-400">Slug :</span>
+              <span className="text-zinc-500">Slug :</span>
               <br />
               <code className="text-[10px] text-bordeaux-900">/capsule/{cap.identity.slug}</code>
             </p>

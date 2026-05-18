@@ -49,14 +49,14 @@ function UsageBar({
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between text-sm">
-        <span className="text-stone-600">{label}</span>
-        <span className="font-medium tabular-nums text-stone-900">
+        <span className="text-zinc-400">{label}</span>
+        <span className="font-medium tabular-nums text-foreground">
           {used}
           {!full && ` / ${max}`}
         </span>
       </div>
       {!full && (
-        <div className="h-2 overflow-hidden rounded-full bg-stone-200">
+        <div className="h-2 overflow-hidden rounded-full bg-zinc-900/10">
           <div
             className={`h-full rounded-full transition-all ${pct >= 90 ? "bg-amber-500" : "bg-bordeaux-600"}`}
             style={{ width: `${pct}%` }}
@@ -187,7 +187,7 @@ function BillingPageContent() {
 
   if (loading || !billing) {
     return (
-      <div className="flex items-center justify-center py-24 text-stone-500">Chargement…</div>
+      <div className="flex items-center justify-center py-24 text-zinc-500">Chargement…</div>
     );
   }
 
@@ -214,8 +214,8 @@ function BillingPageContent() {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-stone-900">Facturation</h1>
-        <p className="mt-1 text-stone-600">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Facturation</h1>
+        <p className="mt-1 text-zinc-400">
           {!catalogLoaded
             ? "Chargement des offres…"
             : demoMode
@@ -242,25 +242,25 @@ function BillingPageContent() {
         </div>
       )}
 
-      <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm shadow-stone-200/40">
-        <h2 className="text-lg font-semibold text-stone-900">Votre abonnement</h2>
+      <section className="rounded-2xl border border-white/10 bg-zinc-900/45 p-6 shadow-sm shadow-black/35">
+        <h2 className="text-lg font-semibold text-foreground">Votre abonnement</h2>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-medium uppercase tracking-wide text-stone-500">Plan effectif</dt>
-            <dd className="mt-0.5 text-lg font-semibold text-stone-900">
+            <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500">Plan effectif</dt>
+            <dd className="mt-0.5 text-lg font-semibold text-foreground">
               {BILLING_PLAN_CATALOG.find((p) => p.key === billing.effectivePlan)?.name ?? billing.effectivePlan}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase tracking-wide text-stone-500">
+            <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500">
               {demoMode ? "Statut (démo)" : "Statut Stripe"}
             </dt>
-            <dd className="mt-0.5 font-medium capitalize text-stone-800">{statusLabel}</dd>
+            <dd className="mt-0.5 font-medium capitalize text-foreground">{statusLabel}</dd>
           </div>
           {periodEnd && (
             <div className="sm:col-span-2">
-              <dt className="text-xs font-medium uppercase tracking-wide text-stone-500">Fin de période</dt>
-              <dd className="mt-0.5 font-medium text-stone-800">{periodEnd}</dd>
+              <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500">Fin de période</dt>
+              <dd className="mt-0.5 font-medium text-foreground">{periodEnd}</dd>
             </div>
           )}
         </dl>
@@ -277,8 +277,8 @@ function BillingPageContent() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-stone-200/80 bg-white p-6 shadow-sm shadow-stone-200/40">
-        <h2 className="text-lg font-semibold text-stone-900">Usage ({billing.usage.periodKey}, UTC)</h2>
+      <section className="rounded-2xl border border-white/10 bg-zinc-900/45 p-6 shadow-sm shadow-black/35">
+        <h2 className="text-lg font-semibold text-foreground">Usage ({billing.usage.periodKey}, UTC)</h2>
         <div className="mt-6 space-y-5 max-w-lg">
           <UsageBar label="Identités" used={billing.usage.identities} max={billing.limits.maxIdentities} />
           <UsageBar label="Capsules" used={billing.usage.capsules} max={billing.limits.maxCapsules} />
@@ -301,8 +301,8 @@ function BillingPageContent() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-stone-900">Choisir un plan</h2>
-        <p className="mt-1 text-sm text-stone-600">
+        <h2 className="text-lg font-semibold text-foreground">Choisir un plan</h2>
+        <p className="mt-1 text-sm text-zinc-400">
           {!catalogLoaded
             ? "Chargement du catalogue tarifaire…"
             : demoMode
@@ -318,35 +318,35 @@ function BillingPageContent() {
               <div
                 key={plan.key}
                 className={`flex flex-col rounded-2xl border p-5 shadow-sm ${
-                  plan.highlight ? "border-bordeaux-300 bg-bordeaux-50/40 ring-1 ring-bordeaux-200/60" : "border-stone-200 bg-white"
+                  plan.highlight ? "border-bordeaux-300 bg-bordeaux-50/40 ring-1 ring-bordeaux-200/60" : "border-white/10 bg-zinc-900/45"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-lg font-bold text-stone-900">{plan.name}</h3>
+                  <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
                   {isCurrent && (
                     <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
                       Actuel
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-sm text-stone-600">{dbRow?.description ?? plan.description}</p>
+                <p className="mt-2 text-sm text-zinc-400">{dbRow?.description ?? plan.description}</p>
                 {dbRow && (
-                  <p className="mt-2 text-sm font-semibold text-stone-800">
-                    {formatMoney(dbRow.monthlyCents, dbRow.currency)} <span className="font-normal text-stone-500">/ mois</span>
-                    <span className="mx-1 text-stone-400">·</span>
-                    {formatMoney(dbRow.yearlyCents, dbRow.currency)} <span className="font-normal text-stone-500">/ an</span>
+                  <p className="mt-2 text-sm font-semibold text-foreground">
+                    {formatMoney(dbRow.monthlyCents, dbRow.currency)} <span className="font-normal text-zinc-500">/ mois</span>
+                    <span className="mx-1 text-zinc-500">·</span>
+                    {formatMoney(dbRow.yearlyCents, dbRow.currency)} <span className="font-normal text-zinc-500">/ an</span>
                   </p>
                 )}
-                <ul className="mt-4 space-y-1 text-xs text-stone-600">
+                <ul className="mt-4 space-y-1 text-xs text-zinc-400">
                   <li>Jusqu’à {lim.maxIdentities} identités</li>
                   <li>Jusqu’à {lim.maxCapsules} capsules</li>
                   {lim.studioFeatureAccess ? (
                     <>
-                      <li>Studio : {lim.maxStudioClients} clients, {lim.maxStudioInvitesPerMonth} invitations / mois</li>
+                      <li>Espace commercial : {lim.maxStudioClients} clients, {lim.maxStudioInvitesPerMonth} invitations / mois</li>
                       <li>{lim.maxStudioExportsPerMonth} exports / mois</li>
                     </>
                   ) : (
-                    <li>Pas d’espace Studio client</li>
+                    <li>Pas d’espace commercial client</li>
                   )}
                 </ul>
                 <div className="mt-auto flex flex-col gap-2 pt-6">
@@ -376,7 +376,7 @@ function BillingPageContent() {
                     onClick={() =>
                       void (demoMode ? activateDemoPlan(plan.key, "year") : startCheckout(plan.key, "year"))
                     }
-                    className="w-full rounded-xl border border-stone-300 bg-white py-2.5 text-sm font-medium text-stone-800 transition hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full rounded-xl border border-white/15 bg-zinc-900/45 py-2.5 text-sm font-medium text-foreground transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {!catalogLoaded
                       ? "Chargement…"
@@ -402,7 +402,7 @@ export default function BillingPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center py-24 text-stone-500">Chargement…</div>
+        <div className="flex items-center justify-center py-24 text-zinc-500">Chargement…</div>
       }
     >
       <BillingPageContent />

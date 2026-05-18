@@ -44,7 +44,7 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const profileTypes = [
   { value: "FREELANCER", label: "Freelancer", icon: "💼", desc: "Indépendant & consultant" },
-  { value: "AGENCY", label: "Agence", icon: "🏢", desc: "Studio & équipe créative" },
+  { value: "AGENCY", label: "Agence", icon: "🏢", desc: "Agence & équipe créative" },
   { value: "CREATOR", label: "Créateur", icon: "🎨", desc: "Artiste & content creator" },
   { value: "STARTUP", label: "Startup", icon: "🚀", desc: "Entrepreneur & fondateur" },
 ] as const;

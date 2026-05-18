@@ -115,7 +115,7 @@ export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
       </div>
 
       {/* Capsule card */}
-      <div className="relative rounded-2xl border border-white/5 bg-white/[0.03] backdrop-blur-sm shadow-2xl overflow-hidden">
+      <div className="relative rounded-2xl border border-white/5 bg-zinc-900/[0.03] backdrop-blur-sm shadow-2xl overflow-hidden">
         {/* Question section */}
         <div className="px-8 pt-10 pb-6 text-center border-b border-white/5">
           <p className="text-xs font-medium uppercase tracking-widest text-indigo-400 mb-3">
@@ -139,7 +139,7 @@ export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
                 <button
                   key={option.id}
                   onClick={() => handleSelect(option)}
-                  className="group relative w-full rounded-xl border border-white/10 bg-white/[0.03] px-6 py-4 text-left transition-all duration-200 hover:border-indigo-500/40 hover:bg-indigo-500/5 hover:shadow-lg hover:shadow-indigo-500/5 active:scale-[0.98]"
+                  className="group relative w-full rounded-xl border border-white/10 bg-zinc-900/[0.03] px-6 py-4 text-left transition-all duration-200 hover:border-indigo-500/40 hover:bg-indigo-500/5 hover:shadow-lg hover:shadow-indigo-500/5 active:scale-[0.98]"
                 >
                   <span className="text-base font-medium text-zinc-200 group-hover:text-white transition-colors">
                     {option.label}
@@ -164,7 +164,7 @@ export function CapsuleViewer({ identity, capsule }: CapsuleViewerProps) {
                   </p>
 
                   {selectedOption.branch.proof && (
-                    <div className="rounded-lg border border-white/5 bg-white/[0.02] p-4">
+                    <div className="rounded-lg border border-white/5 bg-zinc-900/[0.02] p-4">
                       <p className="text-xs font-medium uppercase tracking-widest text-zinc-500 mb-2">
                         Proof
                       </p>

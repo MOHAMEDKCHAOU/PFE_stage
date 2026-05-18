@@ -111,7 +111,7 @@ export function WelcomeToFaymoos() {
         </h1>
 
         <p
-          className={`mt-8 max-w-3xl mx-auto text-balance text-base font-medium leading-relaxed text-stone-300 transition-all duration-700 ease-out sm:text-lg md:text-xl ${
+          className={`mt-8 max-w-3xl mx-auto text-balance text-base font-medium leading-relaxed text-zinc-400 transition-all duration-700 ease-out sm:text-lg md:text-xl ${
             phase === "tagline" || phase === "exit"
               ? "translate-y-0 opacity-100"
               : "pointer-events-none -translate-y-2 opacity-0"
@@ -129,7 +129,7 @@ export function WelcomeToFaymoos() {
         <button
           type="button"
           onClick={skip}
-          className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm font-medium text-stone-400 backdrop-blur-sm transition-all hover:border-white/30 hover:bg-white/10 hover:text-stone-200"
+          className="rounded-full border border-white/20 bg-zinc-900/5 px-5 py-2 text-sm font-medium text-zinc-500 backdrop-blur-sm transition-all hover:border-white/30 hover:bg-zinc-900/10 hover:text-zinc-300"
         >
           Skip
         </button>

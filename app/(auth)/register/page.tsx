@@ -138,17 +138,17 @@ function RegisterPageContent() {
         <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-bordeaux-800 to-bordeaux-500 flex items-center justify-center shadow-lg shadow-bordeaux-500/20">
           <span className="text-white font-bold text-base">F</span>
         </div>
-        <span className="text-xl font-bold text-stone-900 tracking-tight">
+        <span className="text-xl font-bold text-foreground tracking-tight">
           Faymoos
         </span>
       </div>
 
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
           Créer votre compte
         </h2>
-        <p className="mt-2 text-sm text-stone-600">
+        <p className="mt-2 text-sm text-zinc-400">
           {step === 1
             ? "Remplissez vos informations pour commencer"
             : "Choisissez votre type de profil"}
@@ -162,7 +162,7 @@ function RegisterPageContent() {
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
               step >= 1
                 ? "bg-bordeaux-500 text-white shadow-md shadow-bordeaux-500/20"
-                : "bg-bordeaux-500/10 text-stone-500"
+                : "bg-bordeaux-500/10 text-zinc-500"
             }`}
           >
             {step > 1 ? (
@@ -173,22 +173,22 @@ function RegisterPageContent() {
               "1"
             )}
           </div>
-          <span className={`text-xs font-medium ${step >= 1 ? "text-stone-800" : "text-stone-500"}`}>
+          <span className={`text-xs font-medium ${step >= 1 ? "text-foreground" : "text-zinc-500"}`}>
             Informations
           </span>
         </div>
-        <div className={`h-px w-8 transition-colors duration-300 ${step >= 2 ? "bg-bordeaux-500" : "bg-white/[0.08]"}`} />
+        <div className={`h-px w-8 transition-colors duration-300 ${step >= 2 ? "bg-bordeaux-500" : "bg-zinc-900/[0.08]"}`} />
         <div className="flex items-center gap-2">
           <div
             className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-all duration-300 ${
               step >= 2
                 ? "bg-bordeaux-500 text-white shadow-md shadow-bordeaux-500/20"
-                : "bg-bordeaux-500/10 text-stone-500"
+                : "bg-bordeaux-500/10 text-zinc-500"
             }`}
           >
             2
           </div>
-          <span className={`text-xs font-medium ${step >= 2 ? "text-stone-800" : "text-stone-500"}`}>
+          <span className={`text-xs font-medium ${step >= 2 ? "text-foreground" : "text-zinc-500"}`}>
             Profil
           </span>
         </div>
@@ -220,12 +220,12 @@ function RegisterPageContent() {
         <div className={step === 1 ? "space-y-5" : "hidden"}>
           {/* Name */}
           <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-stone-800">
+            <label htmlFor="name" className="block text-sm font-medium text-foreground">
               Nom complet
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-stone-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-zinc-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </div>
@@ -235,7 +235,7 @@ function RegisterPageContent() {
                 autoComplete="name"
                 placeholder="John Doe"
                 {...register("name")}
-                className={`block w-full rounded-xl border border-stone-200/90 bg-white py-3 pl-11 pr-4 text-sm text-stone-900 shadow-sm placeholder:text-stone-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border border-white/10 bg-zinc-900/45 py-3 pl-11 pr-4 text-sm text-foreground shadow-sm placeholder:text-zinc-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                 errors.name
                     ? "border-red-500/50 focus:ring-red-500/20"
                     : "focus:border-bordeaux-400 focus:ring-bordeaux-200/50"
@@ -249,12 +249,12 @@ function RegisterPageContent() {
 
           {/* Email */}
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-stone-800">
+            <label htmlFor="email" className="block text-sm font-medium text-foreground">
               Adresse email
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-stone-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-zinc-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
               </div>
@@ -264,7 +264,7 @@ function RegisterPageContent() {
                 autoComplete="email"
                 placeholder="vous@exemple.com"
                 {...register("email")}
-                className={`block w-full rounded-xl border border-stone-200/90 bg-white py-3 pl-11 pr-4 text-sm text-stone-900 shadow-sm placeholder:text-stone-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border border-white/10 bg-zinc-900/45 py-3 pl-11 pr-4 text-sm text-foreground shadow-sm placeholder:text-zinc-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.email
                     ? "border-red-500/50 focus:ring-red-500/20"
                     : "focus:border-bordeaux-400 focus:ring-bordeaux-200/50"
@@ -278,12 +278,12 @@ function RegisterPageContent() {
 
           {/* Password */}
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-stone-800">
+            <label htmlFor="password" className="block text-sm font-medium text-foreground">
               Mot de passe
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-stone-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-zinc-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
                 </svg>
               </div>
@@ -293,7 +293,7 @@ function RegisterPageContent() {
                 autoComplete="new-password"
                 placeholder="Min. 8 caractères"
                 {...register("password")}
-                className={`block w-full rounded-xl border border-stone-200/90 bg-white py-3 pl-11 pr-11 text-sm text-stone-900 shadow-sm placeholder:text-stone-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border border-white/10 bg-zinc-900/45 py-3 pl-11 pr-11 text-sm text-foreground shadow-sm placeholder:text-zinc-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.password
                     ? "border-red-500/50 focus:ring-red-500/20"
                     : "focus:border-bordeaux-400 focus:ring-bordeaux-200/50"
@@ -302,7 +302,7 @@ function RegisterPageContent() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-stone-500 hover:text-stone-800 transition-colors"
+                className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-500 hover:text-foreground transition-colors"
               >
                 {showPassword ? (
                   <svg className="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -345,12 +345,12 @@ function RegisterPageContent() {
 
           {/* Confirm Password */}
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-stone-800">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground">
               Confirmer le mot de passe
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                <svg className="h-[18px] w-[18px] text-stone-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <svg className="h-[18px] w-[18px] text-zinc-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
               </div>
@@ -360,7 +360,7 @@ function RegisterPageContent() {
                 autoComplete="new-password"
                 placeholder="Retapez le mot de passe"
                 {...register("confirmPassword")}
-                className={`block w-full rounded-xl border border-stone-200/90 bg-white py-3 pl-11 pr-4 text-sm text-stone-900 shadow-sm placeholder:text-stone-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
+                className={`block w-full rounded-xl border border-white/10 bg-zinc-900/45 py-3 pl-11 pr-4 text-sm text-foreground shadow-sm placeholder:text-zinc-500 outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0 ${
                   errors.confirmPassword
                     ? "border-red-500/50 focus:ring-red-500/20"
                     : "focus:border-bordeaux-400 focus:ring-bordeaux-200/50"
@@ -385,10 +385,10 @@ function RegisterPageContent() {
         {/* ─── STEP 2: Profile Type ─── */}
         <div className={step === 2 ? "space-y-5" : "hidden"}>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-stone-800">
+            <label className="block text-sm font-medium text-foreground">
               Type de profil
             </label>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-zinc-500">
               Vous pourrez créer d&apos;autres profils plus tard
             </p>
           </div>
@@ -402,7 +402,7 @@ function RegisterPageContent() {
                 className={`group relative flex flex-col items-start rounded-xl border p-4 text-left transition-all duration-200 active:scale-[0.97] ${
                   watchedType === type.value
                     ? "border-bordeaux-500/50 bg-bordeaux-500/10 shadow-md shadow-bordeaux-500/20 ring-1 ring-bordeaux-500/40"
-                    : "border-stone-200/90 bg-white/90 hover:border-bordeaux-200 hover:bg-bordeaux-50/40"
+                    : "border-white/10 bg-zinc-900/45 hover:border-bordeaux-200 hover:bg-bordeaux-50/40"
                 }`}
               >
                 {/* Selection indicator */}
@@ -410,7 +410,7 @@ function RegisterPageContent() {
                   className={`absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200 ${
                     watchedType === type.value
                       ? "bg-bordeaux-500 shadow-md shadow-bordeaux-500/30"
-                      : "border border-stone-200 bg-stone-100"
+                      : "border border-white/10 bg-zinc-900/10"
                   }`}
                 >
                   {watchedType === type.value && (
@@ -421,10 +421,10 @@ function RegisterPageContent() {
                 </div>
 
                 <span className="text-2xl mb-2">{type.icon}</span>
-                <span className={`text-sm font-semibold transition-colors ${watchedType === type.value ? "text-stone-900" : "text-stone-800"}`}>
+                <span className={`text-sm font-semibold transition-colors ${watchedType === type.value ? "text-foreground" : "text-foreground"}`}>
                   {type.label}
                 </span>
-                <span className="text-xs text-stone-500 mt-0.5">
+                <span className="text-xs text-zinc-500 mt-0.5">
                   {type.desc}
                 </span>
               </button>
@@ -439,7 +439,7 @@ function RegisterPageContent() {
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="flex items-center justify-center gap-2 rounded-xl border border-stone-200/90 bg-white px-5 py-3.5 text-sm font-medium text-stone-800 shadow-sm transition-all duration-200 hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
+              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900/45 px-5 py-3.5 text-sm font-medium text-foreground shadow-sm transition-all duration-200 hover:border-bordeaux-200 hover:bg-bordeaux-50/50"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -469,7 +469,7 @@ function RegisterPageContent() {
       </form>
 
       {/* Footer link */}
-      <p className="mt-8 text-center text-sm text-stone-600">
+      <p className="mt-8 text-center text-sm text-zinc-400">
         Déjà un compte ?{" "}
         <Link
           href={loginWithNext}
@@ -486,7 +486,7 @@ export default function RegisterPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-[40vh] items-center justify-center text-sm text-stone-500">Chargement…</div>
+        <div className="flex min-h-[40vh] items-center justify-center text-sm text-zinc-500">Chargement…</div>
       }
     >
       <RegisterPageContent />

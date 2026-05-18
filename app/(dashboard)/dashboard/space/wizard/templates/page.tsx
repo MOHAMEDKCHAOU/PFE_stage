@@ -81,8 +81,8 @@ function SpaceTemplatesContent() {
           ← Capsules
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-stone-900 sm:text-3xl">Space — choisir un thème</h1>
-      <p className="mt-2 text-stone-600">
+      <h1 className="text-2xl font-bold text-foreground sm:text-3xl">Space — choisir un thème</h1>
+      <p className="mt-2 text-zinc-400">
         Un modèle visuel pour votre capsule (aligné sur les thèmes Faymoos). Aperçu en direct avant
         d’alimenter le contenu.
       </p>
@@ -99,9 +99,9 @@ function SpaceTemplatesContent() {
 
       {identities.length > 0 && (
         <div className="mt-6">
-          <label className="text-sm font-medium text-stone-700">Identité cible</label>
+          <label className="text-sm font-medium text-zinc-300">Identité cible</label>
           <select
-            className="mt-1 w-full max-w-md rounded-lg border border-stone-200 bg-white px-3 py-2 text-stone-900"
+            className="mt-1 w-full max-w-md rounded-lg border border-white/10 bg-zinc-900/45 px-3 py-2 text-foreground"
             value={identityId}
             onChange={(e) => setIdentityId(e.target.value)}
           >
@@ -118,7 +118,7 @@ function SpaceTemplatesContent() {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <div>
-          <h2 className="text-sm font-semibold text-stone-500 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">
             Préréglages
           </h2>
           <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2">
@@ -130,14 +130,14 @@ function SpaceTemplatesContent() {
                   className={`flex w-full flex-col rounded-xl border-2 p-3 text-left transition ${
                     selected === p.id
                       ? "border-bordeaux-600 bg-bordeaux-50/50"
-                      : "border-stone-200 bg-white hover:border-bordeaux-200"
+                      : "border-white/10 bg-zinc-900/45 hover:border-bordeaux-200"
                   }`}
                 >
                   <div
                     className={`h-10 rounded-lg bg-gradient-to-br ${p.preview.gradient} opacity-90`}
                   />
-                  <span className="mt-2 text-sm font-semibold text-stone-900">{p.name}</span>
-                  <span className="line-clamp-2 text-xs text-stone-500">{p.description}</span>
+                  <span className="mt-2 text-sm font-semibold text-foreground">{p.name}</span>
+                  <span className="line-clamp-2 text-xs text-zinc-500">{p.description}</span>
                 </button>
               </li>
             ))}
@@ -145,34 +145,34 @@ function SpaceTemplatesContent() {
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold text-stone-500 uppercase tracking-wide">Aperçu</h2>
+          <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide">Aperçu</h2>
           <div
-            className={`mt-3 min-h-[280px] overflow-hidden rounded-2xl border border-stone-200 bg-zinc-950 p-1 shadow-lg`}
+            className={`mt-3 min-h-[280px] overflow-hidden rounded-2xl border border-white/10 bg-zinc-950 p-1 shadow-lg`}
           >
             <div
               className={`flex h-40 flex-col justify-end rounded-t-xl bg-gradient-to-br ${preview.preview.gradient} p-4`}
             >
-              <div className="h-2 w-24 rounded bg-white/30" />
+              <div className="h-2 w-24 rounded bg-zinc-900/30" />
             </div>
             <div className="space-y-2 p-4 text-white">
-              <div className="h-2 w-3/4 rounded bg-white/20" />
-              <div className="h-2 w-1/2 rounded bg-white/10" />
+              <div className="h-2 w-3/4 rounded bg-zinc-900/20" />
+              <div className="h-2 w-1/2 rounded bg-zinc-900/10" />
               <div className="mt-4 flex gap-2">
-                <div className="h-8 flex-1 rounded-lg bg-white/20" />
-                <div className="h-8 flex-1 rounded-lg bg-white/20" />
+                <div className="h-8 flex-1 rounded-lg bg-zinc-900/20" />
+                <div className="h-8 flex-1 rounded-lg bg-zinc-900/20" />
               </div>
             </div>
           </div>
-          <p className="mt-2 text-xs text-stone-500">
+          <p className="mt-2 text-xs text-zinc-500">
             Le thème est appliqué à l’identité (`theme`) et repris par la visionneuse publique.
           </p>
         </div>
       </div>
 
-      <div className="mt-10 flex flex-wrap items-center justify-end gap-3 border-t border-stone-200 pt-6">
+      <div className="mt-10 flex flex-wrap items-center justify-end gap-3 border-t border-white/10 pt-6">
         <Link
           href="/dashboard/space/wizard/create"
-          className="text-sm text-stone-500 hover:text-stone-800"
+          className="text-sm text-zinc-500 hover:text-foreground"
         >
           Passer l’aperçu (déconseillé)
         </Link>
@@ -193,7 +193,7 @@ export default function SpaceTemplatesPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-5xl px-4 py-16 text-center text-sm text-stone-500">
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center text-sm text-zinc-500">
           Chargement du thème…
         </div>
       }

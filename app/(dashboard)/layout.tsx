@@ -124,7 +124,7 @@ const navItems = [
 ];
 
 const studioNavItem = {
-  label: "Espace Studio",
+  label: "Espace commercial",
   href: "/dashboard/studio",
   icon: (
     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -212,29 +212,29 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#f4efe6] text-stone-900">
+    <div className="faymoos-grid flex h-screen overflow-hidden bg-background text-foreground">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] flex flex-col border-r border-stone-200/90 bg-white/95 transition-transform duration-300 shadow-xl shadow-stone-200/30 lg:relative lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] flex flex-col border-r border-white/10 bg-secondary/90 backdrop-blur-xl transition-transform duration-300 shadow-xl shadow-black/40 lg:relative lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 border-b border-stone-200/80 px-6 py-5">
+        <div className="flex items-center gap-3 border-b border-white/10 px-6 py-5">
           <img
             src="/uploads/logofaymoos.jpeg"
             alt="Faymoos"
             className="h-9 w-9 rounded-xl object-contain"
           />
-          <span className="text-lg font-bold tracking-tight text-stone-900">
+          <span className="text-lg font-bold tracking-tight text-foreground">
             Faymoos
           </span>
         </div>
@@ -254,10 +254,10 @@ export default function DashboardLayout({
                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-bordeaux-100 text-bordeaux-900 shadow-sm ring-1 ring-bordeaux-200/80"
-                    : "text-stone-600 hover:bg-bordeaux-50/50 hover:text-stone-900"
+                    : "text-zinc-400 hover:bg-zinc-900/5 hover:text-foreground"
                 }`}
               >
-                <span className={isActive ? "text-bordeaux-800" : "text-stone-500"}>
+                <span className={isActive ? "text-primary" : "text-zinc-500"}>
                   {item.icon}
                 </span>
                 {item.label}
@@ -282,11 +282,11 @@ export default function DashboardLayout({
                     onClick={() => setSidebarOpen(false)}
                     className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-red-50 text-red-700 shadow-sm shadow-red-500/10 ring-1 ring-red-200"
-                        : "text-slate-500 hover:bg-red-50/50 hover:text-red-600"
+                        ? "bg-red-950/40 text-red-200 shadow-sm shadow-red-900/40 ring-1 ring-red-500/30"
+                        : "text-zinc-500 hover:bg-red-950/25 hover:text-red-400"
                     }`}
                   >
-                    <span className={isActive ? "text-red-600" : "text-slate-400"}>
+                    <span className={isActive ? "text-red-400" : "text-zinc-500"}>
                       {item.icon}
                     </span>
                     {item.label}
@@ -298,11 +298,11 @@ export default function DashboardLayout({
         </nav>
 
         {/* Logout */}
-        <div className="border-t border-stone-200/80 px-3 py-4">
+        <div className="border-t border-white/10 px-3 py-4">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-stone-600 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-zinc-400 transition-all duration-200 hover:bg-red-950/40 hover:text-red-400"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -315,10 +315,10 @@ export default function DashboardLayout({
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-stone-200/80 bg-[#f4efe6]/90 px-6 py-4 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 flex items-center gap-4 border-b border-white/10 bg-background/80 px-6 py-4 backdrop-blur-xl">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden rounded-lg p-2 text-stone-600 transition-colors hover:bg-bordeaux-100/50 hover:text-bordeaux-900"
+            className="lg:hidden rounded-lg p-2 text-zinc-400 transition-colors hover:bg-zinc-900/10 hover:text-foreground"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

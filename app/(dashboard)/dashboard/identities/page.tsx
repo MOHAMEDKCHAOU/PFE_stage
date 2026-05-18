@@ -178,7 +178,7 @@ function CreateIdentityModal({
                   value={name}
                   onChange={(e) => { setName(e.target.value); setError(""); }}
                   placeholder="Ex: Studio Créatif, Mon Portfolio..."
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
               </div>
 
@@ -189,7 +189,7 @@ function CreateIdentityModal({
                   value={headline}
                   onChange={(e) => setHeadline(e.target.value)}
                   placeholder="Ex: Développeur Full-Stack passionné"
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
               </div>
 
@@ -200,7 +200,7 @@ function CreateIdentityModal({
                   onChange={(e) => setBio(e.target.value)}
                   rows={3}
                   placeholder="Décrivez cette identité en quelques mots..."
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
               </div>
             </>
@@ -216,7 +216,7 @@ function CreateIdentityModal({
                     setType(e.target.value);
                     setError("");
                   }}
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 >
                   <option value="">Choisir…</option>
                   {profileTypeOptions.map((t) => (
@@ -238,7 +238,7 @@ function CreateIdentityModal({
                     setError("");
                   }}
                   placeholder="Ex: Photographer, Marketing Agency, SaaS Founder…"
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
                 <datalist id="create-identity-profession-hints">
                   <option value="Photographer" />
@@ -260,7 +260,7 @@ function CreateIdentityModal({
                     setError("");
                   }}
                   placeholder="portfolio, booking, case studies…"
-                  className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
+                  className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all"
                 />
                 <p className="text-[11px] text-slate-500">Séparés par des virgules · utile pour la découverte future</p>
               </div>
@@ -272,7 +272,7 @@ function CreateIdentityModal({
         <div className="flex items-center justify-between border-t border-slate-200 px-6 py-4">
           <button
             onClick={() => step === 1 ? onClose() : setStep(1)}
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50"
+            className="rounded-xl border border-slate-200 bg-zinc-900/45 px-5 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50"
           >
             {step === 1 ? "Annuler" : "Retour"}
           </button>
@@ -336,7 +336,7 @@ function DeleteConfirmModal({
           <div className="flex w-full gap-3 mt-2">
             <button
               onClick={onClose}
-              className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50"
+              className="flex-1 rounded-xl border border-slate-200 bg-zinc-900/45 py-2.5 text-sm font-medium text-slate-600 transition-all hover:bg-violet-50"
             >
               Annuler
             </button>
@@ -409,7 +409,7 @@ function PortfolioModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-violet-500/10 animate-in">
+      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-zinc-900/45 shadow-2xl shadow-violet-500/10 animate-in">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100 text-violet-600">📁</div>
@@ -452,20 +452,20 @@ function PortfolioModal({
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-500">Titre *</label>
             <input type="text" value={title} onChange={e => { setTitle(e.target.value); setError(""); }}
-              placeholder="Nom du projet" className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+              placeholder="Nom du projet" className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
           </div>
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-500">Description *</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
-              placeholder="Décrivez ce projet..." className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+              placeholder="Décrivez ce projet..." className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1 space-y-1.5">
               <label className="text-xs font-medium text-slate-500">Année</label>
               <input type="number" value={year} onChange={e => setYear(e.target.value)}
-                placeholder="2024" className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+                placeholder="2024" className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
             </div>
             <div className="flex items-end pb-1">
               <label className="flex items-center gap-2 cursor-pointer">
@@ -476,7 +476,7 @@ function PortfolioModal({
           </div>
         </div>
         <div className="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
-          <button onClick={onClose} className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
+          <button onClick={onClose} className="rounded-xl border border-slate-200 bg-zinc-900/45 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
           <button onClick={handleSave} disabled={saving} className="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:shadow-xl active:scale-[0.98] disabled:opacity-60 transition-all">
             {saving ? "Enregistrement..." : project ? "Modifier" : "Ajouter"}
           </button>
@@ -524,7 +524,7 @@ function TestimonialModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-violet-500/10 animate-in">
+      <div className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-zinc-900/45 shadow-2xl shadow-violet-500/10 animate-in">
         <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600">💬</div>
@@ -540,30 +540,30 @@ function TestimonialModal({
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-500">Nom du client *</label>
             <input type="text" value={author} onChange={e => { setAuthor(e.target.value); setError(""); }}
-              placeholder="Jean Dupont" className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+              placeholder="Jean Dupont" className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
           </div>
 
           <div className="flex gap-3">
             <div className="flex-1 space-y-1.5">
               <label className="text-xs font-medium text-slate-500">Rôle / Poste</label>
               <input type="text" value={role} onChange={e => setRole(e.target.value)}
-                placeholder="CEO, Manager..." className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+                placeholder="CEO, Manager..." className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
             </div>
             <div className="flex-1 space-y-1.5">
               <label className="text-xs font-medium text-slate-500">Entreprise</label>
               <input type="text" value={company} onChange={e => setCompany(e.target.value)}
-                placeholder="Nom de l'entreprise" className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+                placeholder="Nom de l'entreprise" className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <label className="text-xs font-medium text-slate-500">Témoignage *</label>
             <textarea value={content} onChange={e => setContent(e.target.value)} rows={4}
-              placeholder="Le retour d'expérience du client..." className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
+              placeholder="Le retour d'expérience du client..." className="block w-full rounded-xl border border-slate-200 bg-zinc-900/45 px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none resize-none focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all" />
           </div>
         </div>
         <div className="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
-          <button onClick={onClose} className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
+          <button onClick={onClose} className="rounded-xl border border-slate-200 bg-zinc-900/45 px-5 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
           <button onClick={handleSave} disabled={saving} className="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:shadow-xl active:scale-[0.98] disabled:opacity-60 transition-all">
             {saving ? "Enregistrement..." : testimonial ? "Modifier" : "Ajouter"}
           </button>
@@ -684,7 +684,7 @@ export default function IdentitiesPage() {
       {/* Toolbar: filter + view mode */}
       <div className="flex flex-wrap items-center gap-3">
         {/* Type filter pills */}
-        <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white p-1">
+        <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-zinc-900/45 p-1">
           <button
             onClick={() => setFilterType("ALL")}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
@@ -708,7 +708,7 @@ export default function IdentitiesPage() {
         </div>
 
         {/* View toggle */}
-        <div className="ml-auto flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1">
+        <div className="ml-auto flex items-center gap-1 rounded-xl border border-slate-200 bg-zinc-900/45 p-1">
           <button
             onClick={() => setViewMode("grid")}
             className={`rounded-lg p-1.5 transition-all ${viewMode === "grid" ? "bg-violet-100 text-slate-800" : "text-slate-400 hover:text-slate-600"}`}
@@ -773,7 +773,7 @@ export default function IdentitiesPage() {
             return (
               <div
                 key={profile.id}
-                className="group relative flex flex-col rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:border-violet-200 hover:bg-violet-50/50 overflow-hidden"
+                className="group relative flex flex-col rounded-2xl border border-slate-200 bg-zinc-900/45 transition-all duration-200 hover:border-violet-200 hover:bg-violet-50/50 overflow-hidden"
               >
                 {/* Cover */}
                 <div className="h-28 w-full relative">
@@ -899,7 +899,7 @@ export default function IdentitiesPage() {
                         ) : (
                           <div className="space-y-1.5">
                             {profile.portfolioProjects.map((p) => (
-                              <div key={p.id} className="group/item flex items-center gap-2 rounded-lg bg-white px-3 py-2">
+                              <div key={p.id} className="group/item flex items-center gap-2 rounded-lg bg-zinc-900/45 px-3 py-2">
                                 {p.image ? (
                                   <img src={p.image} alt="" className="h-8 w-8 rounded object-cover" />
                                 ) : (
@@ -937,7 +937,7 @@ export default function IdentitiesPage() {
                         ) : (
                           <div className="space-y-1.5">
                             {profile.capsules.map((c) => (
-                              <div key={c.id} className="flex items-center gap-2 rounded-lg bg-white px-3 py-2">
+                              <div key={c.id} className="flex items-center gap-2 rounded-lg bg-zinc-900/45 px-3 py-2">
                                 <div className="flex h-6 w-6 items-center justify-center rounded bg-violet-500/10 text-violet-400">
                                   <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3" />
@@ -969,7 +969,7 @@ export default function IdentitiesPage() {
                         ) : (
                           <div className="space-y-1.5">
                             {profile.testimonials.map((t) => (
-                              <div key={t.id} className="group/item flex items-center gap-2 rounded-lg bg-white px-3 py-2">
+                              <div key={t.id} className="group/item flex items-center gap-2 rounded-lg bg-zinc-900/45 px-3 py-2">
                                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500/10 text-amber-400 text-xs font-bold shrink-0">
                                   {t.author.charAt(0)}
                                 </div>
@@ -992,7 +992,7 @@ export default function IdentitiesPage() {
                       </div>
 
                       {/* Slug link */}
-                      <div className="flex items-center gap-2 rounded-xl bg-white border border-slate-100 px-3 py-2.5">
+                      <div className="flex items-center gap-2 rounded-xl bg-zinc-900/45 border border-slate-100 px-3 py-2.5">
                         <svg className="h-4 w-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
                         </svg>
@@ -1038,7 +1038,7 @@ export default function IdentitiesPage() {
 
       {/* List View */}
       {filtered.length > 0 && viewMode === "list" && (
-        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+        <div className="rounded-2xl border border-slate-200 bg-zinc-900/45 overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-200">
@@ -1057,7 +1057,7 @@ export default function IdentitiesPage() {
                   day: "numeric", month: "short", year: "numeric",
                 });
                 return (
-                  <tr key={profile.id} className="group hover:bg-white transition-colors">
+                  <tr key={profile.id} className="group hover:bg-zinc-900/45 transition-colors">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-sm font-bold text-slate-800 overflow-hidden ring-2 ring-zinc-900">
@@ -1180,7 +1180,7 @@ export default function IdentitiesPage() {
       {deletingPortfolio && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setDeletingPortfolio(null)} />
-          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in">
+          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-zinc-900/45 p-6 shadow-2xl animate-in">
             <div className="flex flex-col items-center text-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-50 ring-1 ring-red-200">
                 <svg className="h-7 w-7 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
@@ -1190,7 +1190,7 @@ export default function IdentitiesPage() {
                 <p className="mt-2 text-sm text-slate-500">Le projet <span className="font-semibold text-slate-800">{deletingPortfolio.title}</span> sera supprimé définitivement.</p>
               </div>
               <div className="flex w-full gap-3 mt-2">
-                <button onClick={() => setDeletingPortfolio(null)} className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
+                <button onClick={() => setDeletingPortfolio(null)} className="flex-1 rounded-xl border border-slate-200 bg-zinc-900/45 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
                 <button onClick={handleDeletePortfolio} className="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white hover:bg-red-500 active:scale-[0.98] transition-all">Supprimer</button>
               </div>
             </div>
@@ -1201,7 +1201,7 @@ export default function IdentitiesPage() {
       {deletingTestimonial && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={() => setDeletingTestimonial(null)} />
-          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl animate-in">
+          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-zinc-900/45 p-6 shadow-2xl animate-in">
             <div className="flex flex-col items-center text-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-50 ring-1 ring-red-200">
                 <svg className="h-7 w-7 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
@@ -1211,7 +1211,7 @@ export default function IdentitiesPage() {
                 <p className="mt-2 text-sm text-slate-500">Le témoignage de <span className="font-semibold text-slate-800">{deletingTestimonial.author}</span> sera supprimé définitivement.</p>
               </div>
               <div className="flex w-full gap-3 mt-2">
-                <button onClick={() => setDeletingTestimonial(null)} className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
+                <button onClick={() => setDeletingTestimonial(null)} className="flex-1 rounded-xl border border-slate-200 bg-zinc-900/45 py-2.5 text-sm font-medium text-slate-600 hover:bg-violet-50 transition-all">Annuler</button>
                 <button onClick={handleDeleteTestimonial} className="flex-1 rounded-xl bg-red-600 py-2.5 text-sm font-semibold text-white hover:bg-red-500 active:scale-[0.98] transition-all">Supprimer</button>
               </div>
             </div>
