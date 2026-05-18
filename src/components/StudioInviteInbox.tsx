@@ -78,14 +78,14 @@ export function StudioInviteInbox({
   }
 
   return (
-    <div className="rounded-2xl border border-bordeaux-200/80 bg-gradient-to-br from-bordeaux-900/[0.04] to-violet-50/60 p-5 shadow-sm">
+    <div className="rounded-2xl border border-primary/25 bg-gradient-to-br from-accent-strong/90 to-card/90 p-5 shadow-lg shadow-black/30 backdrop-blur-sm">
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-bordeaux-900 text-sm font-bold text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground shadow-md shadow-primary/25">
           S
         </div>
         <div>
-          <h2 className="text-sm font-semibold text-slate-800">Invitations — espace commercial</h2>
-          <p className="text-xs text-slate-500">
+          <h2 className="text-sm font-semibold text-foreground">Invitations — espace commercial</h2>
+          <p className="text-xs text-muted-foreground">
             Un partenaire vous invite à lier votre compte — vous pouvez accepter ici sans ouvrir un lien externe.
           </p>
         </div>
@@ -94,13 +94,13 @@ export function StudioInviteInbox({
         {items.map((row) => (
           <li
             key={row.id}
-            className="flex flex-col gap-3 rounded-xl border border-white/60 bg-zinc-900/45 p-4 sm:flex-row sm:items-center sm:justify-between"
+            className="flex flex-col gap-3 rounded-xl border border-border bg-card/70 p-4 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="min-w-0 text-sm">
-              <p className="font-medium text-slate-800">
-                Partenaire : <span className="text-bordeaux-900">{row.affiliate.email}</span>
+              <p className="font-medium text-foreground">
+                Partenaire : <span className="text-primary">{row.affiliate.email}</span>
               </p>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 Expire le {new Date(row.expiresAt).toLocaleString("fr-FR")}
               </p>
             </div>
@@ -108,14 +108,14 @@ export function StudioInviteInbox({
               type="button"
               disabled={busyId !== null}
               onClick={() => accept(row.id)}
-              className="shrink-0 rounded-xl bg-bordeaux-800 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-bordeaux-900 disabled:opacity-50"
+              className="shrink-0 rounded-xl bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:bg-[var(--primary-hover)] disabled:opacity-50"
             >
               {busyId === row.id ? "Traitement…" : "Accepter dans l’app"}
             </button>
           </li>
         ))}
       </ul>
-      {error ? <p className="mt-3 text-xs font-medium text-red-700">{error}</p> : null}
+      {error ? <p className="mt-3 text-xs font-medium text-red-400">{error}</p> : null}
     </div>
   );
 }

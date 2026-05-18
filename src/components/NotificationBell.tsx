@@ -17,7 +17,7 @@ const POLL_INTERVAL = 15_000; // 15 seconds
 
 function notifIconMeta(type: string): { box: string; glyph: string } {
   if (type === "CTA_CLICK") return { box: "bg-emerald-500/15 text-emerald-400", glyph: "🎯" };
-  if (type === "NEW_CAPSULE_COMMENT") return { box: "bg-violet-500/15 text-violet-600", glyph: "📝" };
+  if (type === "NEW_CAPSULE_COMMENT") return { box: "bg-violet-500/15 text-violet-300", glyph: "📝" };
   return { box: "bg-bordeaux-500/15 text-bordeaux-300", glyph: "💬" };
 }
 
@@ -26,27 +26,32 @@ export function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [open, setOpen] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(false);
-  const [browserNotifEnabled, setBrowserNotifEnabled] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("faymoos_notif_sound") === "true";
+  });
+  const [browserNotifEnabled, setBrowserNotifEnabled] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+      return localStorage.getItem("faymoos_notif_browser") === "true";
+    }
+    return false;
+  });
   const prevUnreadRef = useRef(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  /** Tick for relative timestamps — avoids calling Date.now during render (react-hooks/purity). */
+  const [nowMs, setNowMs] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = setInterval(() => setNowMs(Date.now()), 30_000);
+    return () => clearInterval(id);
+  }, []);
 
   // Initialize audio
   useEffect(() => {
     audioRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdH2JkI2DdWdrf4eLi4N4b2p0gIqRjoV7cGxzf4mRj4Z9c25zfoiQj4iBd3JzfISOi4V/eHV2fIKIiYaDf3t4eX2ChIWEg4B+fHt8fYCCg4OCgX9+fXx9f4GCgoKBgH9+fX1+gIGBgoGAgH9+fn5/gIGBgYGAgH9+fn5/gIGBgYCAgH9+fn9/gICBgYCAgH9/fn9/gICAgYCAgH9/fn9/gICAgYCAgH9/f39/gICAgICAgH9/f39/gICAgICAgH9/f39/gICAgICAgH9/f39/gICAgICAgH9/f39/gICAgICAgH9/f39/gICAgICA");
     audioRef.current.volume = 0.5;
-  }, []);
-
-  // Load preferences from localStorage
-  useEffect(() => {
-    const sound = localStorage.getItem("faymoos_notif_sound");
-    if (sound === "true") setSoundEnabled(true);
-
-    if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-      const browser = localStorage.getItem("faymoos_notif_browser");
-      if (browser === "true") setBrowserNotifEnabled(true);
-    }
   }, []);
 
   // Close dropdown on outside click
@@ -86,6 +91,7 @@ export function NotificationBell() {
       const data = await res.json();
       setNotifications(data.notifications || []);
       setUnreadCount(data.unread || 0);
+      setNowMs(Date.now());
 
       // If new unread notifications arrived, play sound + browser notif
       if (data.unread > prevUnreadRef.current) {
@@ -103,9 +109,16 @@ export function NotificationBell() {
 
   // Poll for notifications
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, POLL_INTERVAL);
-    return () => clearInterval(interval);
+    const tid = window.setTimeout(() => {
+      void fetchNotifications();
+    }, 0);
+    const interval = window.setInterval(() => {
+      void fetchNotifications();
+    }, POLL_INTERVAL);
+    return () => {
+      window.clearTimeout(tid);
+      window.clearInterval(interval);
+    };
   }, [fetchNotifications]);
 
   // Mark single notification as read + navigate
@@ -164,7 +177,7 @@ export function NotificationBell() {
   }
 
   function timeAgo(dateStr: string) {
-    const diff = Date.now() - new Date(dateStr).getTime();
+    const diff = nowMs - new Date(dateStr).getTime();
     const mins = Math.floor(diff / 60000);
     if (mins < 1) return "À l'instant";
     if (mins < 60) return `il y a ${mins}min`;

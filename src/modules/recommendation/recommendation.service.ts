@@ -202,7 +202,7 @@ export async function getRecommendedIdentities(options: {
   }
   for (const p of userProfiles) favoriteTypes.add(p.type);
 
-  let userText = new Set<string>();
+  const userText = new Set<string>();
   for (const p of userProfiles) {
     tokenize(p.headline).forEach((w) => userText.add(w));
     tokenize(p.bio).forEach((w) => userText.add(w));

@@ -369,7 +369,7 @@ export function generatePortfolioPDF({ identity, capsules, projects, testimonial
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(...COLORS.dark);
-      let authorLine = t.author;
+      const authorLine = t.author;
       if (t.role || t.company) {
         doc.text(authorLine, MARGIN + 12, y);
         doc.setFont("helvetica", "normal");

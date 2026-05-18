@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Prisma / codegen — CommonJS bundles + generated types are not project style sources
+    "src/generated/**",
   ]),
 ]);
 

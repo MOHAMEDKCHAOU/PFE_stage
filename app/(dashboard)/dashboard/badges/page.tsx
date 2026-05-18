@@ -25,24 +25,27 @@ export default function DashboardBadgesPage() {
   }, []);
 
   useEffect(() => {
-    if (!slug) {
-      setBundle(null);
-      return;
-    }
-    setLoadErr(null);
-    fetch(`/api/badges/public?identitySlug=${encodeURIComponent(slug)}`, { credentials: "include" })
-      .then(async (r) => {
-        if (!r.ok) {
-          const j = await r.json().catch(() => ({}));
-          throw new Error(typeof j.error === "string" ? j.error : `Erreur ${r.status}`);
-        }
-        return (await r.json()) as PublicBadgeBundle;
-      })
-      .then(setBundle)
-      .catch((e: Error) => {
-        setLoadErr(e.message);
+    const tid = window.setTimeout(() => {
+      if (!slug) {
         setBundle(null);
-      });
+        return;
+      }
+      setLoadErr(null);
+      fetch(`/api/badges/public?identitySlug=${encodeURIComponent(slug)}`, { credentials: "include" })
+        .then(async (r) => {
+          if (!r.ok) {
+            const j = await r.json().catch(() => ({}));
+            throw new Error(typeof j.error === "string" ? j.error : `Erreur ${r.status}`);
+          }
+          return (await r.json()) as PublicBadgeBundle;
+        })
+        .then(setBundle)
+        .catch((e: Error) => {
+          setLoadErr(e.message);
+          setBundle(null);
+        });
+    }, 0);
+    return () => window.clearTimeout(tid);
   }, [slug]);
 
   return (

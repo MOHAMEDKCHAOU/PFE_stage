@@ -202,13 +202,13 @@ function PieChart({
   const size = 180;
   const center = size / 2;
   const radius = 70;
-  let cumulativeAngle = 0;
 
-  const slices = data.map((d) => {
+  const slices = data.reduce<
+    { label: string; value: number; color: string; path: string; percentage: number }[]
+  >((acc, d) => {
     const angle = (d.value / total) * 360;
-    const startAngle = cumulativeAngle;
-    cumulativeAngle += angle;
-    const endAngle = cumulativeAngle;
+    const startAngle = acc.length === 0 ? 0 : acc[acc.length - 1].endAngle;
+    const endAngle = startAngle + angle;
 
     const startRad = ((startAngle - 90) * Math.PI) / 180;
     const endRad = ((endAngle - 90) * Math.PI) / 180;
@@ -222,8 +222,14 @@ function PieChart({
 
     const path = `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
 
-    return { ...d, path, percentage: Math.round((d.value / total) * 100) };
-  });
+    acc.push({
+      ...d,
+      path,
+      percentage: Math.round((d.value / total) * 100),
+      endAngle,
+    });
+    return acc;
+  }, []);
 
   return (
     <div className="flex items-center gap-6">
