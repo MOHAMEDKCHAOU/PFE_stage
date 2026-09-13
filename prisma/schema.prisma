@@ -1,0 +1,540 @@
+generator client {
+  provider = "prisma-client-js"
+  // Sortie sous src/ : chemins stables pour le langage service TypeScript.
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  password         String
+  role             String            @default("USER") // USER | AFFILIATE | MODERATOR | ADMIN | SUPER_ADMIN
+  status           String            @default("ACTIVE") // ACTIVE | SUSPENDED
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  /// Stripe Customer id (cus_…)
+  stripeCustomerId     String? @unique
+  /// Stripe Subscription id (sub_…)
+  stripeSubscriptionId String? @unique
+  /// inactive | active | past_due | canceled | trialing | unpaid | incomplete …
+  subscriptionStatus   String?
+  /// FREE | PRO | STUDIO | STUDIO_PLUS (aligné produits Stripe / appli)
+  subscriptionPlan     String  @default("FREE")
+  currentPeriodEnd     DateTime?
+
+  identityProfiles IdentityProfile[]
+  favorites        Favorite[]
+  notifications    Notification[]
+  userAssets       UserAsset[]
+  affiliateClients AffiliateClient[] @relation("AffiliateToClients")
+  studioAsClient   AffiliateClient[] @relation("ClientOfAffiliate")
+  studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
+  studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
+  subscriptionUsages    SubscriptionUsage[]
+  userBadges            UserBadge[]
+  authSessions          AuthSession[]
+  auditLogs             AuditLog[]    @relation("AuditActor")
+  leads                 Lead[]
+  smartSpaces           SmartSpace[]
+}
+
+
+/// Server-side sessions. The browser stores only the opaque raw token; the DB stores a SHA-256 hash.
+model AuthSession {
+  id         String    @id @default(uuid())
+  tokenHash  String    @unique
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  lastSeenAt DateTime?
+
+  @@index([userId, expiresAt])
+  @@index([expiresAt])
+}
+
+/// Security and administration audit trail.
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String?
+  actor       User?    @relation("AuditActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  action      String
+  targetType  String
+  targetId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([actorUserId, createdAt(sort: Desc)])
+  @@index([action, createdAt(sort: Desc)])
+  @@index([targetType, targetId])
+}
+
+// ─── Badges Faymoos (profil public : 3 catégories, 2 niveaux) ───
+
+enum BadgeCategory {
+  EXPERTISE
+  CREDIBILITY
+  IMPACT
+}
+
+enum BadgeTier {
+  VERIFIED
+  EXPERT
+}
+
+enum BadgeGrantSource {
+  AUTO
+  EXTERNAL
+  ADMIN
+}
+
+model BadgeDefinition {
+  id          String          @id @default(uuid())
+  slug        String          @unique
+  label       String
+  description String
+  category    BadgeCategory
+  sortOrder   Int             @default(0)
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id           String           @id @default(uuid())
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badgeId      String
+  badge        BadgeDefinition  @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  tier         BadgeTier
+  source       BadgeGrantSource @default(AUTO)
+  /// Texte court pour tooltip (ex. critère, date)
+  evidence     String?
+  verifiedAt   DateTime         @default(now())
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+}
+
+/// Compteurs mensuels (UTC) pour quotas facturation (exports Studio, invitations créées, etc.)
+model SubscriptionUsage {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  /// Clé mois UTC, ex. "2026-05"
+  periodKey    String
+  exportsCount Int      @default(0)
+  invitesCount Int      @default(0)
+  smartScansCount Int   @default(0)
+  aiActionsCount  Int   @default(0)
+
+  @@unique([userId, periodKey])
+  @@index([userId])
+}
+
+/// Tarifs affichés (PFE / catalogue) — montants en centimes, sans passer par Stripe en mode démo.
+model SubscriptionPlanPrice {
+  planKey      String   @id
+  name         String
+  description  String?
+  monthlyCents Int
+  yearlyCents  Int
+  currency     String   @default("EUR")
+  sortOrder    Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+/// Lien Studio (affilié) → compte client géré
+model AffiliateClient {
+  id              String   @id @default(uuid())
+  affiliateUserId String
+  clientUserId    String
+  createdAt       DateTime @default(now())
+
+  affiliate User @relation("AffiliateToClients", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  client    User @relation("ClientOfAffiliate", fields: [clientUserId], references: [id], onDelete: Cascade)
+
+  @@unique([affiliateUserId, clientUserId])
+  @@index([affiliateUserId])
+  @@index([clientUserId])
+}
+
+/// Invitation Studio (lien + acceptation par le client)
+model StudioClientInvite {
+  id              String    @id @default(uuid())
+  /// SHA-256 hex du jeton brut (jamais stocker le jeton en clair)
+  tokenHash       String    @unique
+  affiliateUserId String
+  affiliate       User      @relation("StudioInvitesSent", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  /// Si renseigné, seul ce compte (e-mail) peut accepter
+  inviteeEmail    String?
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  clientUserId    String?
+  client          User?     @relation("StudioInviteAcceptedClient", fields: [clientUserId], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now())
+
+  @@index([affiliateUserId])
+  @@index([expiresAt])
+}
+
+/// Médias personnels réutilisables (hub Asset Library)
+model UserAsset {
+  id         String        @id @default(uuid())
+  url        String
+  kind       UserAssetKind
+  mimeType   String
+  sizeBytes  Int
+  createdAt  DateTime      @default(now())
+
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, kind, createdAt(sort: Desc)])
+}
+
+enum UserAssetKind {
+  IMAGE
+  VIDEO
+  MODEL_3D
+}
+
+model IdentityProfile {
+  id                String             @id @default(uuid())
+  name              String
+  slug              String             @unique
+  type              String
+  bio               String?
+
+  // 🔥 AJOUTS IMPORTANTS
+  headline          String?
+  avatar            String?
+  cover             String?
+  theme             String?
+  socialLinks       Json?
+  /// Métier / domaine (texte libre : ex. Photographe, SaaS Founder)
+  profession        String?
+  /// Tags optionnels — tableau JSON de chaînes (reco / filtres futurs)
+  tags              Json?
+
+  /// Premium / Zapier : masquer le branding Faymoos sur la capsule publique
+  hideBranding      Boolean            @default(false)
+  /// URL webhook HTTPS appelée à chaque CTA_CLICK (corps JSON signé si secret défini)
+  ctaWebhookUrl     String?
+  ctaWebhookSecret  String?
+
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+
+  portfolioProjects PortfolioProject[]
+  testimonials      Testimonial[]
+  capsules          Capsule[]
+  messages          Message[]
+  leads             Lead[]
+  smartSpaces       SmartSpace[]
+}
+
+model PortfolioProject {
+  id          String          @id @default(uuid())
+  title       String
+  description String
+
+  // 🔥 AJOUTS IMPORTANTS
+  image       String?
+  year        Int?
+  isPublic    Boolean         @default(true)
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+model Testimonial {
+  id         String          @id @default(uuid())
+  author     String
+  content    String
+
+  // 🔥 AJOUTS IMPORTANTS
+  role       String?
+  company    String?
+
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  identityId String
+  identity   IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+model Capsule {
+  id          String          @id @default(uuid())
+  title       String
+  objective   String
+
+  /// Preset visuel Space (ocean, sunset, …) — aligné sur IdentityProfile.theme
+  layoutPreset String?
+  /// Brouillon : false jusqu’au bouton Publier dans Space Editor
+  isPublished  Boolean         @default(true)
+  /// Hotspots { hotspots: [{ optionId, x, y, w, h, ... }] } — JSON libre
+  editorHotspots Json?
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id])
+
+  options     CapsuleOption[]
+  sessions    CapsuleSession[]
+  favorites   Favorite[]
+  /// Commentaires publics (modération) — désactivables par capsule
+  commentsEnabled Boolean         @default(true)
+  comments        CapsuleComment[]
+}
+
+model CapsuleOption {
+  id         String         @id @default(uuid())
+  label      String
+  sortOrder  Int            @default(0)
+
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  capsuleId  String
+  capsule    Capsule        @relation(fields: [capsuleId], references: [id])
+
+  // ⚠️ gardé comme tu as fait (1 branch)
+  branch     CapsuleBranch?
+}
+
+model CapsuleBranch {
+  id            String        @id @default(uuid())
+  optionId      String        @unique
+  option        CapsuleOption @relation(fields: [optionId], references: [id])
+
+  headline      String
+  description   String
+  cta           String
+
+  // 🔥 AJOUT IMPORTANT (core du projet)
+  proof         String?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// 🔥 ANALYTICS — Tracking des interactions visiteurs
+model CapsuleSession {
+  id         String         @id @default(uuid())
+  capsuleId  String
+  capsule    Capsule        @relation(fields: [capsuleId], references: [id])
+  startedAt  DateTime       @default(now())
+  endedAt    DateTime?
+
+  events     CapsuleEvent[]
+}
+
+model CapsuleEvent {
+  id         String         @id @default(uuid())
+  sessionId  String
+  type       String         // "START" | "OPTION_CLICK" | "CTA_CLICK"
+  value      String?        
+  createdAt  DateTime       @default(now())
+
+  session    CapsuleSession @relation(fields: [sessionId], references: [id])
+}
+
+/// Commentaires sur une capsule (visiteurs + réponses créateur) — modération PENDING / APPROVED / REJECTED
+model CapsuleComment {
+  id         String   @id @default(uuid())
+  capsuleId  String
+  capsule    Capsule  @relation(fields: [capsuleId], references: [id], onDelete: Cascade)
+
+  parentId   String?
+  parent     CapsuleComment?  @relation("CapsuleCommentThread", fields: [parentId], references: [id], onDelete: Cascade)
+  children   CapsuleComment[] @relation("CapsuleCommentThread")
+
+  authorName  String
+  authorEmail String?
+  body        String
+  /// PENDING | APPROVED | REJECTED
+  status      String   @default("PENDING")
+  isOwnerReply Boolean @default(false)
+
+  reviewedAt     DateTime?
+  reviewerUserId String?
+
+  createdAt  DateTime @default(now())
+
+  @@index([capsuleId, status])
+  @@index([capsuleId, createdAt(sort: Desc)])
+  @@index([parentId])
+}
+
+// ⭐ FAVORIS — Capsules favorites des utilisateurs
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  capsuleId  String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  capsule    Capsule  @relation(fields: [capsuleId], references: [id])
+
+  @@unique([userId, capsuleId])
+}
+
+// 📩 MESSAGES — Formulaire de contact sur les capsules
+model Message {
+  id          String          @id @default(uuid())
+  name        String
+  email       String
+  content     String
+  isRead      Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id])
+}
+
+// 🔔 NOTIFICATIONS — Alertes pour le propriétaire de capsule
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // "CTA_CLICK" | "NEW_MESSAGE"
+  title     String
+  body      String
+  isRead    Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+// ─── CRM-lite leads generated by CTAs and public contact forms ───────────────
+model Lead {
+  id          String          @id @default(uuid())
+  name        String
+  email       String?
+  phone       String?
+  message     String?
+  source      String          @default("DIRECT")
+  status      String          @default("NEW") // NEW | CONTACTED | QUALIFIED | WON | LOST
+  capsuleId   String?
+  branchLabel String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  identityId  String
+  identity    IdentityProfile @relation(fields: [identityId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, createdAt(sort: Desc)])
+  @@index([identityId, createdAt(sort: Desc)])
+}
+
+// ─── Smart 360 Spaces ───────────────────────────────────────────────────────
+model SmartSpace {
+  id          String            @id @default(uuid())
+  title       String
+  slug        String            @unique
+  status      String            @default("DRAFT") // DRAFT | CAPTURING | PROCESSING | READY | PUBLISHED | FAILED
+  coverUrl    String?
+  description String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  identityId  String
+  identity    IdentityProfile   @relation(fields: [identityId], references: [id], onDelete: Cascade)
+
+  scenes      SmartSpaceScene[]
+  events      SmartSpaceEvent[]
+
+  @@index([userId, updatedAt(sort: Desc)])
+  @@index([identityId, status])
+}
+
+model SmartSpaceScene {
+  id          String              @id @default(uuid())
+  name        String
+  sortOrder   Int                 @default(0)
+  panoramaUrl String?
+  previewUrl  String?
+  status      String              @default("EMPTY") // EMPTY | CAPTURING | PROCESSING | READY | FAILED
+  startYaw    Float               @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  spaceId     String
+  space       SmartSpace          @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  captures    SmartSpaceCapture[]
+  hotspots    SmartSpaceHotspot[] @relation("SceneHotspots")
+  incomingHotspots SmartSpaceHotspot[] @relation("TargetSceneHotspots")
+  events      SmartSpaceEvent[]
+
+  @@index([spaceId, sortOrder])
+}
+
+model SmartSpaceCapture {
+  id           String          @id @default(uuid())
+  assetUrl     String
+  alpha        Float?
+  beta         Float?
+  gamma        Float?
+  qualityScore Float?
+  createdAt    DateTime        @default(now())
+
+  sceneId      String
+  scene        SmartSpaceScene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@index([sceneId, createdAt])
+}
+
+model SmartSpaceHotspot {
+  id            String           @id @default(uuid())
+  type          String           // INFO | PROJECT | VIDEO | CTA | NAVIGATION | LINK
+  label         String
+  yaw           Float
+  pitch         Float
+  targetUrl     String?
+  metadata      Json?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  sceneId       String
+  scene         SmartSpaceScene  @relation("SceneHotspots", fields: [sceneId], references: [id], onDelete: Cascade)
+  targetSceneId String?
+  targetScene   SmartSpaceScene? @relation("TargetSceneHotspots", fields: [targetSceneId], references: [id], onDelete: SetNull)
+
+  @@index([sceneId])
+  @@index([targetSceneId])
+}
+
+model SmartSpaceEvent {
+  id         String           @id @default(uuid())
+  type       String           // VIEW | SCENE_VIEW | HOTSPOT_CLICK | CTA_CLICK | EXIT
+  sessionKey String?
+  hotspotId  String?
+  createdAt  DateTime         @default(now())
+
+  spaceId    String
+  space      SmartSpace       @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  sceneId    String?
+  scene      SmartSpaceScene? @relation(fields: [sceneId], references: [id], onDelete: SetNull)
+
+  @@index([spaceId, createdAt(sort: Desc)])
+  @@index([sceneId, createdAt(sort: Desc)])
+}

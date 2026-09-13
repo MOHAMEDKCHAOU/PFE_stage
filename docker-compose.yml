@@ -1,0 +1,71 @@
+# Faymoos Premium 2026 — Next.js + PostgreSQL + Smart 360 reconstruction + AI inference
+# Start: docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: faymoos
+      POSTGRES_PASSWORD: faymoos_dev
+      POSTGRES_DB: faymoos
+    volumes:
+      - faymoos_pgdata:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U faymoos -d faymoos"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  vision360:
+    build:
+      context: ./services/vision360
+    ports: ["8010:8010"]
+    restart: unless-stopped
+
+  ai:
+    build:
+      context: .
+      dockerfile: services/ai/Dockerfile
+    ports: ["8020:8020"]
+    environment:
+      FAYMOOS_AI_ARTIFACTS: /app/ai/artifacts
+    volumes:
+      - ./ai/artifacts:/app/ai/artifacts
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrate
+    environment:
+      DATABASE_URL: postgresql://faymoos:faymoos_dev@db:5432/faymoos
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_URL: postgresql://faymoos:faymoos_dev@db:5432/faymoos
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      BILLING_DEMO_MODE: "true"
+      VISION360_URL: http://vision360:8010
+      FAYMOOS_AI_URL: http://ai:8020
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      vision360:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  faymoos_pgdata:

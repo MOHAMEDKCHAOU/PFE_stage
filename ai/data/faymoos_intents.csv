@@ -1,0 +1,145 @@
+text,intent,locale
+I want to hire you,hire,en
+Can you work on my project,hire,en
+I need your services,hire,en
+Are you available for a job,hire,en
+I want to engage you,hire,en
+Can we start a paid project,hire,en
+I want to book a consultation,book_consultation,en
+Can we schedule a call,book_consultation,en
+I need an appointment,book_consultation,en
+Can I reserve a meeting,book_consultation,en
+I want to talk before deciding,book_consultation,en
+Do you have a consultation slot,book_consultation,en
+Can I get a quote,request_quote,en
+How much would this cost,request_quote,en
+Send me an estimate,request_quote,en
+I need pricing for my project,request_quote,en
+What is your price for this work,request_quote,en
+Can you prepare a proposal,request_quote,en
+I want to buy this,buy,en
+How can I purchase,buy,en
+I am ready to order,buy,en
+Where do I pay,buy,en
+I want this product,buy,en
+Can I buy it now,buy,en
+Show me your portfolio,view_portfolio,en
+I want to see your work,view_portfolio,en
+Can I see past projects,view_portfolio,en
+Show examples of your projects,view_portfolio,en
+I want to view your case studies,view_portfolio,en
+What have you built before,view_portfolio,en
+I want to collaborate,collaborate,en
+Would you like to partner,collaborate,en
+Can we work together as partners,collaborate,en
+I have a collaboration idea,collaborate,en
+Let us create something together,collaborate,en
+Are you open to partnerships,collaborate,en
+Tell me more,learn_more,en
+I need more information,learn_more,en
+How does this work,learn_more,en
+Explain your service,learn_more,en
+What exactly do you offer,learn_more,en
+I want to understand this better,learn_more,en
+Hello there,other,en
+Thanks for sharing,other,en
+Nice profile,other,en
+I am just browsing,other,en
+Good morning,other,en
+This looks interesting,other,en
+Je veux vous engager,hire,fr
+Pouvez-vous travailler sur mon projet,hire,fr
+J’ai besoin de vos services,hire,fr
+Êtes-vous disponible pour une mission,hire,fr
+Je souhaite vous confier un projet,hire,fr
+Pouvons-nous commencer une mission payante,hire,fr
+Je veux réserver une consultation,book_consultation,fr
+Peut-on planifier un appel,book_consultation,fr
+J’ai besoin d’un rendez-vous,book_consultation,fr
+Puis-je réserver une réunion,book_consultation,fr
+Je veux discuter avant de décider,book_consultation,fr
+Avez-vous un créneau de consultation,book_consultation,fr
+Puis-je avoir un devis,request_quote,fr
+Combien cela coûterait,request_quote,fr
+Envoyez-moi une estimation,request_quote,fr
+J’ai besoin du prix pour mon projet,request_quote,fr
+Quel est votre tarif,request_quote,fr
+Pouvez-vous préparer une proposition,request_quote,fr
+Je veux acheter ceci,buy,fr
+Comment puis-je acheter,buy,fr
+Je suis prêt à commander,buy,fr
+Où puis-je payer,buy,fr
+Je veux ce produit,buy,fr
+Puis-je l’acheter maintenant,buy,fr
+Montrez-moi votre portfolio,view_portfolio,fr
+Je veux voir vos réalisations,view_portfolio,fr
+Puis-je voir vos anciens projets,view_portfolio,fr
+Montrez des exemples de travaux,view_portfolio,fr
+Je veux voir vos études de cas,view_portfolio,fr
+Qu’avez-vous déjà réalisé,view_portfolio,fr
+Je veux collaborer,collaborate,fr
+Voulez-vous devenir partenaire,collaborate,fr
+Peut-on travailler ensemble,collaborate,fr
+J’ai une idée de collaboration,collaborate,fr
+Créons quelque chose ensemble,collaborate,fr
+Êtes-vous ouvert aux partenariats,collaborate,fr
+Dites-m’en plus,learn_more,fr
+J’ai besoin de plus d’informations,learn_more,fr
+Comment cela fonctionne,learn_more,fr
+Expliquez votre service,learn_more,fr
+Que proposez-vous exactement,learn_more,fr
+Je veux mieux comprendre,learn_more,fr
+Bonjour,other,fr
+Merci pour le partage,other,fr
+Beau profil,other,fr
+Je regarde simplement,other,fr
+Bonne journée,other,fr
+Cela semble intéressant,other,fr
+أريد التعاقد معك,hire,ar
+هل يمكنك العمل على مشروعي,hire,ar
+أحتاج إلى خدماتك,hire,ar
+هل أنت متاح لمهمة,hire,ar
+أريد تكليفك بمشروع,hire,ar
+هل يمكننا بدء مشروع مدفوع,hire,ar
+أريد حجز استشارة,book_consultation,ar
+هل يمكننا تحديد مكالمة,book_consultation,ar
+أحتاج إلى موعد,book_consultation,ar
+هل يمكنني حجز اجتماع,book_consultation,ar
+أريد التحدث قبل أن أقرر,book_consultation,ar
+هل لديك موعد متاح للاستشارة,book_consultation,ar
+هل يمكنني الحصول على عرض سعر,request_quote,ar
+كم ستكلف هذه الخدمة,request_quote,ar
+أرسل لي تقديرا للسعر,request_quote,ar
+أحتاج إلى تسعير لمشروعي,request_quote,ar
+ما هو سعر هذا العمل,request_quote,ar
+هل يمكنك إعداد عرض,request_quote,ar
+أريد شراء هذا,buy,ar
+كيف يمكنني الشراء,buy,ar
+أنا مستعد للطلب,buy,ar
+أين يمكنني الدفع,buy,ar
+أريد هذا المنتج,buy,ar
+هل يمكنني شراؤه الآن,buy,ar
+أرني معرض أعمالك,view_portfolio,ar
+أريد رؤية أعمالك,view_portfolio,ar
+هل يمكنني رؤية مشاريع سابقة,view_portfolio,ar
+أرني أمثلة من مشاريعك,view_portfolio,ar
+أريد مشاهدة دراسات الحالة,view_portfolio,ar
+ماذا أنجزت من قبل,view_portfolio,ar
+أريد التعاون معك,collaborate,ar
+هل ترغب في شراكة,collaborate,ar
+هل يمكننا العمل معا كشركاء,collaborate,ar
+لدي فكرة تعاون,collaborate,ar
+لننشئ شيئا معا,collaborate,ar
+هل أنت منفتح على الشراكات,collaborate,ar
+أخبرني المزيد,learn_more,ar
+أحتاج إلى معلومات أكثر,learn_more,ar
+كيف تعمل هذه الخدمة,learn_more,ar
+اشرح لي خدمتك,learn_more,ar
+ماذا تقدم بالضبط,learn_more,ar
+أريد أن أفهم أكثر,learn_more,ar
+مرحبا,other,ar
+شكرا على المشاركة,other,ar
+ملف جميل,other,ar
+أنا أتصفح فقط,other,ar
+صباح الخير,other,ar
+هذا يبدو مثيرا للاهتمام,other,ar

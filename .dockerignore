@@ -1,0 +1,27 @@
+# dépendances & artefact local
+node_modules
+.next
+.git
+.gitignore
+
+# secrets & env local
+.env
+.env.*
+!.env.example
+
+# outils / IDE
+.cursor
+.vscode
+.idea
+
+# logs & caches
+npm-debug.log*
+*.log
+.turbo
+
+# tests & docs (inutiles à l’image runtime)
+coverage
+*.md
+
+# CI / Docker (évite copies circulaires mineures)
+.gitlab-ci.yml

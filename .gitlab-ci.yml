@@ -1,0 +1,234 @@
+# GitLab CI/CD pipeline for Faymoos / PFE_stage
+# Stack: Next.js + TypeScript + Prisma + Vitest + Docker.
+# Goal: validate code quality, run automated tests, build the app, publish a Docker image,
+# run optional security checks, then deploy manually to a server.
+
+workflow:
+  rules:
+    # Run on merge requests, branches and tags.
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH'
+    - if: '$CI_COMMIT_TAG'
+
+stages:
+  - prepare
+  - quality
+  - test
+  - build
+  - package
+  - security
+  - deploy
+
+variables:
+  NODE_VERSION: "20"
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+  NEXT_TELEMETRY_DISABLED: "1"
+  # Placeholder values used only by CI jobs that compile the app.
+  # Real production values must be configured in GitLab: Settings > CI/CD > Variables.
+  DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+  NEXT_PUBLIC_APP_URL: "http://localhost:3000"
+  BILLING_DEMO_MODE: "true"
+  OPENAI_API_KEY: "ci-placeholder"
+  STRIPE_SECRET_KEY: "sk_test_ci_placeholder"
+  STRIPE_WEBHOOK_SECRET: "whsec_ci_placeholder"
+  DOCKER_TLS_CERTDIR: "/certs"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - .npm/
+  policy: pull-push
+
+.node_job:
+  image: node:${NODE_VERSION}-bookworm
+  interruptible: true
+  before_script:
+    - node --version
+    - npm --version
+    - npm ci --cache .npm --prefer-offline
+
+install_dependencies:
+  stage: prepare
+  image: node:${NODE_VERSION}-bookworm
+  interruptible: true
+  script:
+    - node --version
+    - npm --version
+    - npm ci --cache .npm --prefer-offline
+    - npm ls --depth=0
+  artifacts:
+    when: always
+    expire_in: 1 day
+    reports:
+      dotenv: ci.env
+  after_script:
+    - echo "APP_IMAGE=$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" > ci.env
+    - echo "MIGRATE_IMAGE=$CI_REGISTRY_IMAGE:migrate-$CI_COMMIT_SHORT_SHA" >> ci.env
+
+prisma_validate:
+  stage: quality
+  extends: .node_job
+  needs: ["install_dependencies"]
+  script:
+    - npm run prisma:generate
+    - npm run prisma:validate
+
+lint_code:
+  stage: quality
+  extends: .node_job
+  needs: ["install_dependencies"]
+  script:
+    - npm run lint:ci
+
+typecheck_code:
+  stage: quality
+  extends: .node_job
+  needs: ["install_dependencies"]
+  script:
+    - npm run typecheck
+
+unit_tests:
+  stage: test
+  extends: .node_job
+  needs: ["prisma_validate", "lint_code", "typecheck_code"]
+  script:
+    - mkdir -p reports
+    - npm run test:ci
+  artifacts:
+    when: always
+    expire_in: 7 days
+    reports:
+      junit: reports/junit.xml
+    paths:
+      - reports/
+
+next_build:
+  stage: build
+  extends: .node_job
+  needs: ["unit_tests"]
+  script:
+    - npm run build
+  artifacts:
+    when: on_success
+    expire_in: 7 days
+    paths:
+      - .next/
+      - public/
+      - next.config.ts
+      - package.json
+      - package-lock.json
+      - prisma/
+
+# Builds and pushes the production Docker image to the GitLab Container Registry.
+# Runs only on the default branch and on tags to avoid publishing every feature branch.
+docker_build_push:
+  stage: package
+  image: docker:27.5.1
+  services:
+    - name: docker:27.5.1-dind
+      alias: docker
+  needs: ["next_build"]
+  variables:
+    DOCKER_HOST: "tcp://docker:2376"
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    APP_IMAGE_TAG: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    APP_IMAGE_LATEST: "$CI_REGISTRY_IMAGE:latest"
+    MIGRATE_IMAGE_TAG: "$CI_REGISTRY_IMAGE:migrate-$CI_COMMIT_SHORT_SHA"
+    MIGRATE_IMAGE_LATEST: "$CI_REGISTRY_IMAGE:migrate-latest"
+  before_script:
+    - docker version
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    - docker build --pull --target runner -t "$APP_IMAGE_TAG" -t "$APP_IMAGE_LATEST" .
+    - docker build --pull --target migrate -t "$MIGRATE_IMAGE_TAG" -t "$MIGRATE_IMAGE_LATEST" .
+    - docker push "$APP_IMAGE_TAG"
+    - docker push "$APP_IMAGE_LATEST"
+    - docker push "$MIGRATE_IMAGE_TAG"
+    - docker push "$MIGRATE_IMAGE_LATEST"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_TAG'
+
+# Production dependency audit. It is allowed to fail so a network/audit-service problem
+# does not block the demo pipeline, but real high vulnerabilities remain visible.
+npm_audit_production:
+  stage: security
+  extends: .node_job
+  needs: ["install_dependencies"]
+  script:
+    - npm run audit:prod
+  allow_failure: true
+
+# Container image scan with Trivy. It runs after the image is pushed.
+# Marked optional because some student/self-hosted runners cannot pull external scanner images.
+container_scan:
+  stage: security
+  image:
+    name: aquasec/trivy:0.57.1
+    entrypoint: [""]
+  needs: ["docker_build_push"]
+  variables:
+    TRIVY_NO_PROGRESS: "true"
+    TRIVY_CACHE_DIR: ".trivycache/"
+    IMAGE_TAG: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+  script:
+    - trivy image --exit-code 0 --severity LOW,MEDIUM "$IMAGE_TAG"
+    - trivy image --exit-code 1 --severity HIGH,CRITICAL "$IMAGE_TAG"
+  cache:
+    key: trivy-cache
+    paths:
+      - .trivycache/
+  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_TAG'
+
+# Manual production deployment by SSH.
+# Required GitLab CI/CD variables:
+#   DEPLOY_HOST          example: 192.168.1.50 or your-domain.com
+#   DEPLOY_USER          example: ubuntu
+#   DEPLOY_PATH          example: /var/www/faymoos
+#   SSH_PRIVATE_KEY      private key allowed to connect to the server
+# On the server, DEPLOY_PATH should contain docker-compose.prod.yml.
+deploy_production:
+  stage: deploy
+  image: alpine:3.20
+  needs: ["docker_build_push"]
+  environment:
+    name: production
+    url: $PRODUCTION_URL
+  before_script:
+    - apk add --no-cache openssh-client bash
+    - test -n "$DEPLOY_HOST" || (echo "DEPLOY_HOST is missing" && exit 1)
+    - test -n "$DEPLOY_USER" || (echo "DEPLOY_USER is missing" && exit 1)
+    - test -n "$DEPLOY_PATH" || (echo "DEPLOY_PATH is missing" && exit 1)
+    - test -n "$SSH_PRIVATE_KEY" || (echo "SSH_PRIVATE_KEY is missing" && exit 1)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+  script:
+    - |
+      ssh "$DEPLOY_USER@$DEPLOY_HOST" "
+        set -e
+        cd '$DEPLOY_PATH'
+        export APP_IMAGE='$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA'
+        export MIGRATE_IMAGE='$CI_REGISTRY_IMAGE:migrate-$CI_COMMIT_SHORT_SHA'
+        echo '$CI_REGISTRY_PASSWORD' | docker login -u '$CI_REGISTRY_USER' --password-stdin '$CI_REGISTRY'
+        docker compose -f docker-compose.prod.yml pull
+        docker compose -f docker-compose.prod.yml up -d --remove-orphans
+        docker image prune -f
+      "
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: manual
+    - if: '$CI_COMMIT_TAG'
+      when: manual
+  allow_failure: false
