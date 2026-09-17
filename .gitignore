@@ -42,3 +42,6 @@ next-env.d.ts
 
 /app/generated/prisma
 /src/generated/prisma
+
+# Python virtual environment
+services/ai/.venv/
