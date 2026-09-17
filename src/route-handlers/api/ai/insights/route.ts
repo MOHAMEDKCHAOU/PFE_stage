@@ -8,13 +8,12 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("ai:use");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
-    const userId = auth.userId;
+    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
 
     const { analytics } = await req.json();
     if (!analytics) {
       return NextResponse.json(
-        { error: "Données analytics requises" },
+        { error: "DonnÃ©es analytics requises" },
         { status: 400 }
       );
     }
@@ -25,25 +24,25 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: `Tu es un expert en analyse de données et optimisation de conversion. 
-L'utilisateur te donne les analytics d'une capsule interactive (parcours visiteur). Analyse les données et donne des insights actionnables.
+          content: `Tu es un expert en analyse de donnÃ©es et optimisation de conversion. 
+L'utilisateur te donne les analytics d'une capsule interactive (parcours visiteur). Analyse les donnÃ©es et donne des insights actionnables.
 
-Réponds UNIQUEMENT en JSON :
+RÃ©ponds UNIQUEMENT en JSON :
 {
   "insights": [
-    "insight 1 — conseil actionnable",
-    "insight 2 — conseil actionnable",
-    "insight 3 — conseil actionnable"
+    "insight 1 â€” conseil actionnable",
+    "insight 2 â€” conseil actionnable",
+    "insight 3 â€” conseil actionnable"
   ]
 }
 
-Règles :
-- Donne 3 à 5 insights pertinents basés sur les données
-- Chaque insight doit être concis (1-2 phrases max)
+RÃ¨gles :
+- Donne 3 Ã  5 insights pertinents basÃ©s sur les donnÃ©es
+- Chaque insight doit Ãªtre concis (1-2 phrases max)
 - Inclus des chiffres quand pertinent
-- Sois spécifique et actionnable, pas générique
-- Si les données sont insuffisantes (0 visiteurs), dis-le
-- Tout en français
+- Sois spÃ©cifique et actionnable, pas gÃ©nÃ©rique
+- Si les donnÃ©es sont insuffisantes (0 visiteurs), dis-le
+- Tout en franÃ§ais
 - Pas de markdown, uniquement le JSON`,
         },
         {
@@ -56,7 +55,7 @@ Règles :
     const content = completion.choices[0]?.message?.content;
     if (!content) {
       return NextResponse.json(
-        { error: "Pas de réponse de l'IA" },
+        { error: "Pas de rÃ©ponse de l'IA" },
         { status: 500 }
       );
     }

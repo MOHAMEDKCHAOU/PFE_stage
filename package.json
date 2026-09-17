@@ -8,10 +8,13 @@
     "build": "next build",
     "start": "next start",
     "postinstall": "prisma generate",
+    "prisma:validate": "prisma validate",
     "lint": "eslint",
     "lint:ci": "eslint src/route-handlers src/__tests__ app/api --max-warnings 0",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prisma:generate": "prisma generate",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

@@ -8,8 +8,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("ai:use");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
-    const userId = auth.userId;
+    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
 
     const { text, context } = await req.json();
     if (!text || typeof text !== "string" || text.trim().length < 2) {
@@ -21,10 +20,10 @@ export async function POST(req: Request) {
 
     const contextDescriptions: Record<string, string> = {
       title: "le titre d'une capsule interactive (court, accrocheur)",
-      objective: "la question posée au visiteur dans une capsule (claire, engageante, professionnelle)",
+      objective: "la question posÃ©e au visiteur dans une capsule (claire, engageante, professionnelle)",
       option: "le label d'un bouton d'option dans une capsule (court, descriptif)",
       headline: "le titre d'une branche de capsule (accrocheur, qui donne envie)",
-      description: "la description détaillée d'une branche (2-3 phrases, convaincante)",
+      description: "la description dÃ©taillÃ©e d'une branche (2-3 phrases, convaincante)",
       cta: "un call-to-action (texte de bouton ou lien, actionnable et direct)",
     };
 
@@ -37,20 +36,20 @@ export async function POST(req: Request) {
         {
           role: "system",
           content: `Tu es un expert en copywriting professionnel. L'utilisateur te donne un texte brut et tu dois :
-1. L'améliorer pour qu'il soit plus professionnel, clair et engageant
+1. L'amÃ©liorer pour qu'il soit plus professionnel, clair et engageant
 2. Proposer 2 alternatives
 
 Le texte est : ${contextDesc}
 
-Réponds UNIQUEMENT en JSON :
+RÃ©ponds UNIQUEMENT en JSON :
 {
-  "improved": "version améliorée du texte",
+  "improved": "version amÃ©liorÃ©e du texte",
   "suggestions": ["alternative 1", "alternative 2"]
 }
 
-Règles :
-- Garde le même sens et intention
-- Tout en français
+RÃ¨gles :
+- Garde le mÃªme sens et intention
+- Tout en franÃ§ais
 - Pas de markdown ni explication, uniquement le JSON`,
         },
         {
@@ -63,7 +62,7 @@ Règles :
     const content = completion.choices[0]?.message?.content;
     if (!content) {
       return NextResponse.json(
-        { error: "Pas de réponse de l'IA" },
+        { error: "Pas de rÃ©ponse de l'IA" },
         { status: 500 }
       );
     }
@@ -75,7 +74,7 @@ Règles :
   } catch (error) {
     console.error("AI IMPROVE TEXT ERROR:", error);
     return NextResponse.json(
-      { error: "Erreur lors de l'amélioration IA" },
+      { error: "Erreur lors de l'amÃ©lioration IA" },
       { status: 500 }
     );
   }

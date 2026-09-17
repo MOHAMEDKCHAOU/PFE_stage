@@ -200,34 +200,48 @@ function PieChart({
   if (total === 0) return <p className="text-sm text-white/35 italic text-center py-8">Pas de données</p>;
 
   const size = 180;
-  const center = size / 2;
-  const radius = 70;
 
+  const center = size / 2;
+  
+  const radius = 70;
+  
   const slices = data.reduce<
-    { label: string; value: number; color: string; path: string; percentage: number }[]
+    {
+      label: string;
+      value: number;
+      color: string;
+      path: string;
+      percentage: number;
+      endAngle: number;
+    }[]
   >((acc, d) => {
     const angle = (d.value / total) * 360;
-    const startAngle = acc.length === 0 ? 0 : acc[acc.length - 1].endAngle;
+  
+    const startAngle =
+      acc.length === 0 ? 0 : acc[acc.length - 1].endAngle;
+  
     const endAngle = startAngle + angle;
-
+  
     const startRad = ((startAngle - 90) * Math.PI) / 180;
     const endRad = ((endAngle - 90) * Math.PI) / 180;
-
+  
     const x1 = center + radius * Math.cos(startRad);
     const y1 = center + radius * Math.sin(startRad);
+  
     const x2 = center + radius * Math.cos(endRad);
     const y2 = center + radius * Math.sin(endRad);
-
+  
     const largeArcFlag = angle > 180 ? 1 : 0;
-
+  
     const path = `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
-
+  
     acc.push({
       ...d,
       path,
       percentage: Math.round((d.value / total) * 100),
       endAngle,
     });
+  
     return acc;
   }, []);
 
