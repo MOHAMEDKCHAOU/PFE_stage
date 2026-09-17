@@ -13,6 +13,7 @@
     "lint:ci": "eslint src/route-handlers src/__tests__ app/api --max-warnings 0",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:ci": "vitest run --reporter=default --reporter=junit",
     "prisma:generate": "prisma generate",
     "typecheck": "tsc --noEmit"
   },

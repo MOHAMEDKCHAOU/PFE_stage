@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/auth";
+import { requirePermission, getUserId } from "@/lib/auth";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
@@ -7,7 +7,11 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const { capsuleId, label, sortOrder: sortIn } = await req.json();
@@ -50,7 +54,11 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const { id, label, sortOrder } = await req.json();
@@ -85,7 +93,11 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const { searchParams } = new URL(req.url);
@@ -110,3 +122,5 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+

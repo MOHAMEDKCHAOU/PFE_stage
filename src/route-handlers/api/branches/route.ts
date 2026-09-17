@@ -1,13 +1,23 @@
-import { prisma } from "@/lib/prisma";
-import { requirePermission } from "@/lib/auth";
+﻿import { prisma } from "@/lib/prisma";
+import { requirePermission, getUserId } from "@/lib/auth";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { NextResponse } from "next/server";
 
-// REST Route: POST /api/branches (Protégé)
+// REST Route: POST /api/branches (ProtÃ©gÃ©)
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
+
     const userId = auth.userId;
 
     const { optionId, headline, description, cta, proof } = await req.json();
@@ -24,7 +34,7 @@ export async function POST(req: Request) {
       include: { capsule: { include: { identity: true } } },
     });
     if (!optionRow || !(await canManageIdentityAsOwner(userId, optionRow.capsule.identity.userId))) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
     }
 
     const branch = await prisma.capsuleBranch.create({
@@ -38,17 +48,27 @@ export async function POST(req: Request) {
   }
 }
 
-// REST Route: PUT /api/branches (Protégé)
+// REST Route: PUT /api/branches (ProtÃ©gÃ©)
 export async function PUT(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
+
     const userId = auth.userId;
 
     const { id, headline, description, cta, proof } = await req.json();
     if (!id) return NextResponse.json({ error: "id requis" }, { status: 400 });
 
-    // Vérifier que la branch appartient bien au user
+    // VÃ©rifier que la branch appartient bien au user
     const existing = await prisma.capsuleBranch.findUnique({
       where: { id },
       include: {
@@ -57,7 +77,7 @@ export async function PUT(req: Request) {
     });
 
     if (!existing || !(await canManageIdentityAsOwner(userId, existing.option.capsule.identity.userId))) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
     }
 
     const branch = await prisma.capsuleBranch.update({
@@ -72,11 +92,21 @@ export async function PUT(req: Request) {
   }
 }
 
-// REST Route: DELETE /api/branches (Protégé)
+// REST Route: DELETE /api/branches (ProtÃ©gÃ©)
 export async function DELETE(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
+
     const userId = auth.userId;
 
     const { searchParams } = new URL(req.url);
@@ -84,7 +114,7 @@ export async function DELETE(req: Request) {
 
     if (!id) return NextResponse.json({ error: "L'ID est requis" }, { status: 400 });
 
-    // Vérifier que la branch appartient bien au user
+    // VÃ©rifier que la branch appartient bien au user
     const existing = await prisma.capsuleBranch.findUnique({
       where: { id },
       include: {
@@ -93,13 +123,14 @@ export async function DELETE(req: Request) {
     });
 
     if (!existing || !(await canManageIdentityAsOwner(userId, existing.option.capsule.identity.userId))) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
     }
 
     await prisma.capsuleBranch.delete({ where: { id } });
-    return NextResponse.json({ success: true, message: "Branch supprimée" });
+    return NextResponse.json({ success: true, message: "Branch supprimÃ©e" });
   } catch (error) {
     console.error("DELETE BRANCHES ERROR", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+

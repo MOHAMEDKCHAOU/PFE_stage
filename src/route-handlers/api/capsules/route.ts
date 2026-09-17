@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import { getAuthContext, requirePermission } from "@/lib/auth";
+﻿import { prisma } from "@/lib/prisma";
+import { getAuthContext, getUserId, requirePermission } from "@/lib/auth";
 import { canManageIdentityAsOwner } from "@/lib/studio-access";
 import { syncAutoBadgesForUser } from "@/lib/faymoos-badges";
 import { hasPermission } from "@/lib/rbac-policy";
@@ -15,7 +15,15 @@ export async function GET(req: Request) {
 
     if (capsuleId) {
       const auth = await requirePermission("capsules:manage");
-      if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
       const userId = auth.userId;
       const cap = await prisma.capsule.findUnique({
         where: { id: capsuleId },
@@ -28,13 +36,13 @@ export async function GET(req: Request) {
         },
       });
       if (!cap || !(await canManageIdentityAsOwner(userId, cap.identity.userId))) {
-        return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+        return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
       }
       return NextResponse.json(cap);
     }
 
     if (!identityId) {
-      return NextResponse.json({ error: "Le paramètre identityId est requis" }, { status: 400 });
+      return NextResponse.json({ error: "Le paramÃ¨tre identityId est requis" }, { status: 400 });
     }
 
     // Public viewers only receive published capsules. Owners and authorized Studio
@@ -75,7 +83,15 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const body = await req.json();
@@ -90,10 +106,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "identityId, title et objective requis" }, { status: 400 });
     }
 
-    // Sécurité : vérifier que l'identité appartient bien au userId session
+    // SÃ©curitÃ© : vÃ©rifier que l'identitÃ© appartient bien au userId session
     const identity = await prisma.identityProfile.findUnique({ where: { id: identityId }});
     if (!identity || !(await canManageIdentityAsOwner(userId, identity.userId))) {
-      return NextResponse.json({ error: "Identité non autorisée" }, { status: 403 });
+      return NextResponse.json({ error: "IdentitÃ© non autorisÃ©e" }, { status: 403 });
     }
 
     const capQuota = await assertCanCreateCapsule(userId, identity.userId);
@@ -126,7 +142,15 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const body = await req.json();
@@ -144,7 +168,7 @@ export async function PUT(req: Request) {
     });
 
     if (!capsule || !(await canManageIdentityAsOwner(userId, capsule.identity.userId))) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
     }
 
     const updated = await prisma.capsule.update({
@@ -172,7 +196,15 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const auth = await requirePermission("capsules:manage");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+
+      if (!userId) {
+        return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      }
+
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const { searchParams } = new URL(req.url);
@@ -186,13 +218,14 @@ export async function DELETE(req: Request) {
     });
 
     if (!capsule || !(await canManageIdentityAsOwner(userId, capsule.identity.userId))) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
     }
 
     await prisma.capsule.delete({ where: { id } });
-    return NextResponse.json({ success: true, message: "Capsule supprimée" });
+    return NextResponse.json({ success: true, message: "Capsule supprimÃ©e" });
   } catch (error) {
     console.error("DELETE CAPSULES ERROR", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+

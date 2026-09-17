@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+﻿import { describe, it, expect, vi, beforeEach } from "vitest";
 import { prisma } from "@/lib/prisma";
 import * as auth from "@/lib/auth";
 import { GET, POST, DELETE } from "@/route-handlers/api/capsules/route";
@@ -29,9 +29,47 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({
-  getUserId: vi.fn(),
-}));
+vi.mock("@/lib/auth", () => {
+  const getUserId = vi.fn();
+
+  const getAuthContext = vi.fn(async () => {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      userId,
+      role: "USER",
+      status: "ACTIVE",
+      permissions: [],
+      sessionId: "test-session",
+    };
+  });
+
+  const requirePermission = vi.fn(async () => {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      userId,
+      role: "USER",
+      status: "ACTIVE",
+      permissions: [],
+      sessionId: "test-session",
+    };
+  });
+
+  return {
+    getUserId,
+    getAuthContext,
+    requirePermission,
+  };
+});
 
 const mockCapsule = vi.mocked(prisma.capsule);
 const mockIdentity = vi.mocked(prisma.identityProfile);
@@ -63,7 +101,8 @@ function makeRequest(method: string, url: string, body?: object) {
 describe("GET /api/capsules", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("retourne 200 avec les capsules de l'identité", async () => {
+  it("retourne 200 avec les capsules de l.identité", async () => {
+    mockIdentity.findUnique.mockResolvedValue(fakeIdentity as never);
     mockCapsule.findMany.mockResolvedValue([fakeCapsule] as never);
 
     const res = await GET(makeRequest("GET", "/api/capsules?identityId=identity-1"));
@@ -83,7 +122,7 @@ describe("GET /api/capsules", () => {
 describe("POST /api/capsules", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("crée une capsule et retourne 201", async () => {
+  it("crÃ©e une capsule et retourne 201", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockIdentity.findUnique.mockResolvedValue(fakeIdentity as never);
     mockUser.findUnique.mockResolvedValue({
@@ -116,7 +155,7 @@ describe("POST /api/capsules", () => {
     expect(res.status).toBe(400);
   });
 
-  it("retourne 403 si l'identité appartient à un autre utilisateur", async () => {
+  it("retourne 403 si l'identitÃ© appartient Ã  un autre utilisateur", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockIdentity.findUnique.mockResolvedValue({ id: "identity-1", userId: OTHER_USER_ID } as never);
 
@@ -128,7 +167,7 @@ describe("POST /api/capsules", () => {
     expect(res.status).toBe(403);
   });
 
-  it("retourne 401 si non authentifié", async () => {
+  it("retourne 401 si non authentifiÃ©", async () => {
     mockGetUserId.mockResolvedValue(null);
 
     const res = await POST(makeRequest("POST", "/api/capsules", {
@@ -162,7 +201,7 @@ describe("DELETE /api/capsules", () => {
     expect(res.status).toBe(400);
   });
 
-  it("retourne 403 si la capsule appartient à un autre utilisateur", async () => {
+  it("retourne 403 si la capsule appartient Ã  un autre utilisateur", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockCapsule.findUnique.mockResolvedValue({
       ...fakeCapsule,
@@ -173,10 +212,14 @@ describe("DELETE /api/capsules", () => {
     expect(res.status).toBe(403);
   });
 
-  it("retourne 401 si non authentifié", async () => {
+  it("retourne 401 si non authentifiÃ©", async () => {
     mockGetUserId.mockResolvedValue(null);
 
     const res = await DELETE(makeRequest("DELETE", "/api/capsules?id=capsule-1"));
     expect(res.status).toBe(401);
   });
 });
+
+
+
+

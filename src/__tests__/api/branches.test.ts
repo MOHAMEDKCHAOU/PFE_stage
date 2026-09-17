@@ -1,7 +1,23 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+﻿import { describe, it, expect, vi, beforeEach } from "vitest";
 import { prisma } from "@/lib/prisma";
 import * as auth from "@/lib/auth";
 import { POST, PUT, DELETE } from "@/route-handlers/api/branches/route";
+
+const CURRENT_USER_ID = "user-1";
+
+function makeRequest(
+  method: string,
+  url: string,
+  body?: Record<string, unknown>
+) {
+  return new Request(`http://localhost${url}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+  });
+}
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
@@ -21,47 +37,74 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({
-  getUserId: vi.fn(),
-}));
+vi.mock("@/lib/auth", () => {
+  const getUserId = vi.fn();
 
+  const getAuthContext = vi.fn(async () => {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      userId,
+      role: "USER",
+      status: "ACTIVE",
+      permissions: [],
+      sessionId: "test-session",
+    };
+  });
+
+  const requirePermission = vi.fn(async () => {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      userId,
+      role: "USER",
+      status: "ACTIVE",
+      permissions: [],
+      sessionId: "test-session",
+    };
+  });
+
+  return {
+    getUserId,
+    getAuthContext,
+    requirePermission,
+  };
+});
+
+const mockGetUserId = vi.mocked(auth.getUserId);
 const mockCapsuleOption = vi.mocked(prisma.capsuleOption);
 const mockBranch = vi.mocked(prisma.capsuleBranch);
-const mockGetUserId = vi.mocked(auth.getUserId);
 
-const CURRENT_USER_ID = "user-1";
-const OTHER_USER_ID = "user-99";
+const OTHER_USER_ID = "user-2";
 
 const fakeBranch = {
   id: "branch-1",
   optionId: "option-1",
   headline: "Titre accrocheur",
-  description: "Description détaillée",
-  cta: "Contactez-nous",
-  proof: null,
+  description: "Description initiale",
+  cta: "Contacter",
+  proof: "Preuve",
   option: {
-    id: "option-1",
     capsule: {
-      id: "capsule-1",
-      identity: { id: "identity-1", userId: CURRENT_USER_ID },
+      identity: {
+        userId: CURRENT_USER_ID,
+      },
     },
   },
-  createdAt: new Date(),
-  updatedAt: new Date(),
 };
-
-function makeRequest(method: string, url: string, body?: object) {
-  return new Request(`http://localhost${url}`, {
-    method,
-    headers: body ? { "Content-Type": "application/json" } : {},
-    body: body ? JSON.stringify(body) : undefined,
-  });
-}
 
 describe("POST /api/branches", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("crée une branch et retourne 201", async () => {
+  it("crÃ©e une branch et retourne 201", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockCapsuleOption.findUnique.mockResolvedValue({
       id: "option-1",
@@ -75,7 +118,7 @@ describe("POST /api/branches", () => {
     const res = await POST(makeRequest("POST", "/api/branches", {
       optionId: "option-1",
       headline: "Titre accrocheur",
-      description: "Description détaillée",
+      description: "Description dÃ©taillÃ©e",
       cta: "Contactez-nous",
     }));
     const json = await res.json();
@@ -95,7 +138,7 @@ describe("POST /api/branches", () => {
     expect(res.status).toBe(400);
   });
 
-  it("retourne 401 si non authentifié", async () => {
+  it("retourne 401 si non authentifiÃ©", async () => {
     mockGetUserId.mockResolvedValue(null);
 
     const res = await POST(makeRequest("POST", "/api/branches", {
@@ -111,7 +154,7 @@ describe("POST /api/branches", () => {
 describe("PUT /api/branches", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("met à jour la branch et retourne 200", async () => {
+  it("met Ã  jour la branch et retourne 200", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockBranch.findUnique.mockResolvedValue(fakeBranch as never);
     mockBranch.update.mockResolvedValue({ ...fakeBranch, headline: "Nouveau titre" } as never);
@@ -135,7 +178,7 @@ describe("PUT /api/branches", () => {
     expect(res.status).toBe(400);
   });
 
-  it("retourne 403 si la branch appartient à un autre utilisateur", async () => {
+  it("retourne 403 si la branch appartient Ã  un autre utilisateur", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockBranch.findUnique.mockResolvedValue({
       ...fakeBranch,
@@ -153,7 +196,7 @@ describe("PUT /api/branches", () => {
     expect(res.status).toBe(403);
   });
 
-  it("retourne 401 si non authentifié", async () => {
+  it("retourne 401 si non authentifiÃ©", async () => {
     mockGetUserId.mockResolvedValue(null);
 
     const res = await PUT(makeRequest("PUT", "/api/branches", {
@@ -188,7 +231,7 @@ describe("DELETE /api/branches", () => {
     expect(res.status).toBe(400);
   });
 
-  it("retourne 403 si la branch appartient à un autre utilisateur", async () => {
+  it("retourne 403 si la branch appartient Ã  un autre utilisateur", async () => {
     mockGetUserId.mockResolvedValue(CURRENT_USER_ID);
     mockBranch.findUnique.mockResolvedValue({
       ...fakeBranch,
@@ -201,10 +244,21 @@ describe("DELETE /api/branches", () => {
     expect(res.status).toBe(403);
   });
 
-  it("retourne 401 si non authentifié", async () => {
+  it("retourne 401 si non authentifiÃ©", async () => {
     mockGetUserId.mockResolvedValue(null);
 
     const res = await DELETE(makeRequest("DELETE", "/api/branches?id=branch-1"));
     expect(res.status).toBe(401);
   });
 });
+
+
+
+
+
+
+
+
+
+
+

@@ -22,9 +22,30 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({
-  getUserId: vi.fn(),
-}));
+vi.mock("@/lib/auth", () => {
+  const getUserId = vi.fn();
+
+  const requirePermission = vi.fn(async () => {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      userId,
+      role: "USER",
+      status: "ACTIVE",
+      permissions: [],
+      sessionId: "test-session",
+    };
+  });
+
+  return {
+    getUserId,
+    requirePermission,
+  };
+});
 
 const mockCapsule = vi.mocked(prisma.capsule);
 const mockOption = vi.mocked(prisma.capsuleOption);
@@ -176,3 +197,4 @@ describe("DELETE /api/options", () => {
     expect(res.status).toBe(401);
   });
 });
+

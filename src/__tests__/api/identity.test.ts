@@ -33,9 +33,30 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({
-  getUserId: vi.fn(),
-}));
+vi.mock("@/lib/auth", () => {
+  const getUserId = vi.fn();
+
+  const requirePermission = vi.fn(async () => {
+    const userId = await getUserId();
+
+    if (!userId) {
+      return null;
+    }
+
+    return {
+      userId,
+      role: "USER",
+      status: "ACTIVE",
+      permissions: [],
+      sessionId: "test-session",
+    };
+  });
+
+  return {
+    getUserId,
+    requirePermission,
+  };
+});
 
 const mockIdentity = vi.mocked(prisma.identityProfile);
 const mockUserFindMany = vi.mocked(prisma.user.findMany);
@@ -245,3 +266,5 @@ describe("DELETE /api/identity", () => {
     expect(res.status).toBe(401);
   });
 });
+
+

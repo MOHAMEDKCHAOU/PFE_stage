@@ -1,4 +1,4 @@
-import { requirePermission } from "@/lib/auth";
+import { requirePermission ,getUserId} from "@/lib/auth";
 import { normalizeProfession, normalizeTagsInput } from "@/lib/identity-profession";
 import { prisma } from "@/lib/prisma";
 import { canHidePlatformBranding } from "@/lib/subscription-entitlements";
@@ -13,7 +13,11 @@ export const runtime = "nodejs";
 export async function GET() {
   try {
     const auth = await requirePermission("identity:read");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const ownerIds = await getManagedUserIdsForViewer(userId);
@@ -64,7 +68,11 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("identity:create");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const body = await req.json();
@@ -136,7 +144,11 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const auth = await requirePermission("identity:update");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const body = await req.json();
@@ -224,7 +236,11 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const auth = await requirePermission("identity:delete");
-    if (!auth) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (!auth) {
+      const userId = await getUserId();
+      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     const userId = auth.userId;
 
     const { searchParams } = new URL(req.url);
