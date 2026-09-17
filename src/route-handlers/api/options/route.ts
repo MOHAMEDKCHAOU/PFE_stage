@@ -9,8 +9,8 @@ export async function POST(req: Request) {
     const auth = await requirePermission("capsules:manage");
     if (!auth) {
       const userId = await getUserId();
-      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+      if (!userId) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+      return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     }
     const userId = auth.userId;
 
@@ -56,8 +56,8 @@ export async function PUT(req: Request) {
     const auth = await requirePermission("capsules:manage");
     if (!auth) {
       const userId = await getUserId();
-      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+      if (!userId) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+      return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     }
     const userId = auth.userId;
 
@@ -95,8 +95,8 @@ export async function DELETE(req: Request) {
     const auth = await requirePermission("capsules:manage");
     if (!auth) {
       const userId = await getUserId();
-      if (!userId) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+      if (!userId) return NextResponse.json({ error: "Non authentifiÃ©" }, { status: 401 });
+      return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     }
     const userId = auth.userId;
 
