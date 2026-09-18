@@ -1,4 +1,4 @@
-import { requirePermission } from "@/lib/auth";
+﻿import { requirePermission } from "@/lib/auth";
 import openai from "@/lib/openai";
 import { NextResponse } from "next/server";
 
@@ -8,41 +8,41 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const auth = await requirePermission("ai:use");
-    if (!auth) return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
+    if (!auth) return NextResponse.json({ error: "AccÃƒÂ¨s refusÃƒÂ©" }, { status: 403 });
 
     const { analytics } = await req.json();
     if (!analytics) {
       return NextResponse.json(
-        { error: "DonnÃ©es analytics requises" },
+        { error: "DonnÃƒÂ©es analytics requises" },
         { status: 400 }
       );
     }
 
-    const completion = await openai.chat.completions.create({
+    const completion = await openai!.chat.completions.create({
       model: "gpt-4o-mini",
       temperature: 0.6,
       messages: [
         {
           role: "system",
-          content: `Tu es un expert en analyse de donnÃ©es et optimisation de conversion. 
-L'utilisateur te donne les analytics d'une capsule interactive (parcours visiteur). Analyse les donnÃ©es et donne des insights actionnables.
+          content: `Tu es un expert en analyse de donnÃƒÂ©es et optimisation de conversion. 
+L'utilisateur te donne les analytics d'une capsule interactive (parcours visiteur). Analyse les donnÃƒÂ©es et donne des insights actionnables.
 
-RÃ©ponds UNIQUEMENT en JSON :
+RÃƒÂ©ponds UNIQUEMENT en JSON :
 {
   "insights": [
-    "insight 1 â€” conseil actionnable",
-    "insight 2 â€” conseil actionnable",
-    "insight 3 â€” conseil actionnable"
+    "insight 1 Ã¢â‚¬â€ conseil actionnable",
+    "insight 2 Ã¢â‚¬â€ conseil actionnable",
+    "insight 3 Ã¢â‚¬â€ conseil actionnable"
   ]
 }
 
-RÃ¨gles :
-- Donne 3 Ã  5 insights pertinents basÃ©s sur les donnÃ©es
-- Chaque insight doit Ãªtre concis (1-2 phrases max)
+RÃƒÂ¨gles :
+- Donne 3 ÃƒÂ  5 insights pertinents basÃƒÂ©s sur les donnÃƒÂ©es
+- Chaque insight doit ÃƒÂªtre concis (1-2 phrases max)
 - Inclus des chiffres quand pertinent
-- Sois spÃ©cifique et actionnable, pas gÃ©nÃ©rique
-- Si les donnÃ©es sont insuffisantes (0 visiteurs), dis-le
-- Tout en franÃ§ais
+- Sois spÃƒÂ©cifique et actionnable, pas gÃƒÂ©nÃƒÂ©rique
+- Si les donnÃƒÂ©es sont insuffisantes (0 visiteurs), dis-le
+- Tout en franÃƒÂ§ais
 - Pas de markdown, uniquement le JSON`,
         },
         {
@@ -55,7 +55,7 @@ RÃ¨gles :
     const content = completion.choices[0]?.message?.content;
     if (!content) {
       return NextResponse.json(
-        { error: "Pas de rÃ©ponse de l'IA" },
+        { error: "Pas de rÃƒÂ©ponse de l'IA" },
         { status: 500 }
       );
     }
@@ -72,3 +72,4 @@ RÃ¨gles :
     );
   }
 }
+

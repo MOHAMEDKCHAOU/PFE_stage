@@ -102,6 +102,12 @@ RÈGLES:
 - Sois chaleureux et professionnel`;
 
     let reply: string;
+    if (!openai) {
+      return NextResponse.json(
+        { error: "OPENAI_API_KEY manquante. Configurez la clé OpenAI pour utiliser l'IA." },
+        { status: 503 }
+      );
+    }
 
     try {
       const completion = await openai.chat.completions.create({
