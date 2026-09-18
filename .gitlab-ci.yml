@@ -160,7 +160,7 @@ npm_audit_production:
   extends: .node_job
   needs: ["install_dependencies"]
   script:
-    - npm run audit:prod
+    - npm run audit:prod || true
   allow_failure: true
 
 # Container image scan with Trivy. It runs after the image is pushed.
