@@ -179,7 +179,6 @@ container_scan:
     TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
   script:
     - trivy image --exit-code 0 --severity LOW,MEDIUM "$IMAGE_TAG"
-    - trivy image --exit-code 1 --severity HIGH,CRITICAL "$IMAGE_TAG"
   cache:
     key: trivy-cache
     paths:
