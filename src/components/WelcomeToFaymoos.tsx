@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
@@ -7,18 +7,28 @@ const STORAGE_KEY = "faymoos_welcome_seen";
 
 type Phase = "idle" | "title" | "tagline" | "exit" | "done";
 
+function getInitialPhase(): Phase {
+  try {
+    return sessionStorage.getItem(STORAGE_KEY) === "1" ? "done" : "title";
+  } catch {
+    return "title";
+  }
+}
+
 export function WelcomeToFaymoos() {
-  const [phase, setPhase] = useState<Phase>("idle");
+  const [phase, setPhase] = useState<Phase>(getInitialPhase);
 
   const finish = useCallback(() => {
     if (typeof document !== "undefined") {
       document.body.style.overflow = "";
     }
+
     try {
       sessionStorage.setItem(STORAGE_KEY, "1");
     } catch {
       /* ignore */
     }
+
     setPhase("done");
   }, []);
 
@@ -28,16 +38,10 @@ export function WelcomeToFaymoos() {
   }, [finish]);
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem(STORAGE_KEY) === "1") {
-        setPhase("done");
-        return;
-      }
-    } catch {
-      /* private mode */
+    if (phase === "done") {
+      return;
     }
 
-    setPhase("title");
     document.body.style.overflow = "hidden";
 
     const t1 = window.setTimeout(() => setPhase("tagline"), 1500);
@@ -50,7 +54,7 @@ export function WelcomeToFaymoos() {
       window.clearTimeout(t3);
       document.body.style.overflow = "";
     };
-  }, [finish]);
+  }, [phase, finish]);
 
   if (phase === "idle" || phase === "done") {
     return null;
@@ -59,7 +63,9 @@ export function WelcomeToFaymoos() {
   return (
     <div
       className={`fixed inset-0 z-[200] flex flex-col items-center justify-center bg-gradient-to-br from-stone-950 via-zinc-900 to-bordeaux-950 px-6 transition-[opacity,visibility] duration-500 ease-out ${
-        phase === "exit" ? "pointer-events-none opacity-0" : "opacity-100"
+        phase === "exit"
+          ? "pointer-events-none opacity-0"
+          : "opacity-100"
       }`}
       aria-hidden={phase === "exit"}
     >
@@ -84,6 +90,7 @@ export function WelcomeToFaymoos() {
               className="absolute -inset-3 rounded-3xl bg-bordeaux-500/20 blur-2xl"
               aria-hidden
             />
+
             <Image
               src="/uploads/logofaymoos.jpeg"
               alt="Faymoos"
@@ -105,6 +112,7 @@ export function WelcomeToFaymoos() {
           <span className="block bg-gradient-to-r from-[#C6A15B]/10 via-white to-[#C6A15B]/10 bg-clip-text text-transparent">
             Welcome to
           </span>
+
           <span className="mt-2 block bg-gradient-to-r from-[#C6A15B]/10 via-bordeaux-200 to-bordeaux-400 bg-clip-text text-transparent md:mt-3">
             Faymoos
           </span>
@@ -117,7 +125,9 @@ export function WelcomeToFaymoos() {
               : "pointer-events-none -translate-y-2 opacity-0"
           }`}
         >
-          Turn your ideas into dynamic interactive capsules, connect with your audience, and showcase your content in a more engaging and professional way.
+          Turn your ideas into dynamic interactive capsules, connect with your
+          audience, and showcase your content in a more engaging and
+          professional way.
         </p>
       </div>
 

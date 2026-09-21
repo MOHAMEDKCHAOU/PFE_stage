@@ -1,18 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ChangeEvent,
+} from "react";
+
 import "./space-editor.css";
-
-const OPTION_COLORS = ["#C6A15B", "#C6A15B", "#C6A15B", "#C6A15B", "#C6A15B", "#0B0D10"];
-
-const THEME_SWATCHES = [
-  { color: "linear-gradient(135deg, #0B0D10, #0B0D10, #0B0D10)" },
-  { color: "linear-gradient(135deg, #0B0D10, #0B0D10)" },
-  { color: "linear-gradient(135deg, #0B0D10, #0B0D10)" },
-  { color: "linear-gradient(135deg, #0B0D10, #0B0D10)" },
-];
-
 type Branch = {
   id: string;
   headline: string;
@@ -21,14 +19,26 @@ type Branch = {
   proof: string | null;
 };
 
-type Opt = {
+type Option = {
   id: string;
   label: string;
   sortOrder: number;
   branch: Branch | null;
 };
 
-type Cap = {
+type Identity = {
+  id: string;
+  slug: string;
+  name: string;
+  type: string;
+  headline: string | null;
+  bio: string | null;
+  theme: string | null;
+  cover: string | null;
+  avatar: string | null;
+};
+
+type Capsule = {
   id: string;
   title: string;
   objective: string;
@@ -36,946 +46,2241 @@ type Cap = {
   commentsEnabled: boolean;
   layoutPreset: string | null;
   editorHotspots: unknown;
-  options: Opt[];
-  identity: {
-    id: string;
-    slug: string;
-    name: string;
-    type: string;
-    headline: string | null;
-    bio: string | null;
-    theme: string | null;
-    cover: string | null;
-    avatar: string | null;
-  };
+  options: Option[];
+  identity: Identity;
 };
 
-type Tab = "add" | "arrange" | "hotspot" | "text" | "settings";
+type Hotspot = {
+  optionId: string;
+  x: number;
+  y: number;
+  label?: string;
+};
 
-type HotspotEntry = { optionId: string; x: number; y: number; label?: string };
+type Tab =
+  | "overview"
+  | "identity"
+  | "options"
+  | "arrange"
+  | "hotspots"
+  | "design"
+  | "settings";
 
-function parseHotspots(raw: string): { hotspots: HotspotEntry[] } {
-  try {
-    const p = JSON.parse(raw) as { hotspots?: HotspotEntry[] };
-    if (p && Array.isArray(p.hotspots)) return { hotspots: p.hotspots };
-  } catch {
-    /* ignore */
-  }
-  return { hotspots: [] };
-}
+type BranchDraft = {
+  headline: string;
+  description: string;
+  cta: string;
+  proof: string;
+};
+
+const TABS: Array<{
+  id: Tab;
+  label: string;
+  description: string;
+  icon: string;
+}> = [
+  {
+    id: "overview",
+    label: "Overview",
+    description: "Informations générales",
+    icon: "⌂",
+  },
+  {
+    id: "identity",
+    label: "Identity",
+    description: "Présence publique",
+    icon: "◉",
+  },
+  {
+    id: "options",
+    label: "Options",
+    description: "Parcours & branches",
+    icon: "◇",
+  },
+  {
+    id: "arrange",
+    label: "Arrange",
+    description: "Ordre des parcours",
+    icon: "☷",
+  },
+  {
+    id: "hotspots",
+    label: "Hotspots",
+    description: "Interactions visuelles",
+    icon: "⌖",
+  },
+  {
+    id: "design",
+    label: "Design",
+    description: "Cover & médias",
+    icon: "▧",
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    description: "Publication",
+    icon: "⚙",
+  },
+];
+
+const GRADIENTS = [
+  "linear-gradient(135deg, #0B0D10 0%, #1B2028 100%)",
+  "linear-gradient(135deg, #18130D 0%, #5A4522 100%)",
+  "linear-gradient(135deg, #11151A 0%, #30404A 100%)",
+  "linear-gradient(135deg, #241A17 0%, #5D3828 100%)",
+];
 
 function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((p) => p[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() || "?";
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "F"
+  );
 }
 
-export function SpaceEditorClient({ capsuleId }: { capsuleId: string }) {
-  const [tab, setTab] = useState<Tab>("add");
-  const [cap, setCap] = useState<Cap | null>(null);
-  const [loadErr, setLoadErr] = useState("");
+function parseHotspots(raw: unknown): Hotspot[] {
+  if (!raw || typeof raw !== "object") return [];
+
+  const value = raw as { hotspots?: unknown };
+
+  if (!Array.isArray(value.hotspots)) return [];
+
+  return value.hotspots.filter(
+    (item): item is Hotspot =>
+      Boolean(
+        item &&
+          typeof item === "object" &&
+          typeof (item as Hotspot).optionId === "string" &&
+          typeof (item as Hotspot).x === "number" &&
+          typeof (item as Hotspot).y === "number",
+      ),
+  );
+}
+
+export function SpaceStudioClient({
+  capsuleId,
+}: {
+  capsuleId: string;
+}) {
+  const [tab, setTab] = useState<Tab>("overview");
+
+  const [capsule, setCapsule] = useState<Capsule | null>(null);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [title, setTitle] = useState("");
-  const [objective, setObjective] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [idHeadline, setIdHeadline] = useState("");
-  const [idBio, setIdBio] = useState("");
-  const [hotspotDraft, setHotspotDraft] = useState<string>("");
-  const [optLabel, setOptLabel] = useState("");
-  const [br, setBr] = useState({ headline: "", description: "", cta: "" });
-  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
-  const [showBranch, setShowBranch] = useState(false);
-  const [canvasGradIndex, setCanvasGradIndex] = useState(0);
-  const [coverPreview, setCoverPreview] = useState<string | null>(null);
-  const [assets, setAssets] = useState<string[]>([]);
-  const [usedAsset, setUsedAsset] = useState(0);
-  const [bHeadline, setBHeadline] = useState("");
-  const [bDesc, setBDesc] = useState("");
-  const [bCta, setBCta] = useState("");
-  const [togglePub, setTogglePub] = useState(false);
-  const [toggleComments, setToggleComments] = useState(true);
+
+  const [error, setError] = useState("");
   const [toast, setToast] = useState("");
 
-  const showToast = useCallback((msg: string) => {
-    setToast(msg);
-    setTimeout(() => setToast(""), 2800);
+  /* ------------------------------------------------------------------
+   * Capsule
+   * ---------------------------------------------------------------- */
+
+  const [title, setTitle] = useState("");
+  const [objective, setObjective] = useState("");
+
+  /* ------------------------------------------------------------------
+   * Identity
+   * ---------------------------------------------------------------- */
+
+  const [displayName, setDisplayName] = useState("");
+  const [headline, setHeadline] = useState("");
+  const [bio, setBio] = useState("");
+
+  /* ------------------------------------------------------------------
+   * Options / branch
+   * ---------------------------------------------------------------- */
+
+  const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
+    null,
+  );
+
+  const [newOptionLabel, setNewOptionLabel] = useState("");
+
+  const [newBranch, setNewBranch] = useState<BranchDraft>({
+    headline: "",
+    description: "",
+    cta: "",
+    proof: "",
+  });
+
+  const [branchDraft, setBranchDraft] = useState<BranchDraft>({
+    headline: "",
+    description: "",
+    cta: "",
+    proof: "",
+  });
+
+  /* ------------------------------------------------------------------
+   * Publication
+   * ---------------------------------------------------------------- */
+
+  const [published, setPublished] = useState(false);
+  const [commentsEnabled, setCommentsEnabled] = useState(true);
+
+  /* ------------------------------------------------------------------
+   * Design
+   * ---------------------------------------------------------------- */
+
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [gradientIndex, setGradientIndex] = useState(0);
+  const [assets, setAssets] = useState<string[]>([]);
+
+  /* ------------------------------------------------------------------
+   * Hotspots
+   * ---------------------------------------------------------------- */
+
+  const [hotspots, setHotspots] = useState<Hotspot[]>([]);
+
+  /* ------------------------------------------------------------------
+   * Helpers
+   * ---------------------------------------------------------------- */
+
+  const notify = useCallback((message: string) => {
+    setToast(message);
+
+    window.setTimeout(() => {
+      setToast("");
+    }, 2600);
   }, []);
 
-  const load = useCallback(() => {
-    fetch(`/api/capsules?capsuleId=${encodeURIComponent(capsuleId)}`, { credentials: "include" })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((c: Cap | null) => {
-        if (!c) {
-          setLoadErr("Chargement impossible");
-          return;
-        }
-        setCap(c);
-        setTitle(c.title);
-        setObjective(c.objective);
-        setDisplayName(c.identity.name);
-        setIdHeadline(c.identity.headline || "");
-        setIdBio(c.identity.bio || "");
-        setTogglePub(c.isPublished);
-        setToggleComments(c.commentsEnabled !== false);
-        setHotspotDraft(
-          c.editorHotspots
-            ? JSON.stringify(c.editorHotspots, null, 2)
-            : JSON.stringify({ hotspots: [] as HotspotEntry[] }, null, 2),
-        );
-        const initialAssets = [c.identity.cover, c.identity.avatar].filter(
-          (x): x is string => Boolean(x),
-        );
-        setAssets(initialAssets);
-        setCoverPreview(c.identity.cover);
-        setUsedAsset(0);
-      });
+  const sortedOptions = useMemo(() => {
+    if (!capsule) return [];
+
+    return [...capsule.options].sort(
+      (a, b) =>
+        a.sortOrder - b.sortOrder || a.id.localeCompare(b.id),
+    );
+  }, [capsule]);
+
+  const selectedOption = useMemo(
+    () =>
+      sortedOptions.find(
+        (option) => option.id === selectedOptionId,
+      ) || null,
+    [selectedOptionId, sortedOptions],
+  );
+
+  const completion = useMemo(() => {
+    if (!capsule) return 0;
+
+    const checks = [
+      Boolean(title.trim()),
+      Boolean(objective.trim()),
+      Boolean(displayName.trim()),
+      Boolean(headline.trim()),
+      Boolean(bio.trim()),
+      sortedOptions.length > 0,
+      sortedOptions.every((option) => Boolean(option.branch)),
+      Boolean(coverPreview),
+    ];
+
+    const completed = checks.filter(Boolean).length;
+
+    return Math.round((completed / checks.length) * 100);
+  }, [
+    capsule,
+    title,
+    objective,
+    displayName,
+    headline,
+    bio,
+    sortedOptions,
+    coverPreview,
+  ]);
+
+  /* ------------------------------------------------------------------
+   * Load
+   * ---------------------------------------------------------------- */
+
+  const loadCapsule = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `/api/capsules?capsuleId=${encodeURIComponent(capsuleId)}`,
+        {
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Impossible de charger la capsule.");
+      }
+
+      const data = (await response.json()) as Capsule;
+
+      setCapsule(data);
+
+      setTitle(data.title || "");
+      setObjective(data.objective || "");
+
+      setDisplayName(data.identity.name || "");
+      setHeadline(data.identity.headline || "");
+      setBio(data.identity.bio || "");
+
+      setPublished(Boolean(data.isPublished));
+      setCommentsEnabled(data.commentsEnabled !== false);
+
+      setCoverPreview(data.identity.cover || null);
+
+      setAssets(
+        [data.identity.cover, data.identity.avatar].filter(
+          (value): value is string => Boolean(value),
+        ),
+      );
+
+      setHotspots(parseHotspots(data.editorHotspots));
+
+      if (data.options.length > 0) {
+        const first = [...data.options].sort(
+          (a, b) => a.sortOrder - b.sortOrder,
+        )[0];
+
+        setSelectedOptionId(first.id);
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Erreur de chargement.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }, [capsuleId]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    void loadCapsule();
+  }, [loadCapsule]);
 
-  const sortedOpt = useMemo(
-    () =>
-      cap
-        ? [...cap.options].sort(
-            (a, b) => a.sortOrder - b.sortOrder || a.id.localeCompare(b.id),
-          )
-        : [],
-    [cap],
-  );
-
-  const hotspots = useMemo(() => parseHotspots(hotspotDraft).hotspots, [hotspotDraft]);
+  /* ------------------------------------------------------------------
+   * Select option
+   * ---------------------------------------------------------------- */
 
   useEffect(() => {
-    if (!selectedOptionId) {
-      setBHeadline("");
-      setBDesc("");
-      setBCta("");
+    if (!selectedOption) {
+      setBranchDraft({
+        headline: "",
+        description: "",
+        cta: "",
+        proof: "",
+      });
       return;
     }
-    const o = sortedOpt.find((x) => x.id === selectedOptionId);
-    if (o?.branch) {
-      setBHeadline(o.branch.headline);
-      setBDesc(o.branch.description);
-      setBCta(o.branch.cta);
-    } else {
-      setBHeadline("");
-      setBDesc("");
-      setBCta("");
+
+    if (!selectedOption.branch) {
+      setBranchDraft({
+        headline: "",
+        description: "",
+        cta: "",
+        proof: "",
+      });
+      return;
     }
-  }, [selectedOptionId, sortedOpt]);
 
-  const selectOption = useCallback(
-    (id: string) => {
-      setSelectedOptionId(id);
-      setShowBranch(true);
-    },
-    [],
-  );
+    setBranchDraft({
+      headline: selectedOption.branch.headline || "",
+      description: selectedOption.branch.description || "",
+      cta: selectedOption.branch.cta || "",
+      proof: selectedOption.branch.proof || "",
+    });
+  }, [selectedOption]);
 
-  const resetCanvas = useCallback(() => {
-    setSelectedOptionId(null);
-    setShowBranch(false);
-  }, []);
+  /* ------------------------------------------------------------------
+   * Save
+   * ---------------------------------------------------------------- */
 
-  const saveCapsule = useCallback(async () => {
-    if (!cap) return;
+  const save = useCallback(async () => {
+    if (!capsule) return;
+
     setSaving(true);
-    let hs: unknown;
+
     try {
-      hs = JSON.parse(hotspotDraft);
-    } catch {
-      hs = { hotspots: [] };
-    }
-    try {
-      await fetch("/api/capsules", {
+      const capsuleResponse = await fetch("/api/capsules", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
         body: JSON.stringify({
-          id: cap.id,
+          id: capsule.id,
           title,
           objective,
-          editorHotspots: hs,
-          isPublished: togglePub,
-          commentsEnabled: toggleComments,
+          isPublished: published,
+          commentsEnabled,
+          editorHotspots: {
+            hotspots,
+          },
         }),
       });
-      await fetch("/api/identity", {
+
+      if (!capsuleResponse.ok) {
+        throw new Error("La capsule n'a pas pu être sauvegardée.");
+      }
+
+      const identityResponse = await fetch("/api/identity", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
         body: JSON.stringify({
-          id: cap.identity.id,
+          id: capsule.identity.id,
           name: displayName,
-          type: cap.identity.type,
-          headline: idHeadline || null,
-          bio: idBio || null,
+          type: capsule.identity.type,
+          headline: headline || null,
+          bio: bio || null,
           cover: coverPreview,
-          theme: cap.identity.theme,
+          theme: capsule.identity.theme,
         }),
       });
-      if (selectedOptionId) {
-        const o = sortedOpt.find((x) => x.id === selectedOptionId);
-        if (o?.branch?.id) {
-          await fetch("/api/branches", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              id: o.branch.id,
-              headline: bHeadline,
-              description: bDesc,
-              cta: bCta,
-            }),
-          });
+
+      if (!identityResponse.ok) {
+        throw new Error("L'identité n'a pas pu être sauvegardée.");
+      }
+
+      if (selectedOption?.branch) {
+        const branchResponse = await fetch("/api/branches", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            id: selectedOption.branch.id,
+            headline: branchDraft.headline,
+            description: branchDraft.description,
+            cta: branchDraft.cta,
+            proof: branchDraft.proof || null,
+          }),
+        });
+
+        if (!branchResponse.ok) {
+          throw new Error(
+            "La branche n'a pas pu être sauvegardée.",
+          );
         }
       }
-      setCap((c) =>
-        c
+
+      setCapsule((current) =>
+        current
           ? {
-              ...c,
+              ...current,
               title,
               objective,
-              isPublished: togglePub,
-              commentsEnabled: toggleComments,
+              isPublished: published,
+              commentsEnabled,
+              editorHotspots: { hotspots },
               identity: {
-                ...c.identity,
+                ...current.identity,
                 name: displayName,
-                headline: idHeadline,
-                bio: idBio,
+                headline,
+                bio,
                 cover: coverPreview,
               },
             }
-          : c,
+          : current,
       );
-      showToast("Capsule sauvegardée — brouillon mis à jour");
-      load();
+
+      notify("✓ Capsule sauvegardée");
+    } catch (err) {
+      notify(
+        err instanceof Error
+          ? err.message
+          : "Erreur pendant la sauvegarde.",
+      );
     } finally {
       setSaving(false);
     }
   }, [
-    bCta,
-    bDesc,
-    bHeadline,
-    cap,
-    coverPreview,
-    displayName,
-    hotspotDraft,
-    idBio,
-    idHeadline,
-    load,
-    objective,
-    selectedOptionId,
-    showToast,
-    sortedOpt,
+    capsule,
     title,
-    togglePub,
-    toggleComments,
+    objective,
+    published,
+    commentsEnabled,
+    hotspots,
+    displayName,
+    headline,
+    bio,
+    coverPreview,
+    selectedOption,
+    branchDraft,
+    notify,
   ]);
 
+  /* ------------------------------------------------------------------
+   * Publish
+   * ---------------------------------------------------------------- */
+
   const publish = useCallback(async () => {
-    if (!cap) return;
+    if (!capsule) return;
+
     setSaving(true);
+
     try {
-      await fetch("/api/capsules", {
+      const response = await fetch("/api/capsules", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
-        body: JSON.stringify({ id: cap.id, isPublished: true }),
+        body: JSON.stringify({
+          id: capsule.id,
+          isPublished: true,
+        }),
       });
-      setTogglePub(true);
-      setCap((c) => (c ? { ...c, isPublished: true } : c));
-      showToast("Capsule publiée ! Lien : /capsule/" + cap.identity.slug);
+
+      if (!response.ok) {
+        throw new Error("Publication impossible.");
+      }
+
+      setPublished(true);
+
+      setCapsule((current) =>
+        current
+          ? {
+              ...current,
+              isPublished: true,
+            }
+          : current,
+      );
+
+      notify("✓ Capsule publiée");
+    } catch (err) {
+      notify(
+        err instanceof Error
+          ? err.message
+          : "Publication impossible.",
+      );
     } finally {
       setSaving(false);
     }
-  }, [cap, showToast]);
+  }, [capsule, notify]);
+
+  /* ------------------------------------------------------------------
+   * Add option + branch
+   * ---------------------------------------------------------------- */
 
   const addOption = useCallback(async () => {
-    if (!cap || !optLabel.trim()) return;
-    const oRes = await fetch("/api/options", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ capsuleId: cap.id, label: optLabel.trim() }),
-    });
-    if (!oRes.ok) return;
-    const opt = (await oRes.json()) as { id: string };
-    await fetch("/api/branches", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        optionId: opt.id,
-        headline: br.headline || "Titre de branche",
-        description: br.description || "Description",
-        cta: br.cta || "Action",
-        proof: null,
-      }),
-    });
-    setOptLabel("");
-    setBr({ headline: "", description: "", cta: "" });
-    showToast("Option ajoutée — éditez le texte dans l’onglet Text");
-    load();
-  }, [br, cap, load, optLabel, showToast]);
+    if (!capsule || !newOptionLabel.trim()) return;
 
-  const move = useCallback(
-    async (opt: Opt, dir: -1 | 1) => {
-      const sorted = [...(cap?.options || [])].sort(
-        (a, b) => a.sortOrder - b.sortOrder || a.id.localeCompare(b.id),
-      );
-      const i = sorted.findIndex((o) => o.id === opt.id);
-      const j = i + dir;
-      if (i < 0 || j < 0 || j >= sorted.length) return;
-      const s = [...sorted];
-      [s[i], s[j]] = [s[j]!, s[i]!];
-      for (let k = 0; k < s.length; k++) {
-        await fetch("/api/options", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ id: s[k]!.id, sortOrder: k }),
-        });
+    setSaving(true);
+
+    try {
+      const optionResponse = await fetch("/api/options", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          capsuleId: capsule.id,
+          label: newOptionLabel.trim(),
+        }),
+      });
+
+      if (!optionResponse.ok) {
+        throw new Error("Impossible d'ajouter l'option.");
       }
-      load();
-    },
-    [cap?.options, load],
-  );
 
-  const onCoverClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (tab !== "hotspot" || !selectedOptionId) {
+      const option = (await optionResponse.json()) as {
+        id: string;
+      };
+
+      const branchResponse = await fetch("/api/branches", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          optionId: option.id,
+          headline:
+            newBranch.headline.trim() ||
+            "Titre de branche",
+          description:
+            newBranch.description.trim() ||
+            "Description de la branche",
+          cta: newBranch.cta.trim() || "En savoir plus",
+          proof: newBranch.proof.trim() || null,
+        }),
+      });
+
+      if (!branchResponse.ok) {
+        throw new Error(
+          "L'option a été créée mais sa branche n'a pas pu être créée.",
+        );
+      }
+
+      setNewOptionLabel("");
+
+      setNewBranch({
+        headline: "",
+        description: "",
+        cta: "",
+        proof: "",
+      });
+
+      await loadCapsule();
+
+      notify("✓ Option et branche ajoutées");
+    } catch (err) {
+      notify(
+        err instanceof Error
+          ? err.message
+          : "Erreur pendant la création.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }, [
+    capsule,
+    newOptionLabel,
+    newBranch,
+    loadCapsule,
+    notify,
+  ]);
+
+  /* ------------------------------------------------------------------
+   * Move option
+   * ---------------------------------------------------------------- */
+
+  const moveOption = useCallback(
+    async (option: Option, direction: -1 | 1) => {
+      const index = sortedOptions.findIndex(
+        (item) => item.id === option.id,
+      );
+
+      const target = index + direction;
+
+      if (
+        index < 0 ||
+        target < 0 ||
+        target >= sortedOptions.length
+      ) {
         return;
       }
-      const el = e.currentTarget;
-      const r = el.getBoundingClientRect();
-      const x = Math.round(((e.clientX - r.left) / r.width) * 1000) / 10;
-      const y = Math.round(((e.clientY - r.top) / r.height) * 1000) / 10;
-      const o = sortedOpt.find((a) => a.id === selectedOptionId);
-      const next = {
-        ...parseHotspots(hotspotDraft),
-        hotspots: [
-          ...parseHotspots(hotspotDraft).hotspots.filter((h) => h.optionId !== selectedOptionId),
-          { optionId: selectedOptionId, x, y, label: o?.label },
-        ],
-      };
-      setHotspotDraft(JSON.stringify(next, null, 2));
-      showToast(`Hotspot à ${x}% / ${y}% — Save pour enregistrer`);
-    },
-    [hotspotDraft, selectedOptionId, showToast, sortedOpt, tab],
-  );
 
-  const onUpload = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const f = e.target.files?.[0];
-      if (!f) return;
-      const fd = new FormData();
-      fd.append("file", f);
-      fd.append("type", "portfolio");
-      const r = await fetch("/api/upload", { method: "POST", body: fd, credentials: "include" });
-      if (r.ok) {
-        const j = (await r.json()) as { url?: string };
-        if (j.url) {
-          setAssets((a) => [...a, j.url!]);
-          showToast("Asset ajouté");
+      const next = [...sortedOptions];
+
+      [next[index], next[target]] = [
+        next[target],
+        next[index],
+      ];
+
+      setSaving(true);
+
+      try {
+        for (let i = 0; i < next.length; i += 1) {
+          await fetch("/api/options", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              id: next[i].id,
+              sortOrder: i,
+            }),
+          });
         }
+
+        await loadCapsule();
+        notify("✓ Ordre mis à jour");
+      } finally {
+        setSaving(false);
       }
-      e.target.value = "";
     },
-    [showToast],
+    [sortedOptions, loadCapsule, notify],
   );
 
-  if (loadErr || !cap) {
-    return <p className="p-6 text-zinc-400">{loadErr || "Chargement…"}</p>;
+  /* ------------------------------------------------------------------
+   * Upload cover
+   * ---------------------------------------------------------------- */
+
+  const uploadAsset = useCallback(
+    async (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+
+      if (!file) return;
+
+      setSaving(true);
+
+      try {
+        const formData = new FormData();
+
+        formData.append("file", file);
+        formData.append("type", "portfolio");
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Upload impossible.");
+        }
+
+        const data = (await response.json()) as {
+          url?: string;
+        };
+
+        if (data.url) {
+          setAssets((current) => [...current, data.url!]);
+          setCoverPreview(data.url);
+
+          notify("✓ Image ajoutée et utilisée comme cover");
+        }
+      } catch (err) {
+        notify(
+          err instanceof Error
+            ? err.message
+            : "Upload impossible.",
+        );
+      } finally {
+        setSaving(false);
+        event.target.value = "";
+      }
+    },
+    [notify],
+  );
+
+  /* ------------------------------------------------------------------
+   * Hotspot
+   * ---------------------------------------------------------------- */
+
+  const addHotspot = useCallback(
+    (x: number, y: number) => {
+      if (!selectedOption) {
+        notify("Sélectionnez d'abord une option.");
+        return;
+      }
+
+      const next: Hotspot[] = [
+        ...hotspots.filter(
+          (item) => item.optionId !== selectedOption.id,
+        ),
+        {
+          optionId: selectedOption.id,
+          x: Math.round(x * 10) / 10,
+          y: Math.round(y * 10) / 10,
+          label: selectedOption.label,
+        },
+      ];
+
+      setHotspots(next);
+
+      notify("Hotspot ajouté — cliquez sur Save");
+    },
+    [selectedOption, hotspots, notify],
+  );
+
+  /* ------------------------------------------------------------------
+   * Render states
+   * ---------------------------------------------------------------- */
+
+  if (loading) {
+    return (
+      <div className="space-studio-loading">
+        <div className="se-loading-spinner" />
+        <p>Chargement du Space Studio…</p>
+      </div>
+    );
   }
 
-  const coverImg = coverPreview || cap.identity.cover;
-  const grad = THEME_SWATCHES[canvasGradIndex]?.color;
+  if (error || !capsule) {
+    return (
+      <div className="space-studio-error">
+        <h2>Impossible de charger le Studio</h2>
+        <p>{error || "Capsule introuvable."}</p>
+
+        <Link href="/dashboard/capsules">
+          ← Retour aux capsules
+        </Link>
+      </div>
+    );
+  }
+
+  const cover = coverPreview || capsule.identity.cover;
 
   return (
-    <div className="space-editor-root space-editor pb-6">
-      <div className="se-editor-wrap">
-        <div className="se-topbar">
-          <div className="se-topbar-left">
-            <div className="se-avatar" aria-hidden>
-              {cap.identity.avatar ? (
-                <img
-                  src={cap.identity.avatar}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                initials(displayName || cap.identity.name)
-              )}
+    <div className="space-studio-root">
+      {/* ================================================================
+          HEADER
+      ================================================================= */}
+
+      <header className="ss-topbar">
+        <div className="ss-topbar-brand">
+          <Link
+            href="/dashboard/capsules"
+            className="ss-back-link"
+          >
+            ← Capsules
+          </Link>
+
+          <div className="ss-title-block">
+            <div className="ss-title-row">
+              <h1>Space Studio</h1>
+
+              <span
+                className={
+                  published
+                    ? "ss-status ss-status-published"
+                    : "ss-status ss-status-draft"
+                }
+              >
+                <span className="ss-status-dot" />
+                {published ? "Publié" : "Brouillon"}
+              </span>
             </div>
-            <div>
-              <div className="se-topbar-title">{displayName || cap.identity.name}</div>
-              <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
-                {!cap.isPublished && <span className="se-badge-draft">brouillon</span>}
-                <span className="text-[11px] text-zinc-500">
-                  {cap.isPublished ? "publié" : "non publié"}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="se-topbar-actions">
-            <button
-              type="button"
-              className="se-btn"
-              onClick={saveCapsule}
-              disabled={saving}
-            >
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path
-                  d="M13 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V3a1 1 0 00-1-1z"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M5 2v4h6V2M5 10h6"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-              Save
-            </button>
-            <Link
-              href={`/dashboard/space/preview/${cap.id}`}
-              target="_blank"
-              className="se-btn"
-            >
-              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
-                <path
-                  d="M8 3C4.5 3 1.5 8 1.5 8s3 5 6.5 5 6.5-5 6.5-5-3-5-6.5-5z"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                />
-                <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
-              </svg>
-              Preview
-            </Link>
-            <button
-              type="button"
-              className="se-btn se-btn-publish"
-              onClick={publish}
-              disabled={saving}
-            >
-              Publish
-            </button>
+
+            <p>{title || "Capsule sans titre"}</p>
           </div>
         </div>
 
-        <div className="se-editor-body">
-          <aside className="se-sidebar">
-            <div className="se-tabs" role="tablist">
-              {(
-                [
-                  ["add", "Add"],
-                  ["arrange", "Arrange"],
-                  ["hotspot", "Hotspot"],
-                  ["text", "Text"],
-                  ["settings", "Settings"],
-                ] as const
-              ).map(([k, l]) => (
-                <button
-                  key={k}
-                  type="button"
-                  role="tab"
-                  className={"se-tab" + (tab === k ? " se-active" : "")}
-                  onClick={() => setTab(k)}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
+        <div className="ss-topbar-actions">
+          <div className="ss-save-state">
+            {saving ? "Sauvegarde…" : "● Enregistré"}
+          </div>
 
-            {tab === "add" && (
-              <div className="se-panel">
-                <div className="se-panel-section">
-                  <div className="se-panel-label">Capsule</div>
-                  <div className="se-field">
-                    <label htmlFor="se-titre">Titre</label>
-                    <input
-                      id="se-titre"
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </div>
-                  <div className="se-field">
-                    <label htmlFor="se-obj">Objectif (question)</label>
-                    <textarea
-                      id="se-obj"
-                      value={objective}
-                      onChange={(e) => setObjective(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="se-panel-section">
-                  <div className="se-panel-label">Options</div>
-                  <div>
-                    {sortedOpt.map((o, idx) => (
-                      <button
-                        key={o.id}
-                        type="button"
-                        className={
-                          "se-option-item" + (selectedOptionId === o.id ? " se-selected" : "")
-                        }
-                        onClick={() => selectOption(o.id)}
-                      >
-                        <span
-                          className="se-option-dot"
-                          style={{ background: OPTION_COLORS[idx % OPTION_COLORS.length] }}
-                        />
-                        <span className="se-option-text">{o.label}</span>
-                        <span className="se-option-arrow">›</span>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="se-field">
-                    <label htmlFor="se-nopt">Nouvelle option</label>
-                    <input
-                      id="se-nopt"
-                      type="text"
-                      value={optLabel}
-                      onChange={(e) => setOptLabel(e.target.value)}
-                      placeholder="Label…"
-                    />
-                  </div>
-                  <div className="se-field">
-                    <input
-                      type="text"
-                      value={br.headline}
-                      onChange={(e) => setBr((b) => ({ ...b, headline: e.target.value }))}
-                      placeholder="Headline"
-                    />
-                  </div>
-                  <div className="se-field">
-                    <textarea
-                      value={br.description}
-                      onChange={(e) => setBr((b) => ({ ...b, description: e.target.value }))}
-                      placeholder="Description"
-                    />
-                  </div>
-                  <div className="se-field">
-                    <input
-                      type="text"
-                      value={br.cta}
-                      onChange={(e) => setBr((b) => ({ ...b, cta: e.target.value }))}
-                      placeholder="CTA"
-                    />
-                  </div>
-                  <button type="button" className="se-add-block" onClick={addOption}>
-                    <div className="se-add-icon">+</div>
-                    Ajouter une option
-                  </button>
-                </div>
-                <div className="se-panel-section">
-                  <div className="se-panel-label">Éléments</div>
-                  <div className="se-add-block" title="Bientôt">
-                    <div className="se-add-icon" style={{ background: "#F7F4EE" }} />
-                    Image / vidéo
-                  </div>
-                  <div className="se-add-block" title="Bientôt">
-                    <div className="se-add-icon" style={{ background: "#F7F4EE" }} />
-                    Bloc texte
-                  </div>
-                  <div className="se-add-block" title="Bientôt">
-                    <div className="se-add-icon" style={{ background: "#F7F4EE" }} />
-                    Lien / CTA
-                  </div>
-                </div>
-              </div>
-            )}
+          <Link
+            href={`/dashboard/space/preview/${capsule.id}`}
+            target="_blank"
+            className="ss-button ss-button-secondary"
+          >
+            ◉ Preview
+          </Link>
 
-            {tab === "arrange" && (
-              <div className="se-panel">
-                <div className="se-panel-label">Ordre des options</div>
-                <p className="se-arrange-hint">Déplacez avec ↑ / ↓ (persistance en base)</p>
-                {sortedOpt.map((o, idx) => (
-                  <div
-                    key={o.id}
-                    className="se-option-item"
-                    style={{ cursor: "grab" }}
-                  >
-                    <span className="text-zinc-500">⠿</span>
-                    <span
-                      className="se-option-dot"
-                      style={{ background: OPTION_COLORS[idx % OPTION_COLORS.length] }}
-                    />
-                    <span className="se-option-text flex-1">{o.label}</span>
-                    <span className="flex gap-0.5">
-                      <button
-                        type="button"
-                        className="rounded border border-white/10 px-1 text-[10px]"
-                        onClick={() => move(o, -1)}
-                      >
-                        ↑
-                      </button>
-                      <button
-                        type="button"
-                        className="rounded border border-white/10 px-1 text-[10px]"
-                        onClick={() => move(o, 1)}
-                      >
-                        ↓
-                      </button>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+          <button
+            type="button"
+            className="ss-button ss-button-secondary"
+            onClick={() => void save()}
+            disabled={saving}
+          >
+            Save
+          </button>
 
-            {tab === "hotspot" && (
-              <div className="se-panel">
-                <div className="se-panel-label">Hotspots actifs</div>
-                <p className="se-arrange-hint">
-                  Sélectionnez une option (Add), puis cliquez sur le bandeau cover du canvas.
-                </p>
-                {hotspots.map((h) => {
-                  const idx = sortedOpt.findIndex((o) => o.id === h.optionId);
-                  const c =
-                    idx >= 0
-                      ? OPTION_COLORS[idx % OPTION_COLORS.length]
-                      : "#C6A15B";
-                  return (
-                    <div
-                      key={h.optionId + h.x + h.y}
-                      className="se-option-item"
-                      style={{ cursor: "default" }}
-                    >
-                      <span className="se-option-dot" style={{ background: c }} />
-                      <span className="se-option-text">{h.label || h.optionId}</span>
-                      <span className="text-[10px] text-zinc-500">
-                        x:{h.x}% y:{h.y}%
-                      </span>
-                    </div>
-                  );
-                })}
-                <div className="se-field mt-2">
-                  <label>JSON (avancé)</label>
-                  <textarea
-                    className="min-h-[120px] font-mono text-[11px]"
-                    value={hotspotDraft}
-                    onChange={(e) => setHotspotDraft(e.target.value)}
-                  />
-                </div>
-              </div>
-            )}
+          <button
+            type="button"
+            className="ss-button ss-button-primary"
+            onClick={() => void publish()}
+            disabled={saving || published}
+          >
+            {published ? "Published" : "Publish"}
+          </button>
+        </div>
+      </header>
 
-            {tab === "text" && (
-              <div className="se-panel">
-                <div className="se-panel-label">Édition texte</div>
-                <div className="se-field">
-                  <label htmlFor="se-dname">Nom affiché</label>
-                  <input
-                    id="se-dname"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                  />
-                </div>
-                <div className="se-field">
-                  <label htmlFor="se-hd">Headline</label>
-                  <input
-                    id="se-hd"
-                    value={idHeadline}
-                    onChange={(e) => setIdHeadline(e.target.value)}
-                  />
-                </div>
-                <div className="se-field">
-                  <label htmlFor="se-bio">Bio courte</label>
-                  <textarea id="se-bio" value={idBio} onChange={(e) => setIdBio(e.target.value)} />
-                </div>
-                <div className="se-panel-label mt-2">Branche sélectionnée</div>
-                {selectedOptionId && (
-                  <>
-                    <div className="se-field">
-                      <label>Headline branche</label>
-                      <input
-                        value={bHeadline}
-                        onChange={(e) => setBHeadline(e.target.value)}
-                      />
-                    </div>
-                    <div className="se-field">
-                      <label>Description</label>
-                      <textarea
-                        value={bDesc}
-                        onChange={(e) => setBDesc(e.target.value)}
-                      />
-                    </div>
-                    <div className="se-field">
-                      <label>CTA</label>
-                      <input value={bCta} onChange={(e) => setBCta(e.target.value)} />
-                    </div>
-                  </>
-                )}
-                {!selectedOptionId && (
-                  <p className="text-xs text-zinc-500">Choisissez une option dans Add ou le canvas.</p>
-                )}
-              </div>
-            )}
+      {/* ================================================================
+          BODY
+      ================================================================= */}
 
-            {tab === "settings" && (
-              <div className="se-panel">
-                <div className="se-panel-label">Capsule & identité</div>
-                <div className="se-field">
-                  <label>Slug public</label>
-                  <input readOnly value={cap.identity.slug} className="opacity-80" />
-                </div>
-                <div className="se-settings-row">
-                  <span>Thème</span>
-                  <span className="se-settings-val">
-                    {cap.identity.theme || cap.layoutPreset || "—"}
-                  </span>
-                </div>
-                <div className="se-settings-row">
-                  <span>Publié</span>
-                  <button
-                    type="button"
-                    className={"se-toggle" + (togglePub ? " se-on" : "")}
-                    onClick={() => setTogglePub((v) => !v)}
-                    aria-pressed={togglePub}
-                  />
-                </div>
-                <div className="se-settings-row">
-                  <span title="Bloc commentaires en bas de la page publique, avec modération">
-                    Commentaires visiteurs
-                  </span>
-                  <button
-                    type="button"
-                    className={"se-toggle" + (toggleComments ? " se-on" : "")}
-                    onClick={() => setToggleComments((v) => !v)}
-                    aria-pressed={toggleComments}
-                    aria-label="Activer ou désactiver les commentaires publics"
-                  />
-                </div>
-                <div className="se-settings-row">
-                  <span>Analytics</span>
-                  <button
-                    type="button"
-                    className="se-toggle se-on"
-                    title="Bientôt"
-                    disabled
-                    aria-label="Bientôt"
-                  />
-                </div>
-                <div className="se-settings-row">
-                  <span>Chatbot IA</span>
-                  <button
-                    type="button"
-                    className="se-toggle se-on"
-                    title="Bientôt"
-                    disabled
-                    aria-label="Bientôt"
-                  />
-                </div>
-                <div className="se-panel-label mt-3">Export</div>
-                <a
-                  className="se-add-block"
-                  href={`/capsule/${cap.identity.slug}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <span className="se-add-icon">⬇</span>
-                  Voir public
-                </a>
-                <Link
-                  href={`/dashboard/capsule-comments?capsuleId=${encodeURIComponent(cap.id)}`}
-                  className="se-add-block"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span className="se-add-icon">💬</span>
-                  Modération commentaires
-                </Link>
-                <Link
-                  href="/dashboard/identities"
-                  className="se-add-block"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span className="se-add-icon">✎</span>
-                  Identités
-                </Link>
-              </div>
-            )}
-          </aside>
+      <div className="ss-layout">
 
-          <div className="se-canvas-area">
-            <div className="se-canvas-frame">
-              <div
-                className="se-canvas-cover relative cursor-default"
-                onClick={onCoverClick}
-                role="presentation"
+        {/* ============================================================
+            LEFT SIDEBAR
+        ============================================================= */}
+
+        <aside className="ss-sidebar">
+
+          <div className="ss-sidebar-heading">
+            <span>Studio</span>
+            <small>{completion}% complete</small>
+          </div>
+
+          <div className="ss-progress">
+            <span style={{ width: `${completion}%` }} />
+          </div>
+
+          <nav className="ss-navigation">
+            {TABS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={
+                  tab === item.id
+                    ? "ss-nav-item ss-nav-active"
+                    : "ss-nav-item"
+                }
+                onClick={() => setTab(item.id)}
               >
-                {coverImg ? (
+                <span className="ss-nav-icon">
+                  {item.icon}
+                </span>
+
+                <span className="ss-nav-copy">
+                  <strong>{item.label}</strong>
+                  <small>{item.description}</small>
+                </span>
+
+                {tab === item.id && (
+                  <span className="ss-nav-arrow">›</span>
+                )}
+              </button>
+            ))}
+          </nav>
+
+          <div className="ss-sidebar-bottom">
+            <div className="ss-mini-status">
+              <span className="ss-mini-avatar">
+                {capsule.identity.avatar ? (
                   <img
-                    src={coverImg}
+                    src={capsule.identity.avatar}
                     alt=""
-                    className="absolute inset-0 h-full w-full object-cover opacity-80"
                   />
-                ) : null}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: coverImg
-                      ? undefined
-                      : grad,
-                    opacity: coverImg ? 0.35 : 0.95,
-                  }}
-                />
-                <div className="se-cover-overlay">
-                  <div className="se-cover-avatar">
-                    {cap.identity.avatar ? (
-                      <img src={cap.identity.avatar} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  initials(displayName)
+                )}
+              </span>
+
+              <div>
+                <strong>
+                  {displayName || capsule.identity.name}
+                </strong>
+                <small>Faymoos Identity</small>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* ============================================================
+            EDITOR PANEL
+        ============================================================= */}
+
+        <main className="ss-editor">
+
+          {/* ------------------------------------------------------------
+              OVERVIEW
+          ------------------------------------------------------------- */}
+
+          {tab === "overview" && (
+            <section className="ss-section">
+              <div className="ss-section-header">
+                <div>
+                  <span className="ss-eyebrow">
+                    CAPSULE
+                  </span>
+
+                  <h2>Build your experience</h2>
+
+                  <p>
+                    Définissez le contenu principal de votre
+                    capsule avant de configurer les parcours.
+                  </p>
+                </div>
+              </div>
+
+              <div className="ss-card">
+                <div className="ss-card-header">
+                  <div>
+                    <h3>Informations générales</h3>
+                    <p>
+                      Ces informations apparaissent au début
+                      de votre expérience.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="ss-form-grid">
+                  <div className="ss-field ss-field-full">
+                    <label htmlFor="ss-title">
+                      Titre de la capsule
+                      <span>*</span>
+                    </label>
+
+                    <input
+                      id="ss-title"
+                      value={title}
+                      onChange={(event) =>
+                        setTitle(event.target.value)
+                      }
+                      placeholder="Ex. Parlons de votre projet"
+                    />
+
+                    <small>
+                      Le titre interne et public de votre
+                      expérience.
+                    </small>
+                  </div>
+
+                  <div className="ss-field ss-field-full">
+                    <label htmlFor="ss-objective">
+                      Question / objectif
+                      <span>*</span>
+                    </label>
+
+                    <textarea
+                      id="ss-objective"
+                      value={objective}
+                      onChange={(event) =>
+                        setObjective(event.target.value)
+                      }
+                      placeholder="Quelle piste souhaitez-vous explorer avec moi ?"
+                      rows={4}
+                    />
+
+                    <small>
+                      Cette question guide le visiteur vers
+                      le bon parcours.
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <div className="ss-card ss-card-highlight">
+                <div className="ss-card-header">
+                  <div>
+                    <h3>État de la capsule</h3>
+                    <p>
+                      Vérifiez les éléments nécessaires avant
+                      publication.
+                    </p>
+                  </div>
+
+                  <strong className="ss-completion">
+                    {completion}%
+                  </strong>
+                </div>
+
+                <div className="ss-checklist">
+                  <CheckItem
+                    checked={Boolean(title.trim())}
+                    label="Titre"
+                  />
+
+                  <CheckItem
+                    checked={Boolean(objective.trim())}
+                    label="Objectif"
+                  />
+
+                  <CheckItem
+                    checked={Boolean(displayName.trim())}
+                    label="Identité"
+                  />
+
+                  <CheckItem
+                    checked={Boolean(coverPreview)}
+                    label="Cover"
+                  />
+
+                  <CheckItem
+                    checked={sortedOptions.length > 0}
+                    label="Au moins une option"
+                  />
+
+                  <CheckItem
+                    checked={
+                      sortedOptions.length > 0 &&
+                      sortedOptions.every(
+                        (option) => Boolean(option.branch),
+                      )
+                    }
+                    label="Branches configurées"
+                  />
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ------------------------------------------------------------
+              IDENTITY
+          ------------------------------------------------------------- */}
+
+          {tab === "identity" && (
+            <section className="ss-section">
+              <SectionIntro
+                eyebrow="IDENTITY"
+                title="Votre présence"
+                description="Configurez les informations professionnelles affichées dans la capsule."
+              />
+
+              <div className="ss-card">
+                <div className="ss-identity-preview">
+                  <div className="ss-large-avatar">
+                    {capsule.identity.avatar ? (
+                      <img
+                        src={capsule.identity.avatar}
+                        alt=""
+                      />
                     ) : (
                       initials(displayName)
                     )}
                   </div>
-                  <div className="se-cover-name">{displayName}</div>
-                  <div className="se-cover-headline line-clamp-2">
-                    {idHeadline || "—"}
+
+                  <div>
+                    <strong>
+                      {displayName || "Votre nom"}
+                    </strong>
+
+                    <span>
+                      {headline || "Votre headline"}
+                    </span>
                   </div>
                 </div>
-                {hotspots.map((h) => {
-                  const oi = sortedOpt.findIndex((o) => o.id === h.optionId);
-                  const hb =
-                    oi >= 0
-                      ? OPTION_COLORS[oi % OPTION_COLORS.length]
-                      : "#C6A15B";
-                  return (
-                    <div
-                      key={h.optionId + String(h.x) + String(h.y)}
-                      className="se-hotspot"
-                      style={{
-                        left: `${h.x}%`,
-                        top: `${h.y}%`,
-                        backgroundColor: hb,
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        selectOption(h.optionId);
-                      }}
-                    >
-                      <span className="se-hotspot-label">{h.label || "Hotspot"}</span>
-                    </div>
-                  );
-                })}
-              </div>
 
-              <div className="se-canvas-content">
-                <div className="se-canvas-question">
-                  {objective || "—"}
-                </div>
-                <div className="se-canvas-options">
-                  {sortedOpt.map((o, i) => (
-                    <button
-                      key={o.id}
-                      type="button"
-                      className={
-                        "se-canvas-opt" + (selectedOptionId === o.id ? " se-selected" : "")
+                <div className="ss-form-grid">
+                  <div className="ss-field">
+                    <label htmlFor="ss-name">
+                      Nom affiché
+                      <span>*</span>
+                    </label>
+
+                    <input
+                      id="ss-name"
+                      value={displayName}
+                      onChange={(event) =>
+                        setDisplayName(event.target.value)
                       }
-                      onClick={() => selectOption(o.id)}
+                      placeholder="Mohamed Amin Kchaou"
+                    />
+                  </div>
+
+                  <div className="ss-field">
+                    <label htmlFor="ss-headline">
+                      Headline
+                    </label>
+
+                    <input
+                      id="ss-headline"
+                      value={headline}
+                      onChange={(event) =>
+                        setHeadline(event.target.value)
+                      }
+                      placeholder="Développeur Full-Stack & Data Scientist"
+                    />
+                  </div>
+
+                  <div className="ss-field ss-field-full">
+                    <label htmlFor="ss-bio">
+                      Bio
+                    </label>
+
+                    <textarea
+                      id="ss-bio"
+                      value={bio}
+                      onChange={(event) =>
+                        setBio(event.target.value)
+                      }
+                      rows={6}
+                      placeholder="Présentez votre expertise, votre expérience et votre valeur ajoutée…"
+                    />
+
+                    <small>
+                      Une bio courte et claire fonctionne mieux
+                      pour une présentation professionnelle.
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ------------------------------------------------------------
+              OPTIONS
+          ------------------------------------------------------------- */}
+
+          {tab === "options" && (
+            <section className="ss-section">
+              <SectionIntro
+                eyebrow="DECISION PATHS"
+                title="Options & branches"
+                description="Créez les parcours que votre visiteur pourra explorer."
+              />
+
+              <div className="ss-options-layout">
+
+                <div className="ss-options-list">
+
+                  <div className="ss-card ss-card-compact">
+                    <div className="ss-card-header">
+                      <div>
+                        <h3>Parcours</h3>
+                        <p>
+                          {sortedOptions.length} option
+                          {sortedOptions.length !== 1
+                            ? "s"
+                            : ""}
+                        </p>
+                      </div>
+
+                      <span className="ss-count">
+                        {sortedOptions.length}
+                      </span>
+                    </div>
+
+                    <div className="ss-option-list">
+                      {sortedOptions.map(
+                        (option, index) => (
+                          <button
+                            key={option.id}
+                            type="button"
+                            className={
+                              selectedOptionId === option.id
+                                ? "ss-option-card ss-option-selected"
+                                : "ss-option-card"
+                            }
+                            onClick={() =>
+                              setSelectedOptionId(
+                                option.id,
+                              )
+                            }
+                          >
+                            <span className="ss-option-number">
+                              {String(index + 1).padStart(
+                                2,
+                                "0",
+                              )}
+                            </span>
+
+                            <span className="ss-option-main">
+                              <strong>
+                                {option.label}
+                              </strong>
+
+                              <small>
+                                {option.branch
+                                  ? "✓ Branche configurée"
+                                  : "⚠ Branche manquante"}
+                              </small>
+                            </span>
+
+                            <span className="ss-option-arrow">
+                              →
+                            </span>
+                          </button>
+                        ),
+                      )}
+
+                      {sortedOptions.length === 0 && (
+                        <div className="ss-empty-state">
+                          <strong>
+                            Aucune option
+                          </strong>
+                          <span>
+                            Créez votre premier parcours
+                            ci-dessous.
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="ss-card">
+                    <div className="ss-card-header">
+                      <div>
+                        <h3>Nouvelle option</h3>
+                        <p>
+                          Une option représente une intention
+                          du visiteur.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="ss-field">
+                      <label htmlFor="ss-new-option">
+                        Label
+                        <span>*</span>
+                      </label>
+
+                      <input
+                        id="ss-new-option"
+                        value={newOptionLabel}
+                        onChange={(event) =>
+                          setNewOptionLabel(
+                            event.target.value,
+                          )
+                        }
+                        placeholder="Ex. Web Development"
+                      />
+                    </div>
+
+                    <div className="ss-subheading">
+                      Branche initiale
+                    </div>
+
+                    <div className="ss-field">
+                      <label>
+                        Headline
+                      </label>
+
+                      <input
+                        value={newBranch.headline}
+                        onChange={(event) =>
+                          setNewBranch((current) => ({
+                            ...current,
+                            headline:
+                              event.target.value,
+                          }))
+                        }
+                        placeholder="Créons votre présence digitale"
+                      />
+                    </div>
+
+                    <div className="ss-field">
+                      <label>
+                        Description
+                      </label>
+
+                      <textarea
+                        value={newBranch.description}
+                        onChange={(event) =>
+                          setNewBranch((current) => ({
+                            ...current,
+                            description:
+                              event.target.value,
+                          }))
+                        }
+                        rows={4}
+                        placeholder="Expliquez ce que vous proposez pour ce parcours…"
+                      />
+                    </div>
+
+                    <div className="ss-form-grid">
+                      <div className="ss-field">
+                        <label>CTA</label>
+
+                        <input
+                          value={newBranch.cta}
+                          onChange={(event) =>
+                            setNewBranch((current) => ({
+                              ...current,
+                              cta: event.target.value,
+                            }))
+                          }
+                          placeholder="Discuter du projet"
+                        />
+                      </div>
+
+                      <div className="ss-field">
+                        <label>Proof</label>
+
+                        <input
+                          value={newBranch.proof}
+                          onChange={(event) =>
+                            setNewBranch((current) => ({
+                              ...current,
+                              proof: event.target.value,
+                            }))
+                          }
+                          placeholder="Ex. 12 projets réalisés"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="ss-button ss-button-primary ss-button-wide"
+                      onClick={() => void addOption()}
+                      disabled={
+                        saving || !newOptionLabel.trim()
+                      }
                     >
-                      <span>{o.label}</span>
-                      <span className="se-canvas-opt-arrow">›</span>
+                      + Ajouter l'option
                     </button>
+                  </div>
+                </div>
+
+                {/* Branch editor */}
+
+                <div className="ss-card ss-branch-editor">
+                  <div className="ss-card-header">
+                    <div>
+                      <span className="ss-eyebrow">
+                        BRANCH
+                      </span>
+
+                      <h3>
+                        {selectedOption
+                          ? selectedOption.label
+                          : "Sélectionnez une option"}
+                      </h3>
+
+                      <p>
+                        Le contenu affiché après le choix du
+                        visiteur.
+                      </p>
+                    </div>
+                  </div>
+
+                  {!selectedOption ? (
+                    <div className="ss-empty-state ss-empty-large">
+                      <strong>
+                        Sélectionnez un parcours
+                      </strong>
+
+                      <span>
+                        Cliquez sur une option à gauche pour
+                        modifier sa branche.
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="ss-field">
+                        <label>
+                          Headline de branche
+                        </label>
+
+                        <input
+                          value={branchDraft.headline}
+                          onChange={(event) =>
+                            setBranchDraft(
+                              (current) => ({
+                                ...current,
+                                headline:
+                                  event.target.value,
+                              }),
+                            )
+                          }
+                          placeholder="Titre de votre réponse"
+                        />
+                      </div>
+
+                      <div className="ss-field">
+                        <label>
+                          Description
+                        </label>
+
+                        <textarea
+                          value={branchDraft.description}
+                          onChange={(event) =>
+                            setBranchDraft(
+                              (current) => ({
+                                ...current,
+                                description:
+                                  event.target.value,
+                              }),
+                            )
+                          }
+                          rows={7}
+                          placeholder="Présentez votre solution, votre expertise ou votre proposition…"
+                        />
+                      </div>
+
+                      <div className="ss-form-grid">
+                        <div className="ss-field">
+                          <label>CTA</label>
+
+                          <input
+                            value={branchDraft.cta}
+                            onChange={(event) =>
+                              setBranchDraft(
+                                (current) => ({
+                                  ...current,
+                                  cta: event.target.value,
+                                }),
+                              )
+                            }
+                            placeholder="Contactez-moi"
+                          />
+                        </div>
+
+                        <div className="ss-field">
+                          <label>Proof</label>
+
+                          <input
+                            value={branchDraft.proof}
+                            onChange={(event) =>
+                              setBranchDraft(
+                                (current) => ({
+                                  ...current,
+                                  proof: event.target.value,
+                                }),
+                              )
+                            }
+                            placeholder="Votre élément de preuve"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="ss-branch-preview">
+                        <span>
+                          APERÇU DE LA BRANCHE
+                        </span>
+
+                        <strong>
+                          {branchDraft.headline ||
+                            "Headline de branche"}
+                        </strong>
+
+                        <p>
+                          {branchDraft.description ||
+                            "Description de la branche…"}
+                        </p>
+
+                        <button
+                          type="button"
+                          disabled
+                        >
+                          {branchDraft.cta ||
+                            "CTA"}
+                        </button>
+                      </div>
+
+                      <p className="ss-save-hint">
+                        Les modifications de la branche sont
+                        enregistrées avec <strong>Save</strong>.
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ------------------------------------------------------------
+              ARRANGE
+          ------------------------------------------------------------- */}
+
+          {tab === "arrange" && (
+            <section className="ss-section">
+              <SectionIntro
+                eyebrow="ARRANGE"
+                title="Ordre des parcours"
+                description="L'ordre détermine la présentation des options dans votre capsule."
+              />
+
+              <div className="ss-card">
+                <div className="ss-arrange-list">
+                  {sortedOptions.map((option, index) => (
+                    <div
+                      key={option.id}
+                      className="ss-arrange-item"
+                    >
+                      <span className="ss-drag-handle">
+                        ⋮⋮
+                      </span>
+
+                      <span className="ss-arrange-number">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <div className="ss-arrange-copy">
+                        <strong>{option.label}</strong>
+                        <small>
+                          {option.branch
+                            ? "Branche configurée"
+                            : "Branche incomplète"}
+                        </small>
+                      </div>
+
+                      <div className="ss-arrange-actions">
+                        <button
+                          type="button"
+                          disabled={index === 0 || saving}
+                          onClick={() =>
+                            void moveOption(
+                              option,
+                              -1,
+                            )
+                          }
+                        >
+                          ↑
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={
+                            index ===
+                              sortedOptions.length -
+                                1 || saving
+                          }
+                          onClick={() =>
+                            void moveOption(
+                              option,
+                              1,
+                            )
+                          }
+                        >
+                          ↓
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
-                {showBranch && selectedOptionId && (
-                  <div className="se-branch-view se-visible">
-                    <div className="se-branch-headline">{bHeadline}</div>
-                    <div className="se-branch-desc">{bDesc}</div>
-                    <div className="se-branch-cta">{bCta}</div>
+              </div>
+            </section>
+          )}
+
+          {/* ------------------------------------------------------------
+              HOTSPOTS
+          ------------------------------------------------------------- */}
+
+          {tab === "hotspots" && (
+            <section className="ss-section">
+              <SectionIntro
+                eyebrow="INTERACTION"
+                title="Hotspots"
+                description="Associez une zone visuelle à un parcours de votre capsule."
+              />
+
+              <div className="ss-card">
+                <div className="ss-hotspot-info">
+                  <div>
+                    <strong>
+                      {hotspots.length} hotspot
+                      {hotspots.length !== 1
+                        ? "s"
+                        : ""}
+                    </strong>
+
+                    <p>
+                      Sélectionnez une option puis cliquez
+                      directement sur la cover dans le
+                      preview.
+                    </p>
+                  </div>
+
+                  <span className="ss-hotspot-badge">
+                    LIVE
+                  </span>
+                </div>
+
+                <div className="ss-hotspot-list">
+                  {hotspots.map((hotspot) => {
+                    const option = sortedOptions.find(
+                      (item) =>
+                        item.id === hotspot.optionId,
+                    );
+
+                    return (
+                      <div
+                        key={`${hotspot.optionId}-${hotspot.x}-${hotspot.y}`}
+                        className="ss-hotspot-item"
+                      >
+                        <span className="ss-hotspot-dot" />
+
+                        <div>
+                          <strong>
+                            {hotspot.label ||
+                              option?.label ||
+                              "Hotspot"}
+                          </strong>
+
+                          <small>
+                            X {hotspot.x}% · Y{" "}
+                            {hotspot.y}%
+                          </small>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {hotspots.length === 0 && (
+                    <div className="ss-empty-state">
+                      <strong>
+                        Aucun hotspot
+                      </strong>
+
+                      <span>
+                        Sélectionnez une option puis cliquez
+                        sur la cover du preview.
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* ------------------------------------------------------------
+              DESIGN
+          ------------------------------------------------------------- */}
+
+          {tab === "design" && (
+            <section className="ss-section">
+              <SectionIntro
+                eyebrow="DESIGN"
+                title="Cover & médias"
+                description="Choisissez l'image qui représente votre expérience."
+              />
+
+              <div className="ss-card">
+                <div className="ss-cover-editor">
+                  <div
+                    className="ss-cover-large"
+                    style={{
+                      background:
+                        cover ||
+                        GRADIENTS[gradientIndex],
+                    }}
+                  >
+                    {cover && (
+                      <img
+                        src={cover}
+                        alt=""
+                      />
+                    )}
+
+                    <div className="ss-cover-overlay">
+                      <div className="ss-large-avatar">
+                        {capsule.identity.avatar ? (
+                          <img
+                            src={
+                              capsule.identity.avatar
+                            }
+                            alt=""
+                          />
+                        ) : (
+                          initials(displayName)
+                        )}
+                      </div>
+
+                      <strong>
+                        {displayName}
+                      </strong>
+
+                      <span>
+                        {headline ||
+                          "Votre headline"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="ss-cover-controls">
+                    <div className="ss-subheading">
+                      Image de couverture
+                    </div>
+
+                    <label className="ss-upload-button">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={uploadAsset}
+                      />
+                      + Ajouter une image
+                    </label>
+
+                    <p>
+                      L'image sera utilisée comme cover
+                      publique de la capsule.
+                    </p>
+
+                    <div className="ss-subheading">
+                      Dégradé de secours
+                    </div>
+
+                    <div className="ss-gradient-grid">
+                      {GRADIENTS.map(
+                        (gradient, index) => (
+                          <button
+                            key={gradient}
+                            type="button"
+                            className={
+                              gradientIndex === index
+                                ? "ss-gradient ss-gradient-selected"
+                                : "ss-gradient"
+                            }
+                            style={{
+                              background: gradient,
+                            }}
+                            onClick={() =>
+                              setGradientIndex(
+                                index,
+                              )
+                            }
+                          />
+                        ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {assets.length > 0 && (
+                  <div className="ss-assets">
+                    <div className="ss-subheading">
+                      Bibliothèque
+                    </div>
+
+                    <div className="ss-assets-grid">
+                      {assets.map((url, index) => (
+                        <button
+                          key={`${url}-${index}`}
+                          type="button"
+                          className={
+                            coverPreview === url
+                              ? "ss-asset ss-asset-selected"
+                              : "ss-asset"
+                          }
+                          onClick={() =>
+                            setCoverPreview(url)
+                          }
+                        >
+                          <img
+                            src={url}
+                            alt=""
+                          />
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
+            </section>
+          )}
 
-              <div className="se-canvas-bottom">
-                <span className="se-canvas-stat">
-                  {sortedOpt.length} option{sortedOpt.length !== 1 ? "s" : ""} ·{" "}
-                  {selectedOptionId
-                    ? `option ${(sortedOpt.findIndex((o) => o.id === selectedOptionId) + 1) || "?"}`
-                    : "0"} sélection
+          {/* ------------------------------------------------------------
+              SETTINGS
+          ------------------------------------------------------------- */}
+
+          {tab === "settings" && (
+            <section className="ss-section">
+              <SectionIntro
+                eyebrow="PUBLICATION"
+                title="Settings"
+                description="Contrôlez la visibilité et les interactions publiques."
+              />
+
+              <div className="ss-card">
+                <div className="ss-settings-list">
+
+                  <div className="ss-setting">
+                    <div>
+                      <strong>
+                        Publication
+                      </strong>
+
+                      <p>
+                        Rendez la capsule accessible
+                        publiquement.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={
+                        published
+                          ? "ss-toggle ss-toggle-on"
+                          : "ss-toggle"
+                      }
+                      onClick={() =>
+                        setPublished(
+                          (value) => !value,
+                        )
+                      }
+                      aria-pressed={published}
+                    >
+                      <span />
+                    </button>
+                  </div>
+
+                  <div className="ss-setting">
+                    <div>
+                      <strong>
+                        Commentaires visiteurs
+                      </strong>
+
+                      <p>
+                        Autoriser les visiteurs à
+                        commenter votre capsule.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={
+                        commentsEnabled
+                          ? "ss-toggle ss-toggle-on"
+                          : "ss-toggle"
+                      }
+                      onClick={() =>
+                        setCommentsEnabled(
+                          (value) => !value,
+                        )
+                      }
+                      aria-pressed={commentsEnabled}
+                    >
+                      <span />
+                    </button>
+                  </div>
+
+                  <div className="ss-setting">
+                    <div>
+                      <strong>
+                        Analytics
+                      </strong>
+
+                      <p>
+                        Les événements de la capsule
+                        sont préparés pour le dashboard
+                        Analytics.
+                      </p>
+                    </div>
+
+                    <span className="ss-coming">
+                      ACTIF
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+
+              <div className="ss-card">
+                <div className="ss-card-header">
+                  <div>
+                    <h3>URL publique</h3>
+                    <p>
+                      Adresse de votre capsule Faymoos.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="ss-public-url">
+                  <code>
+                    /capsule/{capsule.identity.slug}
+                  </code>
+
+                  <a
+                    href={`/capsule/${capsule.identity.slug}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Ouvrir →
+                  </a>
+                </div>
+              </div>
+
+              <div className="ss-card">
+                <div className="ss-card-header">
+                  <div>
+                    <h3>Actions rapides</h3>
+                  </div>
+                </div>
+
+                <div className="ss-quick-actions">
+                  <Link
+                    href={`/dashboard/space/preview/${capsule.id}`}
+                    target="_blank"
+                    className="ss-quick-action"
+                  >
+                    <span>◉</span>
+                    <div>
+                      <strong>
+                        Preview
+                      </strong>
+                      <small>
+                        Tester la capsule
+                      </small>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href={`/dashboard/capsule-comments?capsuleId=${encodeURIComponent(
+                      capsule.id,
+                    )}`}
+                    className="ss-quick-action"
+                  >
+                    <span>◎</span>
+                    <div>
+                      <strong>
+                        Commentaires
+                      </strong>
+                      <small>
+                        Modération
+                      </small>
+                    </div>
+                  </Link>
+
+                  <Link
+                    href="/dashboard/identities"
+                    className="ss-quick-action"
+                  >
+                    <span>◉</span>
+                    <div>
+                      <strong>
+                        Identity
+                      </strong>
+                      <small>
+                        Gérer la présence
+                      </small>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </section>
+          )}
+        </main>
+
+        {/* ============================================================
+            LIVE CANVAS
+        ============================================================= */}
+
+        <aside className="ss-preview-panel">
+          <div className="ss-preview-header">
+            <div>
+              <span className="ss-eyebrow">
+                LIVE CANVAS
+              </span>
+
+              <strong>Preview</strong>
+            </div>
+
+            <span className="ss-live-dot">
+              LIVE
+            </span>
+          </div>
+
+          <div className="ss-preview-stage">
+            <div className="ss-device">
+
+              <div
+                className="ss-device-cover"
+                onClick={(event) => {
+                  if (tab !== "hotspots") return;
+
+                  const rect =
+                    event.currentTarget.getBoundingClientRect();
+
+                  const x =
+                    ((event.clientX - rect.left) /
+                      rect.width) *
+                    100;
+
+                  const y =
+                    ((event.clientY - rect.top) /
+                      rect.height) *
+                    100;
+
+                  addHotspot(x, y);
+                }}
+              >
+                {cover ? (
+                  <img
+                    src={cover}
+                    alt=""
+                  />
+                ) : (
+                  <div
+                    style={{
+                      background:
+                        GRADIENTS[gradientIndex],
+                    }}
+                  />
+                )}
+
+                <div className="ss-device-cover-shade" />
+
+                <div className="ss-device-identity">
+                  <div className="ss-device-avatar">
+                    {capsule.identity.avatar ? (
+                      <img
+                        src={
+                          capsule.identity.avatar
+                        }
+                        alt=""
+                      />
+                    ) : (
+                      initials(displayName)
+                    )}
+                  </div>
+
+                  <strong>
+                    {displayName ||
+                      "Votre nom"}
+                  </strong>
+
+                  <span>
+                    {headline ||
+                      "Votre headline"}
+                  </span>
+                </div>
+
+                {hotspots.map((hotspot) => (
+                  <button
+                    key={`${hotspot.optionId}-${hotspot.x}-${hotspot.y}`}
+                    type="button"
+                    className="ss-canvas-hotspot"
+                    style={{
+                      left: `${hotspot.x}%`,
+                      top: `${hotspot.y}%`,
+                    }}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setSelectedOptionId(
+                        hotspot.optionId,
+                      );
+                    }}
+                  >
+                    ●
+                  </button>
+                ))}
+              </div>
+
+              <div className="ss-device-content">
+
+                <span className="ss-device-label">
+                  {title || "Faymoos Experience"}
                 </span>
-                <button
-                  type="button"
-                  className={"se-canvas-back" + (showBranch ? " se-visible" : "")}
-                  onClick={resetCanvas}
-                >
-                  ← Retour
-                </button>
+
+                <h3>
+                  {objective ||
+                    "Quelle piste souhaitez-vous explorer avec moi ?"}
+                </h3>
+
+                <div className="ss-device-options">
+                  {sortedOptions.map(
+                    (option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        className={
+                          selectedOptionId ===
+                          option.id
+                            ? "ss-device-option ss-device-option-active"
+                            : "ss-device-option"
+                        }
+                        onClick={() =>
+                          setSelectedOptionId(
+                            option.id,
+                          )
+                        }
+                      >
+                        <span>
+                          {option.label}
+                        </span>
+
+                        <span>→</span>
+                      </button>
+                    ),
+                  )}
+                </div>
+
+                {selectedOption && (
+                  <div className="ss-device-branch">
+                    <span>
+                      {selectedOption.label}
+                    </span>
+
+                    <strong>
+                      {branchDraft.headline ||
+                        "Votre réponse"}
+                    </strong>
+
+                    <p>
+                      {branchDraft.description ||
+                        "Configurez cette branche dans le Studio."}
+                    </p>
+
+                    <button
+                      type="button"
+                      disabled
+                    >
+                      {branchDraft.cta ||
+                        "Action"}
+                    </button>
+
+                    {branchDraft.proof && (
+                      <small>
+                        {branchDraft.proof}
+                      </small>
+                    )}
+                  </div>
+                )}
+
+              </div>
+
+              <div className="ss-device-footer">
+                <span>
+                  {sortedOptions.length} parcours
+                </span>
+
+                <span>
+                  Powered by Faymoos
+                </span>
               </div>
             </div>
           </div>
 
-          <aside className="se-right-panel">
-            <div className="se-rp-title">Assets</div>
-            <div className="se-asset-grid">
-              {assets.length === 0 && (
-                <div className="col-span-2 text-center text-[11px] text-zinc-500">
-                  Aucun visuel
-                </div>
-              )}
-              {assets.map((u, i) => (
-                <button
-                  key={u + i}
-                  type="button"
-                  className={"se-asset-thumb" + (usedAsset === i && coverPreview === u ? " se-used" : "")}
-                  onClick={() => {
-                    setUsedAsset(i);
-                    setCoverPreview(u);
-                  }}
-                  title="Définir comme cover (Save)"
-                >
-                  {u.match(/\.(png|jpe?g|webp|gif)/i) ? (
-                    <img src={u} alt="" className="h-full w-full object-cover" />
-                  ) : (
-                    "📁"
-                  )}
-                </button>
-              ))}
+          <div className="ss-preview-footer">
+            <div>
+              <span>OPTIONS</span>
+              <strong>
+                {sortedOptions.length}
+              </strong>
             </div>
-            <label className="se-add-block cursor-pointer">
-              <input type="file" accept="image/*" className="hidden" onChange={onUpload} />
-              <span>+</span> Upload
-            </label>
-            <div className="se-rp-title mt-3.5">Thème cover</div>
-            <div className="mb-2 grid grid-cols-4 gap-1">
-              {THEME_SWATCHES.map((s, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className="h-5 cursor-pointer rounded border-2 p-0"
-                  style={{
-                    background: s.color,
-                    borderColor: canvasGradIndex === i ? "#C6A15B" : "transparent",
-                  }}
-                  onClick={() => setCanvasGradIndex(i)}
-                  title="Aperçu canvas (sans image)"
-                />
-              ))}
+
+            <div>
+              <span>HOTSPOTS</span>
+              <strong>
+                {hotspots.length}
+              </strong>
             </div>
-            <div className="se-rp-title">Aperçu rapide</div>
-            <p className="text-[11px] leading-relaxed text-zinc-500">
-              {sortedOpt.length} options
-              <br />
-              <span className={cap.isPublished ? "text-[#C6A15B]" : "text-[#C6A15B]"}>
-                {cap.isPublished ? "Publié" : "Brouillon"}
-              </span>
-              <br />
-              <span className="text-zinc-500">Slug :</span>
-              <br />
-              <code className="text-[10px] text-bordeaux-900">/capsule/{cap.identity.slug}</code>
-            </p>
-          </aside>
-        </div>
+
+            <div>
+              <span>STATUS</span>
+              <strong>
+                {published
+                  ? "Public"
+                  : "Draft"}
+              </strong>
+            </div>
+          </div>
+        </aside>
       </div>
 
-      {toast && <div className="se-toast" role="status">{toast}</div>}
+      {toast && (
+        <div
+          className="ss-toast"
+          role="status"
+        >
+          {toast}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ======================================================================
+   SMALL UI COMPONENTS
+====================================================================== */
+
+function SectionIntro({
+  eyebrow,
+  title,
+  description,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="ss-section-intro">
+      <span className="ss-eyebrow">
+        {eyebrow}
+      </span>
+
+      <h2>{title}</h2>
+
+      <p>{description}</p>
+    </div>
+  );
+}
+
+function CheckItem({
+  checked,
+  label,
+}: {
+  checked: boolean;
+  label: string;
+}) {
+  return (
+    <div
+      className={
+        checked
+          ? "ss-check ss-check-done"
+          : "ss-check"
+      }
+    >
+      <span>
+        {checked ? "✓" : "○"}
+      </span>
+
+      <strong>{label}</strong>
     </div>
   );
 }

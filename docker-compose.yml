@@ -58,6 +58,7 @@ services:
       BILLING_DEMO_MODE: "true"
       VISION360_URL: http://vision360:8010
       FAYMOOS_AI_URL: http://ai:8020
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     depends_on:
       db:
         condition: service_healthy

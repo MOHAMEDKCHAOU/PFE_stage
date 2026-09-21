@@ -120,8 +120,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Link href="/dashboard" className="flex items-center gap-3">
             <span className="grid h-9 w-9 place-items-center rounded-xl border border-[#C6A15B]/40 bg-[#C6A15B]/10 text-lg font-black text-[#C6A15B]">F</span>
             <div>
-              <div className="text-[15px] font-semibold tracking-tight">Faymoos</div>
-              <div className="text-[10px] uppercase tracking-[0.18em] text-[#C6A15B]">Creator OS</div>
+              <div className="text-[20px] font-bold tracking-tight">Faymoos</div>
+              <div className="text-[15px] uppercase tracking-[0.18em] text-[#C6A15B]">Creator OS</div>
             </div>
           </Link>
           <button className="rounded-lg p-2 text-white/50 hover:bg-white/5 lg:hidden" onClick={() => setSidebarOpen(false)}>×</button>
@@ -129,8 +129,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
           {visibleGroups.map((group) => (
-            <div key={group.label} className="mb-5">
-              <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/35">{group.label}</p>
+            <div key={group.label} className="mb-7">
+              <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white/35">{group.label}</p>
               <div className="space-y-1">
                 {group.items.map((item) => {
                   const active = isActivePath(pathname, item.href);
@@ -138,7 +138,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)} title={item.hint}
                       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? "bg-[#C6A15B] text-[#0B0D10]" : "text-white/66 hover:bg-white/[0.055] hover:text-[#F7F4EE]"}`}>
                       <span className={active ? "text-[#0B0D10]" : "text-white/42 group-hover:text-[#C6A15B]"}>{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
+                      <span className="font-bold">{item.label}</span>
                     </Link>
                   );
                 })}
@@ -156,7 +156,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Link key={item.href} href={item.href} onClick={() => setSidebarOpen(false)}
                       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? "bg-[#C6A15B] text-[#0B0D10]" : "text-white/66 hover:bg-white/[0.055] hover:text-[#F7F4EE]"}`}>
                       <span className={active ? "text-[#0B0D10]" : "text-white/42 group-hover:text-[#C6A15B]"}>{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
+                      <span className="font-bold">{item.label}</span>
                     </Link>
                   );
                 })}
@@ -170,7 +170,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex items-center gap-3">
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#C6A15B]/15 text-sm font-semibold text-[#C6A15B]">{displayName.charAt(0).toUpperCase()}</span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{displayName}</p>
+                <p className="truncate text-sm font-bold">{displayName}</p>
                 <p className="truncate text-[11px] text-white/38">{me?.email || "Loading account…"}</p>
               </div>
             </div>
@@ -188,8 +188,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="lg:pl-[282px]">
         <header className="sticky top-0 z-30 flex h-[76px] items-center gap-4 border-b border-white/10 bg-[#0B0D10]/90 px-4 backdrop-blur-xl sm:px-7">
           <button onClick={() => setSidebarOpen(true)} className="rounded-xl border border-white/10 p-2 text-white/70 lg:hidden" aria-label="Open navigation"><span className="block text-xl leading-none">☰</span></button>
-          <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{title}</p><p className="hidden text-xs text-white/35 sm:block">Build your presence, create experiences, convert attention into action.</p></div>
-          <Link href="/explore" className="hidden rounded-xl border border-white/10 px-3.5 py-2 text-xs font-medium text-white/65 transition hover:border-[#C6A15B]/50 hover:text-[#F7F4EE] sm:inline-flex">Explore</Link>
+          <div className="min-w-0 flex-1"><p className="truncate text-sm font-bold">{title}</p><p className="hidden text-xs text-white/35 sm:block">Build your presence, create experiences, convert attention into action.</p></div>
+          <Link href="/explore" className="hidden rounded-xl border border-white/10 px-3.5 py-2 text-xs font-bold text-white/65 transition hover:border-[#C6A15B]/50 hover:text-[#F7F4EE] sm:inline-flex">Explore</Link>
+           {/* LOGOUT BUTTON */}
+  <button
+    onClick={handleLogout}
+    disabled={loggingOut}
+    className="rounded-xl border border-white/10 px-3.5 py-2 text-xs font-semibold text-white/65 transition hover:border-red-400/40 hover:bg-red-400/10 hover:text-red-300 disabled:opacity-50"
+  >
+    {loggingOut ? "Signing out…" : "Logout"}
+  </button>
           <NotificationBell />
         </header>
         <main className="min-h-[calc(100vh-76px)] bg-[radial-gradient(circle_at_80%_0%,rgba(198, 161, 91, 0.08),transparent_28%)]">
