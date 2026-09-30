@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
+import { detectMedia } from "@/lib/media-validation";
 
 export const runtime = "nodejs";
 
@@ -21,10 +22,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const created = [];
   for (let i = 0; i < files.length; i += 1) {
     const file = files[i];
-    if (!file.type.startsWith("image/") || file.size > 12_000_000) continue;
-    const ext = file.type.includes("png") ? "png" : "jpg";
-    const filename = `frame-${Date.now()}-${i}.${ext}`;
-    await writeFile(path.join(dir, filename), Buffer.from(await file.arrayBuffer()));
+    if (file.size > 12_000_000) continue;
+    const bytes = Buffer.from(await file.arrayBuffer());
+    // Type réel lu dans le contenu : seules des images JPEG / PNG sont acceptées comme frames.
+    const detected = detectMedia(bytes);
+    if (!detected || (detected.ext !== "jpg" && detected.ext !== "png")) continue;
+    const filename = `frame-${Date.now()}-${i}.${detected.ext}`;
+    await writeFile(path.join(dir, filename), bytes);
     created.push(await prisma.smartSpaceCapture.create({ data: { sceneId: scene.id, assetUrl: `/uploads/spaces/${scene.id}/${filename}` } }));
   }
   await prisma.smartSpaceScene.update({ where: { id: scene.id }, data: { status: "CAPTURING" } });

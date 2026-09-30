@@ -50,6 +50,9 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `GET/POST/DELETE /api/studio/join/[code]` | `app/api/studio/join/[code]/route.ts` | `src/route-handlers/api/studio/join/handlers.ts` *(aperçu public + demande / annulation par le client)* |
 | `POST /api/spaces/[id]/hotspots` | `app/api/spaces/[id]/hotspots/route.ts` | `src/route-handlers/api/spaces/hotspots.ts` *(liens validés par `src/lib/safe-url.ts`)* |
 | `PATCH/DELETE /api/spaces/[id]/hotspots/[hotspotId]` | `app/api/spaces/[id]/hotspots/[hotspotId]/route.ts` | `src/route-handlers/api/spaces/hotspots.ts` |
+| `POST /api/upload` | `app/api/upload/route.ts` | `src/route-handlers/api/upload/route.ts` *(type réel lu dans le contenu, images ré-encodées sans EXIF/GPS, nom aléatoire, déduplication)* |
+| `GET/DELETE /api/assets` | `app/api/assets/route.ts` | `src/route-handlers/api/assets/route.ts` *(bibliothèque : recherche, tri, pagination, suppression groupée)* |
+| `GET/PATCH/DELETE /api/assets/[id]` | `app/api/assets/[id]/route.ts` | `src/route-handlers/api/assets/item.ts` *(détail + usages, titre / alt / tags, suppression avec contrôle d’usage)* |
 | `GET/DELETE /api/studio/partners` | `app/api/studio/partners/route.ts` | `src/route-handlers/api/studio/partners/route.ts` *(côté client : voir / retirer l’accès des partenaires Studio)* |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)
@@ -58,8 +61,6 @@ Ces fichiers contiennent toute la logique ; ajouter un nouvel endpoint ici ne 
 
 - `app/api/me/route.ts`
 - `app/api/logout/route.ts`
-- `app/api/upload/route.ts`
-- `app/api/assets/route.ts`
 - `app/api/favorites/route.ts`
 - `app/api/notifications/route.ts`
 - `app/api/messages/route.ts`

@@ -1,6 +1,7 @@
 "use client";
 
 import { ScanCaptureWorkflow } from "@/components/ScanCaptureWorkflow";
+import { MediaPickerDialog } from "@/components/media/MediaPickerDialog";
 import { Suspense, useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -20,6 +21,7 @@ function SpaceCreatePageContent() {
 
   const [tab, setTab] = useState<"scan" | "upload" | "ia">("upload");
   const [assets, setAssets] = useState<string[]>([]);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [iaPrompt, setIaPrompt] = useState("");
   const [aiData, setAiData] = useState<AiPayload | null>(null);
   const [loading, setLoading] = useState(false);
@@ -248,6 +250,29 @@ function SpaceCreatePageContent() {
             multiple
             className="mt-4 block w-full text-sm"
             onChange={(e) => onUpload(e.target.files)}
+          />
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="mt-4 rounded-xl border border-[#C6A15B]/40 px-4 py-2 text-sm font-medium text-[#E2C68E] hover:bg-[#C6A15B]/10"
+          >
+            Choisir dans la bibliothèque
+          </button>
+          {assets.length > 0 && (
+            <p className="mt-2 text-xs text-zinc-500">{assets.length} visuel(s) prêt(s) pour ce Space.</p>
+          )}
+          <MediaPickerDialog
+            open={pickerOpen}
+            accept="any"
+            multiple
+            uploadType="portfolio"
+            title="Visuels du Space"
+            onClose={() => setPickerOpen(false)}
+            onSelect={(picked) => {
+              setPickerOpen(false);
+              const urls = picked.filter((a) => a.kind !== "MODEL_3D").map((a) => a.url);
+              setAssets((current) => [...current, ...urls.filter((u) => !current.includes(u))]);
+            }}
           />
         </div>
       )}

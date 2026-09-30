@@ -10,6 +10,8 @@ import {
   type ChangeEvent,
 } from "react";
 
+import { MediaPickerDialog } from "@/components/media/MediaPickerDialog";
+
 import "./space-editor.css";
 type Branch = {
   id: string;
@@ -226,6 +228,7 @@ export function SpaceStudioClient({
    * ---------------------------------------------------------------- */
 
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [gradientIndex, setGradientIndex] = useState(0);
   const [assets, setAssets] = useState<string[]>([]);
 
@@ -1755,6 +1758,31 @@ export function SpaceStudioClient({
                       />
                       + Ajouter une image
                     </label>
+
+                    <button
+                      type="button"
+                      className="ss-upload-button"
+                      onClick={() => setPickerOpen(true)}
+                    >
+                      Choisir dans la bibliothèque
+                    </button>
+
+                    <MediaPickerDialog
+                      open={pickerOpen}
+                      accept="image"
+                      uploadType="portfolio"
+                      title="Image de couverture"
+                      onClose={() => setPickerOpen(false)}
+                      onSelect={([asset]) => {
+                        setPickerOpen(false);
+                        if (!asset) return;
+                        setAssets((current) =>
+                          current.includes(asset.url) ? current : [...current, asset.url],
+                        );
+                        setCoverPreview(asset.url);
+                        notify("✓ Image de la bibliothèque utilisée comme cover");
+                      }}
+                    />
 
                     <p>
                       L'image sera utilisée comme cover

@@ -1,4 +1,5 @@
 import { writeAuditLog } from "@/lib/audit";
+import { deleteUploadFile } from "@/lib/asset-storage";
 import { requirePermission, revokeAllUserSessions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import {
@@ -242,6 +243,7 @@ export async function DELETE(req: NextRequest) {
     select: { id: true },
   });
   const optionIds = options.map((option) => option.id);
+  const assetFiles = await prisma.userAsset.findMany({ where: { userId: id }, select: { url: true } });
 
   await writeAuditLog({
     actorUserId: auth.userId,
@@ -272,6 +274,11 @@ export async function DELETE(req: NextRequest) {
     prisma.authSession.deleteMany({ where: { userId: id } }),
     prisma.user.delete({ where: { id } }),
   ]);
+
+  // Fichiers retirés du disque seulement après la suppression effective en base.
+  await Promise.all(
+    assetFiles.map((asset) => deleteUploadFile(asset.url).catch((e) => console.error("DELETE USER FILE", asset.url, e))),
+  );
 
   return NextResponse.json({ success: true });
 }

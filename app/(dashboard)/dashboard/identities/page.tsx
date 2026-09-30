@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EditProfileModal } from "@/components/EditProfileModal";
+import { MediaPickerDialog } from "@/components/media/MediaPickerDialog";
 import { parseTagsFromJson } from "@/lib/identity-profession";
 import QRCode from "qrcode";
 
@@ -374,6 +375,7 @@ function PortfolioModal({
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -384,7 +386,11 @@ function PortfolioModal({
       formData.append("file", file);
       formData.append("type", "portfolio");
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!res.ok) { setError("Erreur upload image"); return; }
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        setError(typeof d.error === "string" ? d.error : "Erreur upload image");
+        return;
+      }
       const data = await res.json();
       setImage(data.url);
     } catch { setError("Erreur upload"); } finally { setUploading(false); }
@@ -446,6 +452,20 @@ function PortfolioModal({
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
               )}
+              <button type="button" onClick={() => setPickerOpen(true)} className="text-xs font-medium text-[#C6A15B] hover:underline">
+                {image ? "Changer depuis la bibliothèque" : "Choisir dans la bibliothèque"}
+              </button>
+              <MediaPickerDialog
+                open={pickerOpen}
+                accept="image"
+                uploadType="portfolio"
+                title="Image du projet"
+                onClose={() => setPickerOpen(false)}
+                onSelect={([asset]) => {
+                  setPickerOpen(false);
+                  if (asset) setImage(asset.url);
+                }}
+              />
             </div>
           </div>
 

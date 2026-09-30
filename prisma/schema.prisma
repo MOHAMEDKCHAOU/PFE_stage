@@ -226,17 +226,32 @@ model StudioJoinRequest {
 
 /// Médias personnels réutilisables (hub Asset Library)
 model UserAsset {
-  id         String        @id @default(uuid())
-  url        String
-  kind       UserAssetKind
-  mimeType   String
-  sizeBytes  Int
-  createdAt  DateTime      @default(now())
+  id           String        @id @default(uuid())
+  url          String
+  kind         UserAssetKind
+  mimeType     String
+  sizeBytes    Int
+  /// Nom du fichier chez l’utilisateur (affichage / recherche uniquement, jamais utilisé sur disque)
+  originalName String?
+  title        String?
+  /// Texte alternatif (accessibilité / SEO des pages publiques)
+  altText      String?
+  tags         String[]      @default([])
+  width        Int?
+  height       Int?
+  /// SHA-256 du fichier envoyé : évite de stocker deux fois le même média
+  sha256       String?
+  /// LIBRARY | AVATAR | COVER | PORTFOLIO | LOGO
+  source       String        @default("LIBRARY")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
 
-  userId     String
-  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, kind, createdAt(sort: Desc)])
+  @@index([userId, sha256])
+  @@index([url])
 }
 
 enum UserAssetKind {

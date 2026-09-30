@@ -2,6 +2,7 @@
 
 import QRCode from "qrcode";
 import { useCallback, useEffect, useState } from "react";
+import { MediaPickerDialog } from "@/components/media/MediaPickerDialog";
 
 type PartnerProfile = {
   code: string;
@@ -154,6 +155,7 @@ export function PartnerQrPanel() {
   const [busy, setBusy] = useState<null | "save" | "toggle" | "rotate" | "logo" | "download" | "print">(null);
   const [notice, setNotice] = useState<Notice>(null);
   const [copied, setCopied] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [origin, setOrigin] = useState("");
 
   const joinUrl = profile ? `${origin}${profile.joinPath}` : "";
@@ -231,7 +233,7 @@ export function PartnerQrPanel() {
     setNotice(null);
     const form = new FormData();
     form.append("file", file);
-    form.append("type", "avatar");
+    form.append("type", "logo");
     const res = await fetch("/api/upload", { method: "POST", body: form });
     const json = await res.json().catch(() => ({}));
     setBusy(null);
@@ -421,6 +423,20 @@ export function PartnerQrPanel() {
             }}
           />
         </label>
+        <button type="button" disabled={busy !== null} onClick={() => setPickerOpen(true)} className={BTN_SECONDARY}>
+          Bibliothèque
+        </button>
+        <MediaPickerDialog
+          open={pickerOpen}
+          accept="image"
+          uploadType="logo"
+          title="Logo de l’agence"
+          onClose={() => setPickerOpen(false)}
+          onSelect={([asset]) => {
+            setPickerOpen(false);
+            if (asset) patch({ logoUrl: asset.url }, "logo", "Logo mis à jour.");
+          }}
+        />
         {profile.logoUrl && (
           <button
             type="button"

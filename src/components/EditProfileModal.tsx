@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- Avatar / cover previews from upload API */
 
 import { useState, useRef } from "react";
+import { MediaPickerDialog } from "@/components/media/MediaPickerDialog";
 import { parseTagsFromJson } from "@/lib/identity-profession";
 import { identityThemePresets } from "@/lib/identity-themes";
 
@@ -64,6 +65,33 @@ function ImageUploadFrame({
   const [dragOver, setDragOver] = useState(false);
   const [preview, setPreview] = useState(currentUrl);
   const [uploadError, setUploadError] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  const libraryPicker = (
+    <>
+      <button
+        type="button"
+        onClick={() => setPickerOpen(true)}
+        className="text-[11px] font-medium text-[#C6A15B] hover:underline"
+      >
+        Choisir dans la bibliothèque
+      </button>
+      <MediaPickerDialog
+        open={pickerOpen}
+        accept="image"
+        uploadType={type}
+        title={type === "avatar" ? "Photo de profil" : "Image de couverture"}
+        onClose={() => setPickerOpen(false)}
+        onSelect={([asset]) => {
+          setPickerOpen(false);
+          if (!asset) return;
+          setUploadError("");
+          setPreview(asset.url);
+          onUploaded(asset.url);
+        }}
+      />
+    </>
+  );
 
   async function handleFile(file: File) {
     if (!file.type.startsWith("image/")) {
@@ -158,6 +186,7 @@ function ImageUploadFrame({
           />
         </div>
         <p className="text-[11px] text-muted-foreground">Cliquer ou glisser</p>
+        {libraryPicker}
         {uploadError && <p className="text-[11px] text-[#C6A15B]">{uploadError}</p>}
       </div>
     );
@@ -166,7 +195,10 @@ function ImageUploadFrame({
   // Banner shape
   return (
     <div className="space-y-2">
-      <label className="text-xs font-medium text-muted-foreground">Image de couverture</label>
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-medium text-muted-foreground">Image de couverture</label>
+        {libraryPicker}
+      </div>
       <div
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
