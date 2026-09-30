@@ -2,7 +2,7 @@ import { writeAuditLog } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import { normalizeStudioClientEmail } from "@/lib/studio-client-email";
 import { hasPermission } from "@/lib/rbac-policy";
-import { assertCanAddStudioClient } from "@/lib/subscription-guards";
+import { checkAffiliateCanTakeClient } from "@/lib/studio-link-guards";
 
 class InviteNoLongerValidError extends Error {}
 
@@ -74,20 +74,8 @@ export async function acceptStudioInviteForSessionUser(
 
   // Le partenaire doit toujours être habilité au moment de l’acceptation (compte actif,
   // permission Studio, abonnement Studio et quota de clients), pas seulement à l’envoi.
-  const affiliate = await prisma.user.findUnique({
-    where: { id: invite.affiliateUserId },
-    select: { role: true, status: true },
-  });
-  if (!affiliate || affiliate.status !== "ACTIVE" || !hasPermission(affiliate.role, "studio:access")) {
-    return { ok: false, status: 410, error: "Ce partenaire n’est plus habilité à gérer des comptes clients." };
-  }
-  if (await assertCanAddStudioClient(invite.affiliateUserId)) {
-    return {
-      ok: false,
-      status: 409,
-      error: "Ce partenaire ne peut pas accepter de nouveaux clients pour le moment.",
-    };
-  }
+  const affiliateCheck = await checkAffiliateCanTakeClient(invite.affiliateUserId);
+  if (!affiliateCheck.ok) return affiliateCheck;
 
   try {
     await prisma.$transaction(async (tx) => {

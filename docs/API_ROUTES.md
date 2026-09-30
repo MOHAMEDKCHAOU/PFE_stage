@@ -45,6 +45,9 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `GET /api/admin/badges/user` | `app/api/admin/badges/user/route.ts` | `src/route-handlers/api/admin/badges/user/route.ts` |
 | `DELETE /api/admin/badges/revoke` | `app/api/admin/badges/revoke/route.ts` | `src/route-handlers/api/admin/badges/revoke/route.ts` |
 | `POST /api/admin/badges/grant` | `app/api/admin/badges/grant/route.ts` | `src/route-handlers/api/admin/badges/grant/route.ts` |
+| `GET/PATCH /api/studio/partner-code` | `app/api/studio/partner-code/route.ts` | `src/route-handlers/api/studio/partner-code/route.ts` *(QR partenaire : code, activation, rotation, nom/logo d’agence)* |
+| `GET/PATCH /api/studio/join-requests` | `app/api/studio/join-requests/route.ts` | `src/route-handlers/api/studio/join-requests/route.ts` *(affilié : valider / refuser les demandes reçues via QR)* |
+| `GET/POST/DELETE /api/studio/join/[code]` | `app/api/studio/join/[code]/route.ts` | `src/route-handlers/api/studio/join/handlers.ts` *(aperçu public + demande / annulation par le client)* |
 | `GET/DELETE /api/studio/partners` | `app/api/studio/partners/route.ts` | `src/route-handlers/api/studio/partners/route.ts` *(côté client : voir / retirer l’accès des partenaires Studio)* |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)

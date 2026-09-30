@@ -11,7 +11,10 @@ export type AuditAction =
   | "BADGE_REVOKED"
   | "STUDIO_CLIENT_ACCESS_REQUESTED"
   | "STUDIO_CLIENT_LINKED"
-  | "STUDIO_CLIENT_UNLINKED_BY_CLIENT";
+  | "STUDIO_CLIENT_UNLINKED_BY_CLIENT"
+  | "STUDIO_JOIN_REQUESTED"
+  | "STUDIO_JOIN_DECIDED"
+  | "STUDIO_PARTNER_CODE_ROTATED";
 
 export async function writeAuditLog(input: {
   actorUserId?: string | null;

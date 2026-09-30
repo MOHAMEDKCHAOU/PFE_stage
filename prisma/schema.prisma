@@ -36,6 +36,9 @@ model User {
   studioAsClient   AffiliateClient[] @relation("ClientOfAffiliate")
   studioInvitesSent     StudioClientInvite[] @relation("StudioInvitesSent")
   studioInvitesAccepted StudioClientInvite[] @relation("StudioInviteAcceptedClient")
+  studioPartnerProfile  StudioPartnerProfile? @relation("StudioPartnerProfile")
+  studioJoinRequestsReceived StudioJoinRequest[] @relation("StudioJoinRequestsReceived")
+  studioJoinRequestsSent     StudioJoinRequest[] @relation("StudioJoinRequestsSent")
   subscriptionUsages    SubscriptionUsage[]
   userBadges            UserBadge[]
   authSessions          AuthSession[]
@@ -182,6 +185,43 @@ model StudioClientInvite {
 
   @@index([affiliateUserId])
   @@index([expiresAt])
+}
+
+/// Profil public Studio d’un affilié : code partenaire permanent (QR) + identité d’agence
+/// affichée sur l’écran de consentement. Le code n’est pas un secret d’accès : il permet
+/// seulement à un client de *demander* le rattachement, que l’affilié doit ensuite valider.
+model StudioPartnerProfile {
+  id              String    @id @default(uuid())
+  affiliateUserId String    @unique
+  affiliate       User      @relation("StudioPartnerProfile", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  /// Code aléatoire (alphabet sans caractères ambigus), stocké sans tiret, en majuscules
+  code            String    @unique
+  active          Boolean   @default(true)
+  agencyName      String?
+  /// URL interne (/uploads/…) uniquement
+  logoUrl         String?
+  /// Clients rattachés via le QR (demandes validées)
+  joinsCount      Int       @default(0)
+  rotatedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+/// Demande de rattachement créée par un client (scan du QR partenaire), validée ou refusée par l’affilié.
+model StudioJoinRequest {
+  id              String    @id @default(uuid())
+  affiliateUserId String
+  affiliate       User      @relation("StudioJoinRequestsReceived", fields: [affiliateUserId], references: [id], onDelete: Cascade)
+  clientUserId    String
+  client          User      @relation("StudioJoinRequestsSent", fields: [clientUserId], references: [id], onDelete: Cascade)
+  /// PENDING | APPROVED | DECLINED | CANCELLED
+  status          String    @default("PENDING")
+  source          String    @default("QR")
+  createdAt       DateTime  @default(now())
+  decidedAt       DateTime?
+
+  @@index([affiliateUserId, status, createdAt(sort: Desc)])
+  @@index([clientUserId, status])
 }
 
 /// Médias personnels réutilisables (hub Asset Library)
