@@ -1,14 +1,32 @@
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/auth";
+import { clientIp, createPublicLead } from "@/lib/leads";
+import { checkRateLimit } from "@/lib/rate-limit-memory";
 import { canManageIdentityAsOwner, getManagedUserIdsForViewer } from "@/lib/studio-access";
 import { NextRequest, NextResponse } from "next/server";
 
 // POST — visitor sends a message (public, no auth required)
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, content, identityId } = await req.json();
+    const { name, email, content, identityId, website } = await req.json();
 
-    if (!name?.trim() || !email?.trim() || !content?.trim() || !identityId) {
+    // Champ piège invisible pour un humain : faux succès pour les robots.
+    if (typeof website === "string" && website.trim() !== "") {
+      return NextResponse.json({ ok: true }, { status: 201 });
+    }
+
+    const limited = checkRateLimit(`message-create:${clientIp(req)}`, 8, 60 * 60 * 1000);
+    if (!limited.ok) {
+      return NextResponse.json(
+        { error: "Trop de messages envoyés. Réessayez plus tard." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(limited.retryAfterMs / 1000)) } },
+      );
+    }
+
+    if (typeof name !== "string" || typeof email !== "string" || typeof content !== "string" || typeof identityId !== "string") {
+      return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
+    }
+    if (!name.trim() || !email.trim() || !content.trim() || !identityId) {
       return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
     }
 
@@ -50,7 +68,17 @@ export async function POST(req: NextRequest) {
       },
     }).catch(() => {});
 
-    return NextResponse.json(message, { status: 201 });
+    // Chaque prise de contact entre aussi dans le pipeline Leads (fusionnée si déjà connue).
+    await createPublicLead({
+      identityId,
+      name,
+      email,
+      message: content,
+      source: "CONTACT_FORM",
+      messageId: message.id,
+    }).catch((e) => console.error("LEAD FROM MESSAGE", e));
+
+    return NextResponse.json({ ok: true, id: message.id }, { status: 201 });
   } catch (error) {
     console.error("POST MESSAGE ERROR:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

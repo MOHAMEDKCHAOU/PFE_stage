@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react
 import QRCode from "qrcode";
 import { generatePortfolioPDF } from "@/lib/generatePDF";
 import { ChatBot } from "@/components/ChatBot";
+import { LeadCaptureDialog } from "@/components/LeadCaptureDialog";
 import { CapsuleCommentsSection } from "@/components/CapsuleCommentsSection";
 import { PublicProfileBadges } from "@/components/PublicProfileBadges";
 import type { PublicBadgeBundle } from "@/lib/faymoos-badges";
@@ -116,7 +117,8 @@ export function CapsuleViewer({
   const sessionIdRef = useRef<string | null>(null);
 
   // Contact form state
-  const [contactForm, setContactForm] = useState({ name: "", email: "", content: "" });
+  const [contactForm, setContactForm] = useState({ name: "", email: "", content: "", website: "" });
+  const [leadFormOpen, setLeadFormOpen] = useState(false);
   const [contactSending, setContactSending] = useState(false);
   const [contactStatus, setContactStatus] = useState<"idle" | "success" | "error">("idle");
   const [contactError, setContactError] = useState("");
@@ -673,10 +675,14 @@ export function CapsuleViewer({
                           </a>
                         );
                       }
+                      // CTA sans lien : ouvre le formulaire de contact (la demande devient un lead).
                       return (
                         <button
                           type="button"
-                          onClick={() => trackEvent("CTA_CLICK", selectedOption!.label)}
+                          onClick={() => {
+                            trackEvent("CTA_CLICK", selectedOption!.label);
+                            setLeadFormOpen(true);
+                          }}
                           className={ctaClass}
                         >
                           {ctaLabel}
@@ -796,7 +802,7 @@ export function CapsuleViewer({
               <h3 className="text-lg font-bold text-white">Message envoyé !</h3>
               <p className="text-sm text-zinc-400 mt-1">Merci, votre message a bien été transmis.</p>
               <button
-                onClick={() => { setContactStatus("idle"); setContactForm({ name: "", email: "", content: "" }); }}
+                onClick={() => { setContactStatus("idle"); setContactForm({ name: "", email: "", content: "", website: "" }); }}
                 className="mt-4 text-sm text-zinc-500 hover:text-white transition-colors"
               >
                 Envoyer un autre message
@@ -872,6 +878,18 @@ export function CapsuleViewer({
                 />
                 <p className="text-[11px] text-zinc-600 text-right">{contactForm.content.length}/2000</p>
               </div>
+              {/* Piège anti-robot : invisible et ignoré par les humains. */}
+              <div aria-hidden className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                <label>
+                  Site web
+                  <input
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={contactForm.website}
+                    onChange={(e) => setContactForm((p) => ({ ...p, website: e.target.value }))}
+                  />
+                </label>
+              </div>
               <button
                 type="submit"
                 disabled={contactSending}
@@ -909,6 +927,19 @@ export function CapsuleViewer({
           <span className={`font-semibold ${tc.accent}`}>Faymoos Platform</span>
         </p>
       </footer>
+      )}
+
+      {/* ──── Formulaire lead (CTA sans lien) ──── */}
+      {leadFormOpen && selectedOption?.branch && (
+        <LeadCaptureDialog
+          identityId={identity.id}
+          identityName={identity.name}
+          capsuleId={activeCapsule.id}
+          optionId={selectedOption.id}
+          ctaLabel={selectedOption.branch.cta}
+          accentClass={tc.gradient}
+          onClose={() => setLeadFormOpen(false)}
+        />
       )}
 
       {/* ──── ChatBot ──── */}

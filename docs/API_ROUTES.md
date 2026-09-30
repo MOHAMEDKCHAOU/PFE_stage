@@ -53,6 +53,7 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `POST /api/upload` | `app/api/upload/route.ts` | `src/route-handlers/api/upload/route.ts` *(type réel lu dans le contenu, images ré-encodées sans EXIF/GPS, nom aléatoire, déduplication)* |
 | `GET/DELETE /api/assets` | `app/api/assets/route.ts` | `src/route-handlers/api/assets/route.ts` *(bibliothèque : recherche, tri, pagination, suppression groupée)* |
 | `GET/PATCH/DELETE /api/assets/[id]` | `app/api/assets/[id]/route.ts` | `src/route-handlers/api/assets/item.ts` *(détail + usages, titre / alt / tags, suppression avec contrôle d’usage)* |
+| `GET/POST/PATCH /api/leads` | `app/api/leads/route.ts` | `src/route-handlers/api/leads/route.ts` *(POST public : formulaire CTA, anti-robot + limite de débit ; logique partagée dans `src/lib/leads.ts`)* |
 | `GET/DELETE /api/studio/partners` | `app/api/studio/partners/route.ts` | `src/route-handlers/api/studio/partners/route.ts` *(côté client : voir / retirer l’accès des partenaires Studio)* |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)

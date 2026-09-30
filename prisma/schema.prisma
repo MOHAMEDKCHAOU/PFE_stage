@@ -355,6 +355,7 @@ model Capsule {
   /// Commentaires publics (modération) — désactivables par capsule
   commentsEnabled Boolean         @default(true)
   comments        CapsuleComment[]
+  leads           Lead[]
 }
 
 model CapsuleOption {
@@ -460,6 +461,7 @@ model Message {
 
   identityId  String
   identity    IdentityProfile @relation(fields: [identityId], references: [id])
+  lead        Lead?
 }
 
 // 🔔 NOTIFICATIONS — Alertes pour le propriétaire de capsule
@@ -486,7 +488,11 @@ model Lead {
   source      String          @default("DIRECT")
   status      String          @default("NEW") // NEW | CONTACTED | QUALIFIED | WON | LOST
   capsuleId   String?
+  capsule     Capsule?        @relation(fields: [capsuleId], references: [id], onDelete: SetNull)
   branchLabel String?
+  /// Message de contact à l’origine du lead (formulaire public)
+  messageId      String?     @unique
+  contactMessage Message?    @relation(fields: [messageId], references: [id], onDelete: SetNull)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
@@ -497,6 +503,8 @@ model Lead {
 
   @@index([userId, status, createdAt(sort: Desc)])
   @@index([identityId, createdAt(sort: Desc)])
+  @@index([identityId, email])
+  @@index([capsuleId])
 }
 
 // ─── Smart 360 Spaces ───────────────────────────────────────────────────────
