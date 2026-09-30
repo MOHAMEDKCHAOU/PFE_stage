@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { EditProfileModal } from "@/components/EditProfileModal";
 import { StudioInviteInbox } from "@/components/StudioInviteInbox";
+import { StudioPartnersPanel } from "@/components/StudioPartnersPanel";
 import { parseTagsFromJson } from "@/lib/identity-profession";
 
 type IdentityProfile = {
@@ -54,6 +55,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingProfile, setEditingProfile] = useState<IdentityProfile | null>(null);
+  const [partnersReloadKey, setPartnersReloadKey] = useState(0);
 
   async function fetchUser() {
     try {
@@ -178,7 +180,14 @@ export default function DashboardPage() {
         </a>
       </div>
 
-      <StudioInviteInbox onAccepted={fetchUser} />
+      <StudioInviteInbox
+        onAccepted={() => {
+          fetchUser();
+          setPartnersReloadKey((k) => k + 1);
+        }}
+      />
+
+      <StudioPartnersPanel reloadKey={partnersReloadKey} />
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

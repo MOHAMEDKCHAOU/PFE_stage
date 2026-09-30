@@ -10,7 +10,8 @@ export type AuditAction =
   | "BADGE_GRANTED"
   | "BADGE_REVOKED"
   | "STUDIO_CLIENT_ACCESS_REQUESTED"
-  | "STUDIO_CLIENT_LINKED";
+  | "STUDIO_CLIENT_LINKED"
+  | "STUDIO_CLIENT_UNLINKED_BY_CLIENT";
 
 export async function writeAuditLog(input: {
   actorUserId?: string | null;

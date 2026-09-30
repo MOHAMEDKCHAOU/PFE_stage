@@ -45,6 +45,7 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `GET /api/admin/badges/user` | `app/api/admin/badges/user/route.ts` | `src/route-handlers/api/admin/badges/user/route.ts` |
 | `DELETE /api/admin/badges/revoke` | `app/api/admin/badges/revoke/route.ts` | `src/route-handlers/api/admin/badges/revoke/route.ts` |
 | `POST /api/admin/badges/grant` | `app/api/admin/badges/grant/route.ts` | `src/route-handlers/api/admin/badges/grant/route.ts` |
+| `GET/DELETE /api/studio/partners` | `app/api/studio/partners/route.ts` | `src/route-handlers/api/studio/partners/route.ts` *(côté client : voir / retirer l’accès des partenaires Studio)* |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)
 
