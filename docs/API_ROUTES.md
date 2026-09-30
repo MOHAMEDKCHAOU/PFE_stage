@@ -48,6 +48,8 @@ L’alias historique `@/app/api/...` pointait en réalité vers `src/app/api/...
 | `GET/PATCH /api/studio/partner-code` | `app/api/studio/partner-code/route.ts` | `src/route-handlers/api/studio/partner-code/route.ts` *(QR partenaire : code, activation, rotation, nom/logo d’agence)* |
 | `GET/PATCH /api/studio/join-requests` | `app/api/studio/join-requests/route.ts` | `src/route-handlers/api/studio/join-requests/route.ts` *(affilié : valider / refuser les demandes reçues via QR)* |
 | `GET/POST/DELETE /api/studio/join/[code]` | `app/api/studio/join/[code]/route.ts` | `src/route-handlers/api/studio/join/handlers.ts` *(aperçu public + demande / annulation par le client)* |
+| `POST /api/spaces/[id]/hotspots` | `app/api/spaces/[id]/hotspots/route.ts` | `src/route-handlers/api/spaces/hotspots.ts` *(liens validés par `src/lib/safe-url.ts`)* |
+| `PATCH/DELETE /api/spaces/[id]/hotspots/[hotspotId]` | `app/api/spaces/[id]/hotspots/[hotspotId]/route.ts` | `src/route-handlers/api/spaces/hotspots.ts` |
 | `GET/DELETE /api/studio/partners` | `app/api/studio/partners/route.ts` | `src/route-handlers/api/studio/partners/route.ts` *(côté client : voir / retirer l’accès des partenaires Studio)* |
 
 ## Implémentation directement sous `app/api/` (pas de miroir dans `route-handlers`)

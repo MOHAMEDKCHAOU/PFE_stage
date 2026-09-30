@@ -24,6 +24,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   if (body?.title?.trim()) data.title = body.title.trim().slice(0, 120);
   if (typeof body?.description === "string") data.description = body.description.trim().slice(0, 1200) || null;
   if (body?.status && ["DRAFT", "CAPTURING", "PROCESSING", "READY", "PUBLISHED"].includes(body.status)) data.status = body.status;
+  if (data.status === "PUBLISHED") {
+    const withPanorama = await prisma.smartSpaceScene.count({ where: { spaceId: id, panoramaUrl: { not: null } } });
+    if (withPanorama === 0) {
+      return NextResponse.json({ error: "Publication impossible : aucune scène reconstruite." }, { status: 400 });
+    }
+  }
   const space = await prisma.smartSpace.update({ where: { id }, data });
   return NextResponse.json({ space });
 }
