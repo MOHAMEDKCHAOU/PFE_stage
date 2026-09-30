@@ -144,7 +144,11 @@ export default function StudioPage() {
     }
     setEmail("");
     setLinkConsent(false);
-    setSuccess("Compte client lié. Vous pouvez gérer ses identités depuis Identités.");
+    setSuccess(
+      typeof json.message === "string"
+        ? json.message
+        : "Demande d’accès envoyée. Le client doit l’accepter depuis son tableau de bord.",
+    );
     await load();
     setBusy(false);
   }
@@ -631,10 +635,10 @@ export default function StudioPage() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-base font-semibold text-foreground">Liaison directe par e-mail</h2>
+                <h2 className="text-base font-semibold text-foreground">Demande d’accès par e-mail</h2>
                 <p className="mt-0.5 text-xs text-zinc-500">
-                  Option avancée si le client ne peut pas utiliser le lien. Préférez l’invitation ci-dessus lorsque
-                  possible.
+                  Le client reçoit la demande dans son tableau de bord Faymoos et doit l’accepter avant que vous
+                  puissiez gérer son espace.
                 </p>
               </div>
             </div>
@@ -642,8 +646,9 @@ export default function StudioPage() {
             <div className="mt-4 rounded-xl border border-[#C6A15B]/80 bg-[#C6A15B]/60 px-3 py-2.5 text-[11px] leading-relaxed text-[#C6A15B]">
               <p className="font-semibold text-[#C6A15B]">Sécurité & bonnes pratiques</p>
               <ul className="mt-1.5 list-inside list-disc space-y-0.5 text-[#C6A15B]">
+                <li>Aucune liaison sans l’acceptation explicite du titulaire du compte.</li>
                 <li>Case à cocher obligatoire : accord / mandat du titulaire du compte.</li>
-                <li>Quota horaire sur les liaisons (limitation des abus).</li>
+                <li>Quota horaire et mensuel sur les demandes (limitation des abus).</li>
                 <li>Les comptes administrateur plateforme ne peuvent pas être rattachés comme clients.</li>
               </ul>
             </div>
@@ -684,14 +689,14 @@ export default function StudioPage() {
                 {busy ? (
                   <>
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    Liaison…
+                    Envoi…
                   </>
                 ) : (
                   <>
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
-                    Lier le compte
+                    Envoyer la demande d’accès
                   </>
                 )}
               </button>

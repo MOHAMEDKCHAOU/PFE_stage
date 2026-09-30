@@ -8,7 +8,9 @@ export type AuditAction =
   | "USER_DELETED"
   | "CAPSULE_MODERATED"
   | "BADGE_GRANTED"
-  | "BADGE_REVOKED";
+  | "BADGE_REVOKED"
+  | "STUDIO_CLIENT_ACCESS_REQUESTED"
+  | "STUDIO_CLIENT_LINKED";
 
 export async function writeAuditLog(input: {
   actorUserId?: string | null;

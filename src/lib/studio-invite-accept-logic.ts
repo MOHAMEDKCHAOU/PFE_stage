@@ -1,6 +1,10 @@
+import { writeAuditLog } from "@/lib/audit";
 import { prisma } from "@/lib/prisma";
 import { normalizeStudioClientEmail } from "@/lib/studio-client-email";
 import { hasPermission } from "@/lib/rbac-policy";
+import { assertCanAddStudioClient } from "@/lib/subscription-guards";
+
+class InviteNoLongerValidError extends Error {}
 
 export type InviteAcceptRow = {
   id: string;
@@ -68,19 +72,51 @@ export async function acceptStudioInviteForSessionUser(
     }
   }
 
+  // Le partenaire doit toujours être habilité au moment de l’acceptation (compte actif,
+  // permission Studio, abonnement Studio et quota de clients), pas seulement à l’envoi.
+  const affiliate = await prisma.user.findUnique({
+    where: { id: invite.affiliateUserId },
+    select: { role: true, status: true },
+  });
+  if (!affiliate || affiliate.status !== "ACTIVE" || !hasPermission(affiliate.role, "studio:access")) {
+    return { ok: false, status: 410, error: "Ce partenaire n’est plus habilité à gérer des comptes clients." };
+  }
+  if (await assertCanAddStudioClient(invite.affiliateUserId)) {
+    return {
+      ok: false,
+      status: 409,
+      error: "Ce partenaire ne peut pas accepter de nouveaux clients pour le moment.",
+    };
+  }
+
   try {
-    await prisma.$transaction([
-      prisma.affiliateClient.create({
-        data: { affiliateUserId: invite.affiliateUserId, clientUserId: userId },
-      }),
-      prisma.studioClientInvite.update({
-        where: { id: invite.id },
+    await prisma.$transaction(async (tx) => {
+      // Consommation atomique : une invitation ne peut être acceptée qu’une seule fois,
+      // même en cas de requêtes concurrentes.
+      const claimed = await tx.studioClientInvite.updateMany({
+        where: { id: invite.id, acceptedAt: null, revokedAt: null, expiresAt: { gt: now } },
         data: { acceptedAt: new Date(), clientUserId: userId },
-      }),
-    ]);
+      });
+      if (claimed.count !== 1) throw new InviteNoLongerValidError();
+
+      await tx.affiliateClient.create({
+        data: { affiliateUserId: invite.affiliateUserId, clientUserId: userId },
+      });
+    });
+
+    await writeAuditLog({
+      actorUserId: userId,
+      action: "STUDIO_CLIENT_LINKED",
+      targetType: "AffiliateClient",
+      targetId: invite.affiliateUserId,
+      metadata: { inviteId: invite.id, affiliateUserId: invite.affiliateUserId, clientUserId: userId },
+    });
 
     return { ok: true, message: "Lien accepté. Votre compte est rattaché à l’espace commercial du partenaire." };
   } catch (e: unknown) {
+    if (e instanceof InviteNoLongerValidError) {
+      return { ok: false, status: 410, error: "Invitation déjà utilisée, annulée ou expirée" };
+    }
     const code = e && typeof e === "object" && "code" in e ? (e as { code: string }).code : "";
     if (code === "P2002") {
       return {
