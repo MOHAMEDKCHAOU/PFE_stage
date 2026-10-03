@@ -8,9 +8,13 @@ services:
       POSTGRES_USER: faymoos
       POSTGRES_PASSWORD: faymoos_dev
       POSTGRES_DB: faymoos
+    # Seul conteneur PostgreSQL autorisé à utiliser ce volume : ne jamais lancer un second
+    # conteneur Postgres sur faymoos_pgdata (deux serveurs sur les mêmes fichiers = corruption).
+    container_name: faymoos-db
     volumes:
       - faymoos_pgdata:/var/lib/postgresql/data
-    ports: ["5432:5432"]
+    # Port 5433 côté machine : c'est celui de DATABASE_URL dans .env (développement local).
+    ports: ["5433:5432"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U faymoos -d faymoos"]
       interval: 5s
