@@ -1,5 +1,10 @@
 # Faymoos Premium 2026 — Next.js + PostgreSQL + Smart 360 reconstruction + AI inference
 # Start: docker compose up --build
+
+# Nom de projet explicite : une autre copie du dépôt dans un dossier du même nom ne doit
+# jamais partager les conteneurs ni le volume de données de celle-ci.
+name: faymoos-premium
+
 services:
   db:
     image: postgres:16-alpine
@@ -74,3 +79,5 @@ services:
 
 volumes:
   faymoos_pgdata:
+    # Nom fixe et propre à ce projet (indépendant du nom du dossier).
+    name: faymoos_premium_pgdata
